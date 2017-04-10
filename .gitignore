@@ -1,3 +1,12 @@
+images/*
+images
+export/*
+export
+*.pyc
+for_distribution
+for_distribution/*
+*.*~
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
