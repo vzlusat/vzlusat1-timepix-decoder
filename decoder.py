@@ -1,3 +1,4 @@
+#!/usr/bin/python
 def install_and_import(package):
     import importlib
     try:
