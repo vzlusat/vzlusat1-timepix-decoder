@@ -162,6 +162,9 @@ def parseBinning32(bin_data):
     image_reshaped[:, (packet_id*64):((packet_id+1)*64)] = bin_data[3:67]
     
     image.data = image_reshaped.reshape((8, 8))
+
+    # data are downscalled by 4, we should upscale them
+    image.data = image.data*4;
     
     image.type = 8
 
