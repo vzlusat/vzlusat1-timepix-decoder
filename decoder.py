@@ -339,7 +339,7 @@ def showImage(image):
                 else:
                     cbar.ax.set_ylabel('[keV]', rotation=270)
             else:
-                cbar.ax.set_ylabel('[active pixel in the bin]', rotation=270)
+                cbar.ax.set_ylabel('[active pixels in the bin]', rotation=270)
 
             f.tight_layout(pad=1)
 
