@@ -2,6 +2,8 @@ images/*
 images
 export/*
 export
+pngs/*
+pngs
 *.pyc
 for_distribution
 for_distribution/*

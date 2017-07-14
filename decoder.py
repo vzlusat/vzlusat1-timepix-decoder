@@ -134,7 +134,7 @@ def loadFiles():
             housekeeeping = loadHouseKeeping(file)
 
             if housekeeeping != 0:
-               list_files.append(str(housekeeeping.images_taken)+"_"+str(housekeeeping.time_since_boot)+"s_hk") 
+                list_files.append(str(housekeeeping.images_taken)+"_"+str(housekeeeping.time_since_boot)+"s_hk") 
             else:
                 print("could not open file "+file)
 
@@ -143,7 +143,7 @@ def loadFiles():
             image = loadImage(file)
 
             if image != 0:
-               list_files.append(str(image.id)+"_"+str(image.type)) 
+                list_files.append(str(image.id)+"_"+str(image.type)) 
             else:
                 print("could not open file "+file)
 
@@ -169,7 +169,7 @@ listbox.pack(side=Tk.LEFT, fill=Tk.Y, expand=0)
 for item in list_files:
     listbox.insert(Tk.END, item)
 
-colormap = "hot"
+colormap = "bone_r"
 
 def showHouseKeeping(housekeeping):
 
@@ -379,17 +379,17 @@ def showImage(image):
             a = f.add_subplot(111)
 
             x = [2.9807, 4.2275, 6.4308, 10.3875, 16.6394, 24.7081, 33.7833, 43.3679, 53.2233, 63.2344, 73.3415, 83.5115, 93.7248, 103.9691, 114.2361, 124.5204, 134.8182]
-            
+
             for i in range(0, 16):
 
-               # rectangle('Position', [x(i), 0, x(i+1)-x(i), image.data(i)], 'FaceColor', [0 0.5 0.5], 'EdgeColor', 'b','LineWidth',1);
-               a.add_patch(
-                   patches.Rectangle(
-                       (x[i], 0),            # (x,y)
-                       x[i+1]-x[i],          # width
-                       image.data[0, i],                  # height
-                   )
-               )
+                # rectangle('Position', [x(i), 0, x(i+1)-x(i), image.data(i)], 'FaceColor', [0 0.5 0.5], 'EdgeColor', 'b','LineWidth',1);
+                a.add_patch(
+                    patches.Rectangle(
+                        (x[i], 0),            # (x,y)
+                        x[i+1]-x[i],          # width
+                        image.data[0, i],                  # height
+                    )
+                )
 
             # a.plot(x, image.data[0, :])
 
@@ -468,7 +468,7 @@ listbox.after(100, lambda: listbox.see(Tk.END))
 def _quit():
     root.quit()   
     root.destroy()
- 
+
 # spawn quit button
 button = Tk.Button(master=frame_left1, text='Quit', command=_quit)
 button.pack(side=Tk.BOTTOM)
