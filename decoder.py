@@ -9,7 +9,6 @@ def install_and_import(package):
     finally:
         globals()[package] = importlib.import_module(package)
 
-
 install_and_import('matplotlib')
 
 matplotlib.use('TkAgg')
@@ -116,6 +115,10 @@ def numericalSort(value):
     parts[1::2] = map(int, parts[1::2])
     return parts
 
+# colormap!!
+colormap = "bone_r"
+
+#{ loadFiles()
 def loadFiles():
 
     # updated the filename list
@@ -150,27 +153,9 @@ def loadFiles():
     v.set("All images loaded")
 
     return list_files
+#}
 
-# preload and sort file names from "images" directories
-global file_names
-list_files = loadFiles()
-
-frame_list = Tk.Frame(frame_left1);
-frame_list.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
-
-frame_list2 = Tk.Frame(frame_list);
-frame_list2.pack(side=Tk.BOTTOM, fill=Tk.BOTH, expand=1)
-
-scrollbar = Tk.Scrollbar(master=frame_list2, orient=Tk.VERTICAL)
-listbox = Tk.Listbox(master=frame_list2, yscrollcommand=scrollbar.set, selectmode=Tk.SINGLE)
-scrollbar.config(command=listbox.yview)
-scrollbar.pack(side=Tk.LEFT, fill=Tk.Y, expand=0)
-listbox.pack(side=Tk.LEFT, fill=Tk.Y, expand=0)
-for item in list_files:
-    listbox.insert(Tk.END, item)
-
-colormap = "bone_r"
-
+#{ showHouseKeeping(housekeeping)
 def showHouseKeeping(housekeeping):
 
     f.clf()
@@ -223,7 +208,9 @@ def showHouseKeeping(housekeeping):
     metadatas_var[13].set(str(housekeeping.UV2_min))
     metadatas_var[14].set(str(housekeeping.temp_max))
     metadatas_var[15].set(str(housekeeping.temp_min))
+#}
 
+#{ showImage(image)
 def showImage(image):
 
     metadatas_var[0].set(str(image.id))
@@ -243,6 +230,7 @@ def showImage(image):
 
     metadatas_var[1].set(img_type)
 
+    #{ METADATA
     if image.got_metadata == 1:
 
         if image.mode == 0:
@@ -313,7 +301,9 @@ def showImage(image):
 
         for i in range(0, len(Image.metadata_labels)):
             text_labels_var[i].set(Image.metadata_labels[i])
+    #}
 
+    #{ IMAGE
     if image.got_data == 1:
 
         if image.type >= 1 and image.type <= 8:
@@ -343,7 +333,9 @@ def showImage(image):
                 cbar.ax.set_ylabel('[active pixels in the bin]', rotation=270)
 
             f.tight_layout(pad=1)
+        #}
 
+        #{ SUMS
         elif image.type == 16:
 
             f.clf()
@@ -372,7 +364,9 @@ def showImage(image):
             a2.set_ylabel("Active pixel count [-]")
 
             f.tight_layout(pad=2)
+        #}
 
+        #{ HISTOGRAM
         elif image.type == 32:
 
             f.clf()
@@ -409,8 +403,9 @@ def showImage(image):
                 a.set_title("Image histogram n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
             f.tight_layout(pad=1)
+        #}
 
-    else:
+    else: # we have not data to show
 
         f.clf()
         a = f.add_subplot(111)
@@ -421,8 +416,47 @@ def showImage(image):
         a.axis('off')
 
     canvas.show()
+#}
 
-# callback function for showing an image after clicking the listbox
+#{ AFTER LAUNCH
+
+# preload and sort file names from "images" directories
+global file_names
+list_files = loadFiles()
+
+frame_list = Tk.Frame(frame_left1);
+frame_list.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
+
+frame_list2 = Tk.Frame(frame_list);
+frame_list2.pack(side=Tk.BOTTOM, fill=Tk.BOTH, expand=1)
+
+scrollbar = Tk.Scrollbar(master=frame_list2, orient=Tk.VERTICAL)
+listbox = Tk.Listbox(master=frame_list2, yscrollcommand=scrollbar.set, selectmode=Tk.SINGLE)
+scrollbar.config(command=listbox.yview)
+scrollbar.pack(side=Tk.LEFT, fill=Tk.Y, expand=0)
+listbox.pack(side=Tk.LEFT, fill=Tk.Y, expand=0)
+for item in list_files:
+    listbox.insert(Tk.END, item)
+
+# select the last item in the listbox
+listbox.after(10, lambda: listbox.focus_force())
+listbox.after(10, lambda: listbox.selection_set("end"))
+listbox.after(10, lambda: listbox.see(Tk.END))
+
+# really we want the scrollabar to be down
+listbox.after(100, lambda: listbox.see(Tk.END))
+
+# autoselect the last item in the listbox after start
+if len(file_names) > 0:
+    file_name = file_names[-1]
+    if file_name[-5] == 'h':
+        print "HK selected"
+    else:
+        image = loadImage(file_names[-1])
+        showImage(image)
+#}
+
+#{ onselect(evt) callback function for showing an image after clicking the listbox
 def onselect(evt):
 
     global file_names
@@ -446,35 +480,12 @@ def onselect(evt):
 # bind onselect() callback function to listbox, so we can 
 # show images after clicking on their name
 listbox.bind('<<ListboxSelect>>', onselect)
+#}
 
-# listbox.selection_clear()
-listbox.after(10, lambda: listbox.focus_force())
-listbox.after(10, lambda: listbox.selection_set("end"))
-listbox.after(10, lambda: listbox.see(Tk.END))
+#{ BUTTON for loading new images and its callback
 
-# autoselect the last item in the listbox after start
-if len(file_names) > 0:
-    file_name = file_names[-1]
-    if file_name[-5] == 'h':
-        print "HK selected"
-    else:
-        image = loadImage(file_names[-1])
-        showImage(image)
-
-# really we want the scrollabar to be down
-listbox.after(100, lambda: listbox.see(Tk.END))
-
-# quit button callback
-def _quit():
-    root.quit()   
-    root.destroy()
-
-# spawn quit button
-button = Tk.Button(master=frame_left1, text='Quit', command=_quit)
-button.pack(side=Tk.BOTTOM)
-
-# callback for loading new images from a text file
-def _loadNewImages():
+#{ loadNewImages() callback for loading new images from a text file
+def loadNewImages():
 
     if sys.version_info[0] < 3:
         file_name = tkFileDialog.askopenfilename()
@@ -506,17 +517,33 @@ def _loadNewImages():
         else:
             image = loadImage(file_names[-1])
             showImage(image)
+#}
 
 # spawn button for loading new images
-load_button = Tk.Button(master=frame_list, text='Load new images', command=_loadNewImages)
+load_button = Tk.Button(master=frame_list, text='Load new images', command=loadNewImages)
 load_button.pack(side=Tk.TOP)
 
+#}
+
+#{ BUTTON for quitting the program
+def _quit():
+    root.quit()   
+    root.destroy()
+
+# spawn quit button
+button = Tk.Button(master=frame_left1, text='Quit', command=_quit)
+button.pack(side=Tk.BOTTOM)
+
+#}
+
+#{ KEYPRESS for quitting the program
 # callback for detecting keypresses
 def on_key_event(event):
     if event.key == 'q' or event.key == 'esc':
         _quit()
 
 canvas.mpl_connect('key_press_event', on_key_event)
+#}
 
 Tk.mainloop()
 # If you put root.destroy() here, it will cause an error if

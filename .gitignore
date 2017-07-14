@@ -9,6 +9,8 @@ for_distribution
 for_distribution/*
 *.*~
 
+*.swp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
