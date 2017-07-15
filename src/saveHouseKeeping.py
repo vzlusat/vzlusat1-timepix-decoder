@@ -10,5 +10,7 @@ def saveHouseKeeping(housekeeping):
     # try to open the file
     with open(file_name, 'wb') as output:
     
-        # load the object with pickle
-        pickle.dump(housekeeping, output, pickle.HIGHEST_PROTOCOL)
+        try:
+            pickle.dump(housekeeping, output, pickle.HIGHEST_PROTOCOL)
+        except:
+            print("file \"{}\" not be saved".format(file_name))

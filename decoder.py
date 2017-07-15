@@ -134,6 +134,11 @@ def reload_data(index):
         showHouseKeeping(housekeeping)
     else:
         image = loadImage(file_names[index])
+
+        # if the file could not been opened, return
+        if image == 0:
+            return
+
         showImage(image)
 
 #{ loadFiles()
@@ -478,7 +483,8 @@ if len(file_names) > 0:
         print("HK selected")
     else:
         image = loadImage(file_names[-1])
-        showImage(image)
+        if image != 0:
+            showImage(image)
 #}
 
 #{ onselect(evt) callback function for showing an image after clicking the listbox
@@ -551,7 +557,8 @@ def loadNewImages():
             print("HK selected")
         else:
             image = loadImage(file_names[-1])
-            showImage(image)
+            if image != 0:
+                showImage(image)
 
     v.set("All images loaded")
 

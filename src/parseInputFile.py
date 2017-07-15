@@ -26,12 +26,16 @@ def parseInputFile(file_path, v, root):
         if line.find("data") > -1:
 
             # select the part with the data
-            hex_data = line[7:-1]
+            if sys.getsizeof(line) % 2 == 1:
+                hex_data = line[7:-1]
+            else:
+                hex_data = line[7:-2]
 
             # convert to binary
             try:
                 data = binascii.unhexlify(hex_data)
             except:
+                 print("Unhexification failed on data: {}".format(hex_data))
                  continue
 
             if sys.version_info[0] < 3:
