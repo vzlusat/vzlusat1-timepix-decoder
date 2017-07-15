@@ -22,8 +22,8 @@ from matplotlib.figure import Figure
 
 import os
 import numpy
-from src.Image import Image 
-from src.HouseKeeping import HouseKeeping 
+from src.Image import Image
+from src.HouseKeeping import HouseKeeping
 from src.loadImage import loadImage
 from src.loadHouseKeeping import loadHouseKeeping
 from src.parseInputFile import parseInputFile
@@ -49,6 +49,9 @@ root = Tk.Tk()
 root.resizable(width=1, height=1)
 root.geometry('{}x{}'.format(1300, 600))
 root.wm_title("VZLUSAT-1 X-Ray data decoder")
+
+# this works
+# root.bind('<Escape>', lambda e: root.quit())
 
 # plot
 f = Figure(facecolor='none')
@@ -84,29 +87,29 @@ for i in range(0, len(Image.metadata_labels)): #Rows
 housekeeping_values = []
 housekeeping_labels = []
 
-# a tk.DrawingArea
+# subplot1 tk.DrawingArea
 frame_canvas = Tk.Frame(frame_right1);
 frame_canvas.pack(side=Tk.RIGHT, fill=Tk.BOTH, expand=0, padx=5, pady=5)
 
-canvas = FigureCanvasTkAgg(f, master=frame_canvas)
-canvas.show()
-canvas.get_tk_widget().pack(side=Tk.TOP)
-canvas._tkcanvas.pack(side=Tk.TOP)
+figure_canvas = FigureCanvasTkAgg(f, master=frame_canvas)
+figure_canvas.show()
+figure_canvas.get_tk_widget().pack(side=Tk.TOP)
+figure_canvas._tkcanvas.pack(side=Tk.TOP)
 
 # toolbar
 frame_toolbar = Tk.Frame(frame_canvas);
 frame_toolbar.pack(side=Tk.BOTTOM, fill=Tk.Y, expand=1)
 
-toolbar = NavigationToolbar2TkAgg(canvas, frame_toolbar)
+toolbar = NavigationToolbar2TkAgg(figure_canvas, frame_toolbar)
 toolbar.pack(side=Tk.LEFT)
 toolbar.update()
 
-a = f.add_subplot(111)
-a.axes.get_xaxis().set_visible(False)
-a.axes.get_yaxis().set_visible(False)
-a.patch.set_visible(False)
-a.axis('off')
-canvas.show()
+subplot1 = f.add_subplot(111)
+subplot1.axes.get_xaxis().set_visible(False)
+subplot1.axes.get_yaxis().set_visible(False)
+subplot1.patch.set_visible(False)
+subplot1.axis('off')
+figure_canvas.show()
 
 import re
 numbers = re.compile(r'(\d+)')
@@ -137,7 +140,7 @@ def loadFiles():
             housekeeeping = loadHouseKeeping(file)
 
             if housekeeeping != 0:
-                list_files.append(str(housekeeeping.images_taken)+"_"+str(housekeeeping.time_since_boot)+"s_hk") 
+                list_files.append(str(housekeeeping.images_taken)+"_"+str(housekeeeping.time_since_boot)+"s_hk")
             else:
                 print("could not open file "+file)
 
@@ -146,7 +149,7 @@ def loadFiles():
             image = loadImage(file)
 
             if image != 0:
-                list_files.append(str(image.id)+"_"+str(image.type)) 
+                list_files.append(str(image.id)+"_"+str(image.type))
             else:
                 print("could not open file "+file)
 
@@ -159,14 +162,14 @@ def loadFiles():
 def showHouseKeeping(housekeeping):
 
     f.clf()
-    a = f.add_subplot(111)
-    a.text(0.5, 0.5, 'No data', horizontalalignment='center',verticalalignment='center', transform = a.transAxes)
-    a.axes.get_xaxis().set_visible(False)
-    a.axes.get_yaxis().set_visible(False)
-    a.patch.set_visible(False)
-    a.axis('off')
+    subplot1 = f.add_subplot(111)
+    subplot1.text(0.5, 0.5, 'No data', horizontalalignment='center',verticalalignment='center', transform = subplot1.transAxes)
+    subplot1.axes.get_xaxis().set_visible(False)
+    subplot1.axes.get_yaxis().set_visible(False)
+    subplot1.patch.set_visible(False)
+    subplot1.axis('off')
 
-    canvas.show()
+    figure_canvas.show()
 
     # clear the text
     for i in range(0, len(Image.metadata_labels)):
@@ -310,17 +313,17 @@ def showImage(image):
 
             # plot the image
             f.clf()
-            a = f.add_subplot(111)
+            subplot1 = f.add_subplot(111)
 
-            a.set_xlabel("Column [-]")
-            a.set_ylabel("Row [-]")
+            subplot1.set_xlabel("Column [-]")
+            subplot1.set_ylabel("Row [-]")
 
             if image.got_metadata == 1:
-                a.set_title(img_type+" n.{0}, {1} s exposure, ".format(image.id, exposure)+mode+" mode", fontsize=13, y=1.02)
+                subplot1.set_title(img_type+" n.{0}, {1} s exposure, ".format(image.id, exposure)+mode+" mode", fontsize=13, y=1.02)
             else:
-                a.set_title(img_type+" n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
+                subplot1.set_title(img_type+" n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
-            cax = a.imshow(image.data, interpolation='none', cmap=colormap)
+            cax = subplot1.imshow(image.data, interpolation='none', cmap=colormap)
             cbar = f.colorbar(cax)
 
             cbar.ax.get_yaxis().labelpad = 20
@@ -370,14 +373,14 @@ def showImage(image):
         elif image.type == 32:
 
             f.clf()
-            a = f.add_subplot(111)
+            subplot1 = f.add_subplot(111)
 
             x = [2.9807, 4.2275, 6.4308, 10.3875, 16.6394, 24.7081, 33.7833, 43.3679, 53.2233, 63.2344, 73.3415, 83.5115, 93.7248, 103.9691, 114.2361, 124.5204, 134.8182]
 
             for i in range(0, 16):
 
                 # rectangle('Position', [x(i), 0, x(i+1)-x(i), image.data(i)], 'FaceColor', [0 0.5 0.5], 'EdgeColor', 'b','LineWidth',1);
-                a.add_patch(
+                subplot1.add_patch(
                     patches.Rectangle(
                         (x[i], 0),            # (x,y)
                         x[i+1]-x[i],          # width
@@ -385,37 +388,39 @@ def showImage(image):
                     )
                 )
 
-            # a.plot(x, image.data[0, :])
+            # subplot1.plot(x, image.data[0, :])
 
-            a.relim()
-            a.autoscale_view()
+            subplot1.relim()
+            subplot1.autoscale_view()
 
             if image.mode == 0:
-                a.set_xlabel("Particle counts [-]")
+                subplot1.set_xlabel("Particle counts [-]")
             else:
-                a.set_xlabel("Energy [keV]")
+                subplot1.set_xlabel("Energy [keV]")
 
-            a.set_ylabel("Counts [-]")
+            subplot1.set_ylabel("Counts [-]")
 
             if image.got_metadata == 1:
-                a.set_title("Image histogram n.{0}, {1} s exposure, ".format(image.id, exposure)+mode+" mode", fontsize=13, y=1.02)
+                subplot1.set_title("Image histogram n.{0}, {1} s exposure, ".format(image.id, exposure)+mode+" mode", fontsize=13, y=1.02)
             else:
-                a.set_title("Image histogram n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
+                subplot1.set_title("Image histogram n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
             f.tight_layout(pad=1)
         #}
 
+        f.savefig('pes.png')
+
     else: # we have not data to show
 
         f.clf()
-        a = f.add_subplot(111)
-        a.text(0.5, 0.5, 'No data', horizontalalignment='center',verticalalignment='center', transform = a.transAxes)
-        a.axes.get_xaxis().set_visible(False)
-        a.axes.get_yaxis().set_visible(False)
-        a.patch.set_visible(False)
-        a.axis('off')
+        subplot1 = f.add_subplot(111)
+        subplot1.text(0.5, 0.5, 'No data', horizontalalignment='center',verticalalignment='center', transform = subplot1.transAxes)
+        subplot1.axes.get_xaxis().set_visible(False)
+        subplot1.axes.get_yaxis().set_visible(False)
+        subplot1.patch.set_visible(False)
+        subplot1.axis('off')
 
-    canvas.show()
+    figure_canvas.show()
 #}
 
 #{ AFTER LAUNCH
@@ -456,6 +461,17 @@ if len(file_names) > 0:
         showImage(image)
 #}
 
+def reload_data(index):
+
+    file_name = file_names[index]
+    if file_name[-5] == 'h':
+        housekeeping = loadHouseKeeping(file_names[index])
+        showHouseKeeping(housekeeping)
+    else:
+        image = loadImage(file_names[index])
+        showImage(image)
+
+
 #{ onselect(evt) callback function for showing an image after clicking the listbox
 def onselect(evt):
 
@@ -467,17 +483,10 @@ def onselect(evt):
         return
 
     index = int(w.curselection()[0])
-    value = w.get(index)
 
-    file_name = file_names[index]
-    if file_name[-5] == 'h':
-        housekeeping = loadHouseKeeping(file_names[index])
-        showHouseKeeping(housekeeping)
-    else:
-        image = loadImage(file_names[index])
-        showImage(image)
+    reload_data(index)
 
-# bind onselect() callback function to listbox, so we can 
+# bind onselect() callback function to listbox, so we can
 # show images after clicking on their name
 listbox.bind('<<ListboxSelect>>', onselect)
 #}
@@ -527,22 +536,52 @@ load_button.pack(side=Tk.TOP)
 
 #{ BUTTON for quitting the program
 def _quit():
-    root.quit()   
+    root.quit()
     root.destroy()
+
+    from sys import exit
+    exit()
 
 # spawn quit button
 button = Tk.Button(master=frame_left1, text='Quit', command=_quit)
 button.pack(side=Tk.BOTTOM)
-
 #}
 
-#{ KEYPRESS for quitting the program
+#{ LISTBOX manipulation
+def listbox_move_up():
+
+    index = int(listbox.curselection()[0])
+    if index >= 1:
+        listbox.selection_clear(0, "end")
+        listbox.selection_set(index-1)
+        reload_data(index)
+
+def listbox_move_down():
+
+    index = int(listbox.curselection()[0])
+    if index < (listbox.size()-1):
+        listbox.selection_clear(0, "end")
+        listbox.selection_set(index+1)
+        reload_data(index)
+#}
+
+#{ KEYPRESS catching
 # callback for detecting keypresses
 def on_key_event(event):
-    if event.key == 'q' or event.key == 'esc':
+
+    if event.char == 'q':
         _quit()
 
-canvas.mpl_connect('key_press_event', on_key_event)
+    if event.char == 'j':
+        listbox_move_down()
+
+    if event.char == 'k':
+        listbox_move_up()
+
+    if event.char == 'l':
+        loadNewImages()
+
+root.bind_all('<Key>', on_key_event)
 #}
 
 Tk.mainloop()
