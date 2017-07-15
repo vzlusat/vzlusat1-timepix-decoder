@@ -506,9 +506,9 @@ listbox.bind('<<ListboxSelect>>', onselect)
 def loadNewImages():
 
     if sys.version_info[0] < 3:
-        file_name = tkFileDialog.askopenfilename()
+        file_name = tkFileDialog.askopenfilename(initialdir = "./orbital_data/")
     else:
-        file_name = tkinter.filedialog.askopenfilename()
+        file_name = tkinter.filedialog.askopenfilename(initialdir = "./orbital_data/")
 
     if file_name == "":
         return
@@ -607,7 +607,7 @@ def on_key_event(event):
     if event.char == 'k':
         listbox_move_up()
 
-    if event.char == 'l':
+    if event.char == 'o':
         loadNewImages()
 
 root.bind_all('<Key>', on_key_event)
