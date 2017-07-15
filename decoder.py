@@ -39,11 +39,16 @@ else:
 import datetime
 import matplotlib.patches as patches
 
-if not os.path.exists("images"):
-    os.makedirs("images")
+#{ CREATE directoris
+if not os.path.exists("images_bin"):
+    os.makedirs("images_bin")
 
-if not os.path.exists("export"):
-    os.makedirs("export")
+if not os.path.exists("images_csv"):
+    os.makedirs("images_csv")
+
+if not os.path.exists("images_png"):
+    os.makedirs("images_png")
+#}
 
 root = Tk.Tk()
 root.resizable(width=1, height=1)
@@ -54,8 +59,8 @@ root.wm_title("VZLUSAT-1 X-Ray data decoder")
 # root.bind('<Escape>', lambda e: root.quit())
 
 # plot
-f = Figure(facecolor='none')
-f.clf()
+my_figure = Figure(facecolor='none')
+my_figure.clf()
 frame_main = Tk.Frame(root);
 frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
@@ -91,7 +96,7 @@ housekeeping_labels = []
 frame_canvas = Tk.Frame(frame_right1);
 frame_canvas.pack(side=Tk.RIGHT, fill=Tk.BOTH, expand=0, padx=5, pady=5)
 
-figure_canvas = FigureCanvasTkAgg(f, master=frame_canvas)
+figure_canvas = FigureCanvasTkAgg(my_figure, master=frame_canvas)
 figure_canvas.show()
 figure_canvas.get_tk_widget().pack(side=Tk.TOP)
 figure_canvas._tkcanvas.pack(side=Tk.TOP)
@@ -104,7 +109,7 @@ toolbar = NavigationToolbar2TkAgg(figure_canvas, frame_toolbar)
 toolbar.pack(side=Tk.LEFT)
 toolbar.update()
 
-subplot1 = f.add_subplot(111)
+subplot1 = my_figure.add_subplot(111)
 subplot1.axes.get_xaxis().set_visible(False)
 subplot1.axes.get_yaxis().set_visible(False)
 subplot1.patch.set_visible(False)
@@ -121,12 +126,22 @@ def numericalSort(value):
 # colormap!!
 colormap = "bone_r"
 
+def reload_data(index):
+
+    file_name = file_names[index]
+    if file_name[-5] == 'h':
+        housekeeping = loadHouseKeeping(file_names[index])
+        showHouseKeeping(housekeeping)
+    else:
+        image = loadImage(file_names[index])
+        showImage(image)
+
 #{ loadFiles()
 def loadFiles():
 
     # updated the filename list
     global file_names
-    file_names = os.listdir("images")
+    file_names = os.listdir("images_bin")
 
     file_names = sorted(file_names, key=numericalSort)
 
@@ -153,16 +168,14 @@ def loadFiles():
             else:
                 print("could not open file "+file)
 
-    v.set("All images loaded")
-
     return list_files
 #}
 
 #{ showHouseKeeping(housekeeping)
 def showHouseKeeping(housekeeping):
 
-    f.clf()
-    subplot1 = f.add_subplot(111)
+    my_figure.clf()
+    subplot1 = my_figure.add_subplot(111)
     subplot1.text(0.5, 0.5, 'No data', horizontalalignment='center',verticalalignment='center', transform = subplot1.transAxes)
     subplot1.axes.get_xaxis().set_visible(False)
     subplot1.axes.get_yaxis().set_visible(False)
@@ -215,6 +228,10 @@ def showHouseKeeping(housekeeping):
 
 #{ showImage(image)
 def showImage(image):
+
+    # Clear the previous metadata
+    for i in range(0, 21):
+        metadatas_var[i].set("")
 
     metadatas_var[0].set(str(image.id))
 
@@ -302,8 +319,8 @@ def showImage(image):
 
         metadatas_var[20].set(chunk_id)
 
-        for i in range(0, len(Image.metadata_labels)):
-            text_labels_var[i].set(Image.metadata_labels[i])
+    for i in range(0, len(Image.metadata_labels)):
+        text_labels_var[i].set(Image.metadata_labels[i])
     #}
 
     #{ IMAGE
@@ -312,8 +329,8 @@ def showImage(image):
         if image.type >= 1 and image.type <= 8:
 
             # plot the image
-            f.clf()
-            subplot1 = f.add_subplot(111)
+            my_figure.clf()
+            subplot1 = my_figure.add_subplot(111)
 
             subplot1.set_xlabel("Column [-]")
             subplot1.set_ylabel("Row [-]")
@@ -324,7 +341,7 @@ def showImage(image):
                 subplot1.set_title(img_type+" n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
             cax = subplot1.imshow(image.data, interpolation='none', cmap=colormap)
-            cbar = f.colorbar(cax)
+            cbar = my_figure.colorbar(cax)
 
             cbar.ax.get_yaxis().labelpad = 20
             if image.type == 1:
@@ -335,15 +352,15 @@ def showImage(image):
             else:
                 cbar.ax.set_ylabel('[active pixels in the bin]', rotation=270)
 
-            f.tight_layout(pad=1)
+            my_figure.tight_layout(pad=1)
         #}
 
         #{ SUMS
         elif image.type == 16:
 
-            f.clf()
-            a1 = f.add_subplot(211)
-            a2 = f.add_subplot(212)
+            my_figure.clf()
+            a1 = my_figure.add_subplot(211)
+            a2 = my_figure.add_subplot(212)
 
             x = numpy.linspace(1, 256, 256)
 
@@ -366,14 +383,14 @@ def showImage(image):
             a2.set_xlabel("Column [-]")
             a2.set_ylabel("Active pixel count [-]")
 
-            f.tight_layout(pad=2)
+            my_figure.tight_layout(pad=2)
         #}
 
         #{ HISTOGRAM
         elif image.type == 32:
 
-            f.clf()
-            subplot1 = f.add_subplot(111)
+            my_figure.clf()
+            subplot1 = my_figure.add_subplot(111)
 
             x = [2.9807, 4.2275, 6.4308, 10.3875, 16.6394, 24.7081, 33.7833, 43.3679, 53.2233, 63.2344, 73.3415, 83.5115, 93.7248, 103.9691, 114.2361, 124.5204, 134.8182]
 
@@ -405,15 +422,18 @@ def showImage(image):
             else:
                 subplot1.set_title("Image histogram n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
-            f.tight_layout(pad=1)
+            my_figure.tight_layout(pad=1)
         #}
 
-        f.savefig('pes.png')
+        if image.got_data == 1:
+
+            image_filename='images_png/{}_{}.png'.format(image.id, image.type)
+            my_figure.savefig(image_filename)
 
     else: # we have not data to show
 
-        f.clf()
-        subplot1 = f.add_subplot(111)
+        my_figure.clf()
+        subplot1 = my_figure.add_subplot(111)
         subplot1.text(0.5, 0.5, 'No data', horizontalalignment='center',verticalalignment='center', transform = subplot1.transAxes)
         subplot1.axes.get_xaxis().set_visible(False)
         subplot1.axes.get_yaxis().set_visible(False)
@@ -425,7 +445,7 @@ def showImage(image):
 
 #{ AFTER LAUNCH
 
-# preload and sort file names from "images" directories
+# preload and sort file names from "images_bin" directories
 global file_names
 list_files = loadFiles()
 
@@ -460,17 +480,6 @@ if len(file_names) > 0:
         image = loadImage(file_names[-1])
         showImage(image)
 #}
-
-def reload_data(index):
-
-    file_name = file_names[index]
-    if file_name[-5] == 'h':
-        housekeeping = loadHouseKeeping(file_names[index])
-        showHouseKeeping(housekeeping)
-    else:
-        image = loadImage(file_names[index])
-        showImage(image)
-
 
 #{ onselect(evt) callback function for showing an image after clicking the listbox
 def onselect(evt):
@@ -511,8 +520,25 @@ def loadNewImages():
 
     listbox.delete(0, Tk.END)
 
+    v.set("Saving new png images")
+
     for item in list_files:
         listbox.insert(Tk.END, item)
+
+    idx=0
+    for item in list_files:
+
+        # generate pngs from
+        image_filename='images_png/{}.png'.format(item)
+
+        # only save the image if the file does not exist
+        try:
+            with open(image_filename) as file:
+                pass
+        except IOError as e:
+            reload_data(idx)
+
+        idx += 1
 
     # listbox.selection_clear()
     listbox.after(10, lambda: listbox.selection_set("end"))
@@ -526,6 +552,9 @@ def loadNewImages():
         else:
             image = loadImage(file_names[-1])
             showImage(image)
+
+    v.set("All images loaded")
+
 #}
 
 # spawn button for loading new images
@@ -550,18 +579,18 @@ button.pack(side=Tk.BOTTOM)
 #{ LISTBOX manipulation
 def listbox_move_up():
 
-    index = int(listbox.curselection()[0])
-    if index >= 1:
+    index = int(listbox.curselection()[0])-1
+    if index >= 0:
         listbox.selection_clear(0, "end")
-        listbox.selection_set(index-1)
+        listbox.selection_set(index)
         reload_data(index)
 
 def listbox_move_down():
 
-    index = int(listbox.curselection()[0])
-    if index < (listbox.size()-1):
+    index = int(listbox.curselection()[0])+1
+    if index <= (listbox.size()-1):
         listbox.selection_clear(0, "end")
-        listbox.selection_set(index+1)
+        listbox.selection_set(index)
         reload_data(index)
 #}
 

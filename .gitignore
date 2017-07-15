@@ -4,6 +4,12 @@ export/*
 export
 pngs/*
 pngs
+images_bin/*
+images_bin
+images_png/*
+images_png
+images_csv/*
+images_csv
 *.pyc
 for_distribution
 for_distribution/*
