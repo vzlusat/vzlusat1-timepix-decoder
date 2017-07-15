@@ -428,7 +428,7 @@ def showImage(image):
         if image.got_data == 1:
 
             image_filename='images_png/{}_{}.png'.format(image.id, image.type)
-            my_figure.savefig(image_filename)
+            my_figure.savefig(image_filename, dpi=200, bbox_inches='tight')
 
     else: # we have not data to show
 
