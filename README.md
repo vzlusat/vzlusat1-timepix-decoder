@@ -9,7 +9,7 @@ Running the **decoder** on Linux requires installing python and matplotlib on bo
 Install python and matplotlib by running:
 
 ```bash
-sudo apt-get install python2.7-dev python-matplotlib python3-pip
+sudo apt-get install python2.7-dev python-matplotlib python3-pip python3-tk
 ```
 
 ### Windows
