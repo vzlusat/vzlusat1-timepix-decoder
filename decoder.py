@@ -475,7 +475,7 @@ listbox.after(100, lambda: listbox.see(Tk.END))
 if len(file_names) > 0:
     file_name = file_names[-1]
     if file_name[-5] == 'h':
-        print "HK selected"
+        print("HK selected")
     else:
         image = loadImage(file_names[-1])
         showImage(image)
@@ -548,7 +548,7 @@ def loadNewImages():
     if len(file_names) > 0:
         file_name = file_names[-1]
         if file_name[-5] == 'h':
-            print "HK selected"
+            print("HK selected")
         else:
             image = loadImage(file_names[-1])
             showImage(image)

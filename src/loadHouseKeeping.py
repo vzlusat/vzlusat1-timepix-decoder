@@ -21,7 +21,7 @@ def loadHouseKeeping(images_taken, time_since_boot=0):
             try:
                 housekeeping = pickle.load(input)
             except:
-                print "file \"{}\" is corrupted".format(file_name)
+                print("file \"{}\" is corrupted".format(file_name))
                 return 0
     
             return housekeeping
