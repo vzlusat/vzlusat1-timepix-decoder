@@ -1,5 +1,7 @@
 #!/usr/bin/python
-def install_and_import(package):
+
+#{ def installAndImport(package):
+def installAndImport(package):
     import importlib
     try:
         importlib.import_module(package)
@@ -8,28 +10,33 @@ def install_and_import(package):
         pip.main(['install', package])
     finally:
         globals()[package] = importlib.import_module(package)
+#}
 
-install_and_import('matplotlib')
-install_and_import('Pmw')
+#{ IMPORTS
+
+installAndImport('matplotlib')
+installAndImport('Pmw')
 
 matplotlib.use('TkAgg')
 
-from numpy import arange, sin, pi
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
-# implement the default mpl key bindings
-from matplotlib.backend_bases import key_press_handler
-
+import matplotlib.patches as patches # for plotting rectangles in the custom histogram
 from matplotlib.figure import Figure
 
 import os
+import sys
 import numpy
+import datetime
+import re
+
+# my custom functions
 from src.Image import Image
 from src.HouseKeeping import HouseKeeping
 from src.loadImage import loadImage
 from src.loadHouseKeeping import loadHouseKeeping
 from src.parseInputFile import parseInputFile
 
-import sys
+# imports that depend on the python version
 if sys.version_info[0] < 3:
     import Tkinter as Tk
     import tkFileDialog
@@ -37,101 +44,12 @@ else:
     import tkinter as Tk
     import tkinter.filedialog
 
-import datetime
-import matplotlib.patches as patches
-
-#{ CREATE directoris
-if not os.path.exists("images_bin"):
-    os.makedirs("images_bin")
-
-if not os.path.exists("images_csv"):
-    os.makedirs("images_csv")
-
-if not os.path.exists("images_png"):
-    os.makedirs("images_png")
 #}
 
-root = Tk.Tk()
-root.resizable(width=1, height=1)
-root.geometry('{}x{}'.format(1300, 600))
-root.wm_title("VZLUSAT-1 X-Ray data decoder")
+# core methods
 
-# this works
-# root.bind('<Escape>', lambda e: root.quit())
-
-# plot
-my_figure = Figure(facecolor='none')
-my_figure.clf()
-frame_main = Tk.Frame(root);
-frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
-
-global v
-v = Tk.StringVar()
-log = Tk.Label(root, anchor=Tk.W, justify=Tk.LEFT, textvariable=v, height=1, bg="white", bd=2, highlightbackground="black")
-log.pack(side=Tk.BOTTOM, fill=Tk.X, expand=0)
-
-frame_left1 = Tk.Frame(frame_main, bd=1);
-frame_left1.pack(side=Tk.LEFT, fill=Tk.Y, expand=0, padx=5, pady=5)
-
-frame_right1 = Tk.Frame(frame_main);
-frame_right1.pack(side=Tk.RIGHT, fill=Tk.BOTH, expand=1, padx=5, pady=5)
-
-frame_left_to_canvas = Tk.Frame(frame_right1, bd=1);
-frame_left_to_canvas.pack(side=Tk.LEFT, fill=Tk.BOTH, expand=0, padx=10, pady=30)
-
-metadatas = []
-metadatas_var = []
-text_labels = []
-text_labels_var = []
-for i in range(0, len(Image.metadata_labels)): #Rows
-    text_labels_var.append(Tk.StringVar())
-    text_labels.append(Tk.Label(frame_left_to_canvas, textvariable=text_labels_var[i]).grid(row=i, column=0, sticky=Tk.E))
-
-    metadatas_var.append(Tk.StringVar())
-    metadatas.append(Tk.Label(frame_left_to_canvas, textvariable=metadatas_var[i]).grid(row=i, column=1, sticky=Tk.W))
-
-housekeeping_values = []
-housekeeping_labels = []
-
-# subplot1 tk.DrawingArea
-frame_canvas = Tk.Frame(frame_right1);
-frame_canvas.pack(side=Tk.RIGHT, fill=Tk.BOTH, expand=0, padx=5, pady=5)
-
-figure_canvas = FigureCanvasTkAgg(my_figure, master=frame_canvas)
-figure_canvas.show()
-figure_canvas.get_tk_widget().pack(side=Tk.TOP)
-figure_canvas._tkcanvas.pack(side=Tk.TOP)
-
-# toolbar
-frame_toolbar = Tk.Frame(frame_canvas);
-frame_toolbar.pack(side=Tk.BOTTOM, fill=Tk.Y, expand=1)
-
-toolbar = NavigationToolbar2TkAgg(figure_canvas, frame_toolbar)
-toolbar.pack(side=Tk.LEFT)
-toolbar.update()
-
-subplot1 = my_figure.add_subplot(111)
-subplot1.axes.get_xaxis().set_visible(False)
-subplot1.axes.get_yaxis().set_visible(False)
-subplot1.patch.set_visible(False)
-subplot1.axis('off')
-figure_canvas.show()
-
-import Pmw
-Pmw.initialise(root)
-
-import re
-numbers = re.compile(r'(\d+)')
-def numericalSort(value):
-    parts = numbers.split(value)
-    parts[1::2] = map(int, parts[1::2])
-    return parts
-
-# colormap!!
-colormap = "bone_r"
-autogenerate_png = Tk.IntVar()
-
-def reload_data(index):
+#{ def reloadData(index): reloads and shows metadata and image for a particular index in the listbox
+def reloadData(index, manual):
 
     file_name = file_names[index]
     if file_name[-5] == 'h':
@@ -144,9 +62,10 @@ def reload_data(index):
         if image == 0:
             return
 
-        showImage(image)
+        showImage(image, manual)
+#}
 
-#{ loadFiles()
+#{ def loadFiles(): inspects "images_bin" folders and prepares the content for the listbox
 def loadFiles():
 
     # updated the filename list
@@ -181,7 +100,7 @@ def loadFiles():
     return list_files
 #}
 
-#{ showHouseKeeping(housekeeping)
+#{ def showHouseKeeping(housekeeping): resets and shows housekeeping data
 def showHouseKeeping(housekeeping):
 
     my_figure.clf()
@@ -236,8 +155,8 @@ def showHouseKeeping(housekeeping):
     metadatas_var[15].set(str(housekeeping.temp_min))
 #}
 
-#{ showImage(image)
-def showImage(image):
+#{ def showImage(image): resets and shows the image
+def showImage(image, manual):
 
     # Clear the previous metadata
     for i in range(0, 21):
@@ -435,7 +354,7 @@ def showImage(image):
             my_figure.tight_layout(pad=1)
         #}
 
-        if autogenerate_png.get() == 1 and image.got_data == 1:
+        if ((manual == 1 and autogenerate_png.get() == 1) or (manual == 0)) and image.got_data == 1:
 
             image_filename='images_png/{}_{}.png'.format(image.id, image.type)
             my_figure.savefig(image_filename, dpi=250, bbox_inches='tight')
@@ -453,47 +372,126 @@ def showImage(image):
     figure_canvas.show()
 #}
 
-#{ AFTER LAUNCH
+# AFTER LAUNCH
+
+#{ create directories
+if not os.path.exists("images_bin"):
+    os.makedirs("images_bin")
+
+if not os.path.exists("images_csv"):
+    os.makedirs("images_csv")
+
+if not os.path.exists("images_png"):
+    os.makedirs("images_png")
+#}
+
+# create the root window
+root = Tk.Tk()
+root.resizable(width=1, height=1)
+root.geometry('{}x{}'.format(1300, 600))
+root.wm_title("VZLUSAT-1 X-Ray data decoder")
+
+# create the main Frame in the root window
+frame_main = Tk.Frame(root);
+frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
+
+# create the figure
+my_figure = Figure(facecolor='none')
+my_figure.clf()
+
+# create the status line
+global v # global variable, so anyone can add text to the status line
+v = Tk.StringVar()
+status_line = Tk.Label(root, anchor=Tk.W, justify=Tk.LEFT, textvariable=v, height=1, bg="white", bd=2, highlightbackground="black")
+status_line.pack(side=Tk.BOTTOM, fill=Tk.X, expand=0)
+
+# create the left subframe for the list
+frame_left = Tk.Frame(frame_main, bd=1);
+frame_left.pack(side=Tk.LEFT, fill=Tk.Y, expand=0, padx=5, pady=5)
+
+# create the right subframe for the figure and its control panel
+frame_right = Tk.Frame(frame_main);
+frame_right.pack(side=Tk.RIGHT, fill=Tk.BOTH, expand=1, padx=5, pady=5)
+
+# create the middle subframe for metadata
+frame_middle = Tk.Frame(frame_right, bd=1);
+frame_middle.pack(side=Tk.LEFT, fill=Tk.BOTH, expand=0, padx=10, pady=30)
+
+#{ create the labels for metadatas and their respective control variables
+metadatas = []
+metadatas_var = []
+text_labels = []
+text_labels_var = []
+for i in range(0, len(Image.metadata_labels)): #Rows
+
+    # labels on the left containing the "labels"
+    text_labels_var.append(Tk.StringVar())
+    text_labels.append(Tk.Label(frame_middle, textvariable=text_labels_var[i]).grid(row=i, column=0, sticky=Tk.E))
+
+    # lables on the right containing the "values"
+    metadatas_var.append(Tk.StringVar())
+    metadatas.append(Tk.Label(frame_middle, textvariable=metadatas_var[i]).grid(row=i, column=1, sticky=Tk.W))
+
+housekeeping_values = []
+housekeeping_labels = []
+#}
+
+# create the subframe for the figure
+frame_figure = Tk.Frame(frame_right);
+frame_figure.pack(side=Tk.RIGHT, fill=Tk.BOTH, expand=0, padx=5, pady=5)
+
+# create the matplotlib's figure canvas 
+figure_canvas = FigureCanvasTkAgg(my_figure, master=frame_figure)
+figure_canvas.show()
+figure_canvas.get_tk_widget().pack(side=Tk.TOP)
+figure_canvas._tkcanvas.pack(side=Tk.TOP)
+
+# create the toolbar for the figure
+frame_toolbar = Tk.Frame(frame_figure);
+frame_toolbar.pack(side=Tk.BOTTOM, fill=Tk.Y, expand=1)
+
+toolbar = NavigationToolbar2TkAgg(figure_canvas, frame_toolbar)
+toolbar.pack(side=Tk.LEFT)
+toolbar.update()
+
+# create the one and only subplot in the figure
+subplot1 = my_figure.add_subplot(111)
+subplot1.axes.get_xaxis().set_visible(False)
+subplot1.axes.get_yaxis().set_visible(False)
+subplot1.patch.set_visible(False)
+subplot1.axis('off')
+figure_canvas.show()
+
+# initialize Pmw (creates on-hover hints)
+Pmw.initialise(root)
+
+# we this sort function for sorting out filenames
+numbers = re.compile(r'(\d+)')
+def numericalSort(value):
+    parts = numbers.split(value)
+    parts[1::2] = map(int, parts[1::2])
+    return parts
+
+# colormap is for now defined here
+colormap = "bone_r"
+
+# this variable is bound to the "autogenerate" checkbox
+autogenerate_png = Tk.IntVar()
 
 # preload and sort file names from "images_bin" directories
 global file_names
 list_files = loadFiles()
 
-frame_list = Tk.Frame(frame_left1);
+frame_list = Tk.Frame(frame_left);
 frame_list.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
 frame_list2 = Tk.Frame(frame_list);
 frame_list2.pack(side=Tk.BOTTOM, fill=Tk.BOTH, expand=1)
 
-scrollbar = Tk.Scrollbar(master=frame_list2, orient=Tk.VERTICAL)
-listbox = Tk.Listbox(master=frame_list2, yscrollcommand=scrollbar.set, selectmode=Tk.SINGLE)
-scrollbar.config(command=listbox.yview)
-scrollbar.pack(side=Tk.LEFT, fill=Tk.Y, expand=0)
-listbox.pack(side=Tk.LEFT, fill=Tk.Y, expand=0)
-for item in list_files:
-    listbox.insert(Tk.END, item)
+#{ LISTBOX (+SCROLLBAR) and its CALLBACK
 
-# select the last item in the listbox
-listbox.after(10, lambda: listbox.focus_force())
-listbox.after(10, lambda: listbox.selection_set("end"))
-listbox.after(10, lambda: listbox.see(Tk.END))
-
-# really we want the scrollabar to be down
-listbox.after(100, lambda: listbox.see(Tk.END))
-
-# autoselect the last item in the listbox after start
-if len(file_names) > 0:
-    file_name = file_names[-1]
-    if file_name[-5] == 'h':
-        print("HK selected")
-    else:
-        image = loadImage(file_names[-1])
-        if image != 0:
-            showImage(image)
-#}
-
-#{ onselect(evt) callback function for showing an image after clicking the listbox
-def onselect(evt):
+#{ def onSelect(evt): callback function for showing the image after clicking the listbox
+def onSelect(evt):
 
     global file_names
 
@@ -502,16 +500,44 @@ def onselect(evt):
     if len(w.curselection()) == 0:
         return
 
+    # extract the index of the selected item
     index = int(w.curselection()[0])
 
-    reload_data(index)
-
-# bind onselect() callback function to listbox, so we can
-# show images after clicking on their name
-listbox.bind('<<ListboxSelect>>', onselect)
+    reloadData(index, 1)
 #}
 
-#{ BUTTON for loading new images and its callback
+scrollbar = Tk.Scrollbar(master=frame_list2, orient=Tk.VERTICAL)
+listbox = Tk.Listbox(master=frame_list2, yscrollcommand=scrollbar.set, selectmode=Tk.SINGLE)
+scrollbar.config(command=listbox.yview)
+scrollbar.pack(side=Tk.LEFT, fill=Tk.Y, expand=0)
+listbox.pack(side=Tk.LEFT, fill=Tk.Y, expand=0)
+# fill the listbox
+for item in list_files:
+    listbox.insert(Tk.END, item)
+
+# select the last item in the listbox
+listbox.after(10, lambda: listbox.focus_force())
+listbox.after(10, lambda: listbox.selection_set("end"))
+listbox.after(10, lambda: listbox.see(Tk.END))
+# really we want the scrollabar to be down
+listbox.after(100, lambda: listbox.see(Tk.END))
+
+# autoselect the last item in the listbox after start
+# and show the metadata and the image
+if len(file_names) > 0:
+    file_name = file_names[-1]
+    if file_name[-5] == 'h':
+        print("HK selected")
+    else:
+        image = loadImage(file_names[-1])
+        if image != 0:
+            showImage(image, 1)
+
+# bind onSelect() callback function to listbox
+listbox.bind('<<ListboxSelect>>', onSelect)
+#}
+
+#{ BUTTON for loading new images and its CALLBACK
 
 #{ loadNewImages() callback for loading new images from a text file
 def loadNewImages():
@@ -548,7 +574,7 @@ def loadNewImages():
             with open(image_filename) as file:
                 pass
         except IOError as e:
-            reload_data(idx)
+            reloadData(idx, 0)
 
         idx += 1
 
@@ -564,10 +590,9 @@ def loadNewImages():
         else:
             image = loadImage(file_names[-1])
             if image != 0:
-                showImage(image)
+                showImage(image, 0)
 
     v.set("All images loaded")
-
 #}
 
 # spawn button for loading new images
@@ -576,7 +601,7 @@ load_button.pack(side=Tk.TOP)
 
 #}
 
-#{ BUTTON for quitting the program
+#{ BUTTON for quitting the program and its CALLBACK
 def _quit():
     root.quit()
     root.destroy()
@@ -585,28 +610,32 @@ def _quit():
     exit()
 
 # spawn quit button
-button = Tk.Button(master=frame_left1, text='Quit', command=_quit)
+button = Tk.Button(master=frame_left, text='Quit', command=_quit)
 button.pack(side=Tk.BOTTOM)
 #}
 
 #{ CHECKBOX for autogenerate_png
 
-autogenerate_checkbox = Tk.Checkbutton(master=frame_left1, text="autogenerate png", variable=autogenerate_png)
+autogenerate_checkbox = Tk.Checkbutton(master=frame_left, text="autogenerate png", variable=autogenerate_png)
 autogenerate_checkbox.pack(side=Tk.BOTTOM)
 
-balloon = Pmw.Balloon(master=frame_canvas);
+balloon = Pmw.Balloon(master=root);
 balloon.bind(autogenerate_checkbox, "When checked, png images will be re-exported every time you click on an image.")
 
 #}
 
+#{ KEYPRESS catching and respective CALLBACKS
+# callback for detecting keypresses
+
 #{ LISTBOX manipulation
+
 def listbox_move_up():
 
     index = int(listbox.curselection()[0])-1
     if index >= 0:
         listbox.selection_clear(0, "end")
         listbox.selection_set(index)
-        reload_data(index)
+        reloadData(index, 1)
 
 def listbox_move_down():
 
@@ -614,11 +643,9 @@ def listbox_move_down():
     if index <= (listbox.size()-1):
         listbox.selection_clear(0, "end")
         listbox.selection_set(index)
-        reload_data(index)
+        reloadData(index, 1)
 #}
 
-#{ KEYPRESS catching
-# callback for detecting keypresses
 def on_key_event(event):
 
     if event.char == 'q':
@@ -640,5 +667,3 @@ root.bind_all('<Key>', on_key_event)
 #}
 
 Tk.mainloop()
-# If you put root.destroy() here, it will cause an error if
-# the window is closed with the window manager.
