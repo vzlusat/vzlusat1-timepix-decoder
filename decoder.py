@@ -10,6 +10,7 @@ def install_and_import(package):
         globals()[package] = importlib.import_module(package)
 
 install_and_import('matplotlib')
+install_and_import('Pmw')
 
 matplotlib.use('TkAgg')
 
@@ -116,6 +117,9 @@ subplot1.patch.set_visible(False)
 subplot1.axis('off')
 figure_canvas.show()
 
+import Pmw
+Pmw.initialise(root)
+
 import re
 numbers = re.compile(r'(\d+)')
 def numericalSort(value):
@@ -125,6 +129,7 @@ def numericalSort(value):
 
 # colormap!!
 colormap = "bone_r"
+autogenerate_png = Tk.IntVar()
 
 def reload_data(index):
 
@@ -430,10 +435,10 @@ def showImage(image):
             my_figure.tight_layout(pad=1)
         #}
 
-        if image.got_data == 1:
+        if autogenerate_png.get() == 1 and image.got_data == 1:
 
             image_filename='images_png/{}_{}.png'.format(image.id, image.type)
-            my_figure.savefig(image_filename, dpi=200, bbox_inches='tight')
+            my_figure.savefig(image_filename, dpi=250, bbox_inches='tight')
 
     else: # we have not data to show
 
@@ -519,8 +524,10 @@ def loadNewImages():
     if file_name == "":
         return
 
-    print("Openning file \"{}\"".format(file_name))
-    parseInputFile(file_name, v, root)
+    if not parseInputFile(file_name, v, root):
+        return
+    else:
+        print("Successfully opened the file \"{}\"".format(file_name))
 
     list_files = loadFiles()
 
@@ -537,7 +544,6 @@ def loadNewImages():
         # generate pngs from
         image_filename='images_png/{}.png'.format(item)
 
-        # only save the image if the file does not exist
         try:
             with open(image_filename) as file:
                 pass
@@ -583,6 +589,16 @@ button = Tk.Button(master=frame_left1, text='Quit', command=_quit)
 button.pack(side=Tk.BOTTOM)
 #}
 
+#{ CHECKBOX for autogenerate_png
+
+autogenerate_checkbox = Tk.Checkbutton(master=frame_left1, text="autogenerate png", variable=autogenerate_png)
+autogenerate_checkbox.pack(side=Tk.BOTTOM)
+
+balloon = Pmw.Balloon(master=frame_canvas);
+balloon.bind(autogenerate_checkbox, "When checked, png images will be re-exported every time you click on an image.")
+
+#}
+
 #{ LISTBOX manipulation
 def listbox_move_up():
 
@@ -616,6 +632,9 @@ def on_key_event(event):
 
     if event.char == 'o':
         loadNewImages()
+
+    if event.char == 'a':
+        autogenerate_checkbox.toggle()
 
 root.bind_all('<Key>', on_key_event)
 #}

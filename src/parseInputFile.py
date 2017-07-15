@@ -17,7 +17,10 @@ else:
 
 def parseInputFile(file_path, v, root):
 
-    infile = open(file_path, "r")
+    try:
+        infile = open(file_path, "r")
+    except:
+        return 0
 
     # for all lines in the file 
     for line in infile:
@@ -102,3 +105,5 @@ def parseInputFile(file_path, v, root):
 
                 print("UNKNOWN packet")
                 print(hex_data)
+
+    return 1
