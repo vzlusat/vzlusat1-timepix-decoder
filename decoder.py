@@ -28,6 +28,7 @@ import sys
 import numpy
 import datetime
 import re
+import time
 
 # my custom functions
 from src.Image import Image
@@ -602,15 +603,19 @@ load_button.pack(side=Tk.TOP)
 #}
 
 #{ BUTTON for quitting the program and its CALLBACK
-def _quit():
-    root.quit()
-    root.destroy()
 
-    from sys import exit
-    exit()
+def close_window():
+    root.withdraw()
+    root.quit() 
+    root.destroy()
+    # sys.exit()
+
+def win_deleted():
+    print("Closed from outside...");
+    close_window();
 
 # spawn quit button
-button = Tk.Button(master=frame_left, text='Quit', command=_quit)
+button = Tk.Button(master=frame_left, text='Quit', command=close_window)
 button.pack(side=Tk.BOTTOM)
 #}
 
@@ -649,7 +654,7 @@ def listbox_move_down():
 def on_key_event(event):
 
     if event.char == 'q':
-        _quit()
+        button.invoke()
 
     if event.char == 'j':
         listbox_move_down()
@@ -666,4 +671,7 @@ def on_key_event(event):
 root.bind_all('<Key>', on_key_event)
 #}
 
-Tk.mainloop()
+root.protocol("WM_DELETE_WINDOW", win_deleted)
+root.mainloop()
+print("Exitting")
+sys.exit()
