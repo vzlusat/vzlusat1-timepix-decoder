@@ -273,7 +273,10 @@ def showImage(image, manual):
             else:
                 subplot1.set_title(img_type+" n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
+            # show the image
             im = subplot1.imshow(image.data, interpolation='none', cmap=colormap)
+
+            # create the colormap bar and place it in the correct place
             divider = make_axes_locatable(my_figure.gca())
             cax = divider.append_axes("right", size="5%", pad=0.2)
             cbar = my_figure.colorbar(im, cax=cax)
