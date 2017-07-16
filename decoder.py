@@ -389,7 +389,7 @@ if not os.path.exists("images_png"):
 # create the root window
 root = Tk.Tk()
 root.resizable(width=1, height=1)
-root.geometry('{}x{}'.format(1300, 600))
+root.geometry('{}x{}'.format(1450, 800))
 root.wm_title("VZLUSAT-1 X-Ray data decoder")
 
 # create the main Frame in the root window
@@ -397,7 +397,7 @@ frame_main = Tk.Frame(root);
 frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
 # create the figure
-my_figure = Figure(facecolor='none')
+my_figure = Figure(facecolor='none', figsize=(9, 7), dpi=100)
 my_figure.clf()
 
 # create the status line
@@ -653,8 +653,8 @@ def listbox_move_down():
 
 def on_key_event(event):
 
-    if event.char == 'q':
-        button.invoke()
+    # if event.char == 'q':
+    #     button.invoke()
 
     if event.char == 'j':
         listbox_move_down()
