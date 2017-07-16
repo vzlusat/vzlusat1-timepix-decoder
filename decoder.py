@@ -23,6 +23,9 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 import matplotlib.patches as patches # for plotting rectangles in the custom histogram
 from matplotlib.figure import Figure
 
+# to fix the colorbar's position
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 import os
 import sys
 import numpy
@@ -270,8 +273,10 @@ def showImage(image, manual):
             else:
                 subplot1.set_title(img_type+" n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
-            cax = subplot1.imshow(image.data, interpolation='none', cmap=colormap)
-            cbar = my_figure.colorbar(cax)
+            im = subplot1.imshow(image.data, interpolation='none', cmap=colormap)
+            divider = make_axes_locatable(my_figure.gca())
+            cax = divider.append_axes("right", size="5%", pad=0.2)
+            cbar = my_figure.colorbar(im, cax=cax)
 
             cbar.ax.get_yaxis().labelpad = 20
             if image.type == 1:
@@ -389,7 +394,7 @@ if not os.path.exists("images_png"):
 # create the root window
 root = Tk.Tk()
 root.resizable(width=1, height=1)
-root.geometry('{}x{}'.format(1450, 800))
+root.geometry('{}x{}'.format(1300, 650))
 root.wm_title("VZLUSAT-1 X-Ray data decoder")
 
 # create the main Frame in the root window
@@ -397,7 +402,7 @@ frame_main = Tk.Frame(root);
 frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
 # create the figure
-my_figure = Figure(facecolor='none', figsize=(9, 7), dpi=100)
+my_figure = Figure(facecolor='none', figsize=(8, 6), dpi=100)
 my_figure.clf()
 
 # create the status line
