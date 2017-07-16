@@ -162,6 +162,9 @@ def showHouseKeeping(housekeeping):
 #{ def showImage(image): resets and shows the image
 def showImage(image, manual):
 
+    if manual == 0 and image.got_data == 0:
+        return 
+
     # Clear the previous metadata
     for i in range(0, 21):
         metadatas_var[i].set("")
@@ -363,7 +366,7 @@ def showImage(image, manual):
             my_figure.tight_layout(pad=1)
         #}
 
-        if ((manual == 1 and autogenerate_png.get() == 1) or (manual == 0)) and image.got_data == 1:
+        if ((manual == 1 and autogenerate_png_view.get() == 1) or (manual == 0)) and image.got_data == 1:
 
             image_filename='images_png/{}_{}.png'.format(image.id, image.type)
             my_figure.savefig(image_filename, dpi=250, bbox_inches='tight')
@@ -484,8 +487,9 @@ def numericalSort(value):
 # colormap is for now defined here
 colormap = "bone_r"
 
-# this variable is bound to the "autogenerate" checkbox
-autogenerate_png = Tk.IntVar()
+# user can switch off generating pngs
+autogenerate_png_view = Tk.IntVar()
+autogenerate_png_load = Tk.IntVar()
 
 # preload and sort file names from "images_bin" directories
 global file_names
@@ -577,19 +581,21 @@ def loadNewImages():
     for item in list_files:
         listbox.insert(Tk.END, item)
 
-    idx=0
-    for item in list_files:
+    # generate pngs
+    if autogenerate_png_load.get() == 1:
+        idx=0
+        for item in list_files:
 
-        # generate pngs from
-        image_filename='images_png/{}.png'.format(item)
+            # generate pngs from
+            image_filename='images_png/{}.png'.format(item)
 
-        try:
-            with open(image_filename) as file:
-                pass
-        except IOError as e:
-            reloadData(idx, 0)
+            try:
+                with open(image_filename) as file:
+                    pass
+            except IOError as e:
+                reloadData(idx, 0)
 
-        idx += 1
+            idx += 1
 
     # listbox.selection_clear()
     listbox.after(10, lambda: listbox.selection_set("end"))
@@ -614,6 +620,17 @@ load_button.pack(side=Tk.TOP)
 
 #}
 
+#{ CHECKBOX for autogenerate_png_load
+
+autogenerate_checkbox2 = Tk.Checkbutton(master=frame_list, text="export pngs while loading", variable=autogenerate_png_load)
+autogenerate_checkbox2.pack(side=Tk.TOP)
+autogenerate_checkbox2.toggle()
+
+balloon2 = Pmw.Balloon(master=root);
+balloon2.bind(autogenerate_checkbox2, "When checked, png images will generated (if they don't already exist) while importing new data.")
+
+#}
+
 #{ BUTTON for quitting the program and its CALLBACK
 
 def close_window():
@@ -631,9 +648,9 @@ button = Tk.Button(master=frame_left, text='Quit', command=close_window)
 button.pack(side=Tk.BOTTOM)
 #}
 
-#{ CHECKBOX for autogenerate_png
+#{ CHECKBOX for autogenerate_png_view
 
-autogenerate_checkbox = Tk.Checkbutton(master=frame_left, text="autogenerate png", variable=autogenerate_png)
+autogenerate_checkbox = Tk.Checkbutton(master=frame_left, text="export pngs while viewing", variable=autogenerate_png_view)
 autogenerate_checkbox.pack(side=Tk.BOTTOM)
 
 balloon = Pmw.Balloon(master=root);
@@ -685,6 +702,9 @@ def on_key_event(event):
 
         if event.char == 'a':
             autogenerate_checkbox.toggle()
+
+        if event.char == 'A':
+            autogenerate_checkbox2.toggle()
 
 listbox.bind_all('<Key>', on_key_event)
 
