@@ -497,6 +497,10 @@ frame_list.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 frame_list2 = Tk.Frame(frame_list);
 frame_list2.pack(side=Tk.BOTTOM, fill=Tk.BOTH, expand=1)
 
+# is used to trigger of detecting key presses when file dialog is opened
+global listbox_focus
+listbox_focus = 0
+
 #{ LISTBOX (+SCROLLBAR) and its CALLBACK
 
 #{ def onSelect(evt): callback function for showing the image after clicking the listbox
@@ -644,39 +648,58 @@ balloon.bind(autogenerate_checkbox, "When checked, png images will be re-exporte
 
 def listbox_move_up():
 
-    index = int(listbox.curselection()[0])-1
-    if index >= 0:
-        listbox.selection_clear(0, "end")
-        listbox.selection_set(index)
-        reloadData(index, 1)
+    try:
+        index = int(listbox.curselection()[0])-1
+        if index >= 0:
+            listbox.selection_clear(0, "end")
+            listbox.selection_set(index)
+            reloadData(index, 1)
+    except:
+        return
 
 def listbox_move_down():
 
-    index = int(listbox.curselection()[0])+1
-    if index <= (listbox.size()-1):
-        listbox.selection_clear(0, "end")
-        listbox.selection_set(index)
-        reloadData(index, 1)
+    try:
+        index = int(listbox.curselection()[0])+1
+        if index <= (listbox.size()-1):
+            listbox.selection_clear(0, "end")
+            listbox.selection_set(index)
+            reloadData(index, 1)
+    except:
+        return
 #}
 
 def on_key_event(event):
 
-    # if event.char == 'q':
-    #     button.invoke()
+    global listbox_focus
+    if listbox_focus == 1:
 
-    if event.char == 'j':
-        listbox_move_down()
+        if event.char == 'j':
+            listbox_move_down()
 
-    if event.char == 'k':
-        listbox_move_up()
+        if event.char == 'k':
+            listbox_move_up()
 
-    if event.char == 'o':
-        loadNewImages()
+        if event.char == 'o':
+            loadNewImages()
 
-    if event.char == 'a':
-        autogenerate_checkbox.toggle()
+        if event.char == 'a':
+            autogenerate_checkbox.toggle()
 
-root.bind_all('<Key>', on_key_event)
+listbox.bind_all('<Key>', on_key_event)
+
+def listboxFocusIn(event):
+
+    global listbox_focus
+    listbox_focus = 1
+
+def listboxFocusOut(event):
+
+    global listbox_focus
+    listbox_focus = 0
+
+listbox.bind('<FocusIn>', listboxFocusIn)
+listbox.bind('<FocusOut>', listboxFocusOut)
 #}
 
 root.protocol("WM_DELETE_WINDOW", win_deleted)
