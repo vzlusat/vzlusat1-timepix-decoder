@@ -545,7 +545,8 @@ listbox.after(100, lambda: listbox.see(Tk.END))
 if len(file_names) > 0:
     file_name = file_names[-1]
     if file_name[-5] == 'h':
-        print("HK selected")
+        housekeeping = loadHouseKeeping(file_name)
+        showHouseKeeping(housekeeping)
     else:
         image = loadImage(file_names[-1])
         if image != 0:
@@ -606,11 +607,12 @@ def loadNewImages():
     if len(file_names) > 0:
         file_name = file_names[-1]
         if file_name[-5] == 'h':
-            print("HK selected")
+            housekeeping = loadHouseKeeping(file_name)
+            showHouseKeeping(housekeeping)
         else:
-            image = loadImage(file_names[-1])
+            image = loadImage(file_name)
             if image != 0:
-                showImage(image, 0)
+                showImage(image, 1)
 
     v.set("All images loaded")
 #}
@@ -625,7 +627,7 @@ load_button.pack(side=Tk.TOP)
 
 autogenerate_checkbox2 = Tk.Checkbutton(master=frame_list, text="export pngs while loading", variable=autogenerate_png_load)
 autogenerate_checkbox2.pack(side=Tk.TOP)
-autogenerate_checkbox2.toggle()
+# autogenerate_checkbox2.toggle()
 
 balloon2 = Pmw.Balloon(master=root);
 balloon2.bind(autogenerate_checkbox2, "When checked, png images will generated (if they don't already exist) while importing new data.")
