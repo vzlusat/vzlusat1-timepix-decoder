@@ -400,7 +400,7 @@ if not os.path.exists("images_png"):
 # create the root window
 root = Tk.Tk()
 root.resizable(width=1, height=1)
-root.geometry('{}x{}'.format(1300, 700))
+root.geometry('{}x{}'.format(1300, 600))
 root.wm_title("VZLUSAT-1 X-Ray data decoder")
 
 # create the main Frame in the root window
@@ -408,7 +408,7 @@ frame_main = Tk.Frame(root);
 frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
 # create the figure
-my_figure = Figure(facecolor='none', figsize=(8, 6), dpi=100)
+my_figure = Figure(facecolor='none', figsize=(7.2, 5.8), dpi=90)
 my_figure.clf()
 
 # create the status line
@@ -485,6 +485,7 @@ def numericalSort(value):
     return parts
 
 # colormap is for now defined here
+# TODO: make that as a selectable option in the gui
 colormap = "bone_r"
 
 # user can switch off generating pngs
