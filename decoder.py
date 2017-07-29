@@ -776,7 +776,10 @@ button.pack(side=Tk.BOTTOM)
 
 #{ CHECKBOX for autogenerate_png_view
 
-autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing", variable=autogenerate_png_view)
+def autogenerateCheckboxCallback():
+    reloadList(int(listbox.curselection()[0]))
+
+autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing", variable=autogenerate_png_view, command=autogenerateCheckboxCallback)
 autogenerate_checkbox.pack(side=Tk.BOTTOM)
 
 balloon = Pmw.Balloon(master=root);
