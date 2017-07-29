@@ -37,6 +37,8 @@ import time
 from src.Image import Image
 from src.HouseKeeping import HouseKeeping
 from src.loadImage import loadImage
+from src.saveImage import saveImage
+from src.saveHouseKeeping import saveHouseKeeping
 from src.loadHouseKeeping import loadHouseKeeping
 from src.parseInputFile import parseInputFile
 
@@ -55,16 +57,25 @@ else:
 #{ def reloadData(index): reloads and shows metadata and image for a particular index in the listbox
 def reloadData(index, manual):
 
+    list_files = loadFiles()
+    global file_names
     file_name = file_names[index]
+
+    global loaded_image
+
     if file_name[-5] == 'h':
         housekeeping = loadHouseKeeping(file_names[index])
+        loaded_image = housekeeping
         showHouseKeeping(housekeeping)
     else:
         image = loadImage(file_names[index])
 
         # if the file could not been opened, return
         if image == 0:
+            print("file_could_not_be_opened")
             return
+
+        loaded_image = image
 
         showImage(image, manual)
 #}
@@ -76,19 +87,26 @@ def loadFiles():
     global file_names
     file_names = os.listdir("images_bin")
 
-    file_names = sorted(file_names, key=numericalSort)
+    file_names2 = sorted(file_names, key=numericalSort)
+    file_names = []
 
     list_files = []
 
     # create the list of files for the listbox
-    for file in file_names:
+    for file in file_names2:
 
         if file[-5] == 'h':
 
             housekeeeping = loadHouseKeeping(file)
 
             if housekeeeping != 0:
-                list_files.append(str(housekeeeping.images_taken)+"_"+str(housekeeeping.time_since_boot)+"s_hk")
+                if (show_favorite_var.get() and not housekeeeping.favorite):
+                    pass
+                elif ((not show_hidden_var.get()) and (housekeeeping.hidden)):
+                    pass
+                else:
+                    file_names.append(file)
+                    list_files.append(str(housekeeeping.images_taken)+"_"+str(housekeeeping.time_since_boot)+"s_hk")
             else:
                 print("could not open file "+file)
 
@@ -97,7 +115,14 @@ def loadFiles():
             image = loadImage(file)
 
             if image != 0:
-                list_files.append(str(image.id)+"_"+str(image.type))
+
+                if (show_favorite_var.get() and not image.favorite):
+                    pass
+                elif ((not show_hidden_var.get()) and (image.hidden)):
+                    pass
+                else:
+                    file_names.append(file)
+                    list_files.append(str(image.id)+"_"+str(image.type))
             else:
                 print("could not open file "+file)
 
@@ -157,10 +182,16 @@ def showHouseKeeping(housekeeping):
     metadatas_var[13].set(str(housekeeping.UV2_min))
     metadatas_var[14].set(str(housekeeping.temp_max))
     metadatas_var[15].set(str(housekeeping.temp_min))
+
+    marked_as_hidden_var.set(housekeeping.hidden)
+    marked_as_favorite_var.set(housekeeping.favorite)
 #}
 
 #{ def showImage(image): resets and shows the image
 def showImage(image, manual):
+
+    marked_as_hidden_var.set(image.hidden)
+    marked_as_favorite_var.set(image.favorite)
 
     if manual == 0 and image.got_data == 0:
         return 
@@ -384,6 +415,70 @@ def showImage(image, manual):
     figure_canvas.show()
 #}
 
+# callback for marking hidden/favorite checkboxex
+
+def markHiddenCallback():
+
+    global loaded_image
+    loaded_image.hidden = marked_as_hidden_var.get()
+    
+    if isinstance(loaded_image, Image):
+        saveImage(loaded_image)
+    elif isinstance(loaded_image, HouseKeeping):
+        saveHouseKeeping(loaded_image)
+
+    reloadList(int(listbox.curselection()[0]))
+
+def markFavoriteCallback():
+
+    global loaded_image
+    loaded_image.favorite = marked_as_favorite_var.get()
+
+    if isinstance(loaded_image, Image):
+        saveImage(loaded_image)
+    elif isinstance(loaded_image, HouseKeeping):
+        saveHouseKeeping(loaded_image)
+
+    reloadList(int(listbox.curselection()[0]))
+
+def reloadList(new_idx=-1):
+
+    list_files = loadFiles()
+
+    if new_idx >=len(list_files)-1:
+        new_idx=-1
+
+    listbox.delete(0, Tk.END)
+
+    for item in list_files:
+        listbox.insert(Tk.END, item)
+
+    # listbox.selection_clear()
+    if new_idx == -1:
+        listbox.after(10, lambda: listbox.selection_set("end"))
+        listbox.after(10, lambda: listbox.see(Tk.END))
+    else:
+        listbox.after(10, lambda: listbox.selection_set(new_idx))
+
+    global file_names
+
+    # autoselect the last item in the listbox after start
+    if len(file_names) > 0:
+
+        file_name = file_names[new_idx]
+
+        global loaded_image
+        if file_name[-5] == 'h':
+            housekeeping = loadHouseKeeping(file_name)
+            loaded_image = housekeeping
+            showHouseKeeping(housekeeping)
+        else:
+            image = loadImage(file_name)
+            if image != 0:
+                
+                loaded_image = image
+                showImage(image, 1)
+
 # AFTER LAUNCH
 
 #{ create directories
@@ -444,6 +539,13 @@ for i in range(0, len(Image.metadata_labels)): #Rows
     metadatas_var.append(Tk.StringVar())
     metadatas.append(Tk.Label(frame_middle, textvariable=metadatas_var[i]).grid(row=i, column=1, sticky=Tk.W))
 
+# add two checkboxes for marking images favorite and hidden
+marked_as_hidden_var = Tk.IntVar()
+metadatas.append(Tk.Checkbutton(frame_middle, text="", variable=marked_as_hidden_var, command=markHiddenCallback).grid(row=len(Image.metadata_labels)-2, column=1, sticky=Tk.W))
+
+marked_as_favorite_var = Tk.IntVar()
+metadatas.append(Tk.Checkbutton(frame_middle, text="", variable=marked_as_favorite_var, command=markFavoriteCallback).grid(row=len(Image.metadata_labels)-1, column=1, sticky=Tk.W))
+
 housekeeping_values = []
 housekeeping_labels = []
 #}
@@ -492,6 +594,13 @@ colormap = "bone_r"
 autogenerate_png_view = Tk.IntVar()
 autogenerate_png_load = Tk.IntVar()
 
+# user can switch on/off showing of hidden and favorite images
+show_hidden_var = Tk.IntVar()
+show_favorite_var = Tk.IntVar()
+
+# user can mark image as favorite or hidden
+image_is_hidden = Tk.IntVar()
+
 # preload and sort file names from "images_bin" directories
 global file_names
 list_files = loadFiles()
@@ -505,6 +614,10 @@ frame_list2.pack(side=Tk.BOTTOM, fill=Tk.BOTH, expand=1)
 # is used to trigger of detecting key presses when file dialog is opened
 global listbox_focus
 listbox_focus = 0
+
+# global loaded_image
+global loaded_image
+loaded_image = []
 
 #{ LISTBOX (+SCROLLBAR) and its CALLBACK
 
@@ -543,13 +656,18 @@ listbox.after(100, lambda: listbox.see(Tk.END))
 # autoselect the last item in the listbox after start
 # and show the metadata and the image
 if len(file_names) > 0:
+
     file_name = file_names[-1]
     if file_name[-5] == 'h':
         housekeeping = loadHouseKeeping(file_name)
+        loaded_image = housekeeping
         showHouseKeeping(housekeeping)
     else:
         image = loadImage(file_names[-1])
         if image != 0:
+
+            loaded_image = image
+
             showImage(image, 1)
 
 # bind onSelect() callback function to listbox
@@ -603,15 +721,20 @@ def loadNewImages():
     listbox.after(10, lambda: listbox.selection_set("end"))
     listbox.after(10, lambda: listbox.see(Tk.END))
 
+    global file_names
     # autoselect the last item in the listbox after start
     if len(file_names) > 0:
         file_name = file_names[-1]
+        global loaded_image
         if file_name[-5] == 'h':
             housekeeping = loadHouseKeeping(file_name)
+            loaded_image = housekeeping
             showHouseKeeping(housekeeping)
         else:
             image = loadImage(file_name)
             if image != 0:
+                
+                loaded_image = image
                 showImage(image, 1)
 
     v.set("All images loaded")
@@ -653,11 +776,21 @@ button.pack(side=Tk.BOTTOM)
 
 #{ CHECKBOX for autogenerate_png_view
 
-autogenerate_checkbox = Tk.Checkbutton(master=frame_left, text="export pngs while viewing", variable=autogenerate_png_view)
+autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing", variable=autogenerate_png_view)
 autogenerate_checkbox.pack(side=Tk.BOTTOM)
 
 balloon = Pmw.Balloon(master=root);
 balloon.bind(autogenerate_checkbox, "When checked, png images will be re-exported every time you click on an image.")
+
+#}
+
+#{ CHECKBOXES for showing and hiding marked images
+
+show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList)
+show_hidden.pack(side=Tk.BOTTOM)
+
+show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite", variable=show_favorite_var, command=reloadList)
+show_favorite_only.pack(side=Tk.BOTTOM)
 
 #}
 
@@ -702,6 +835,22 @@ def on_key_event(event):
 
         if event.char == 'o':
             loadNewImages()
+
+        if event.char == 'h':
+            marked_as_hidden_var.set(not marked_as_hidden_var.get())
+            markHiddenCallback()
+
+        if event.char == 'f':
+            marked_as_favorite_var.set(not marked_as_favorite_var.get())
+            markFavoriteCallback()
+
+        if event.char == 'H':
+            show_hidden_var.set(not show_hidden_var.get())
+            reloadList()
+
+        if event.char == 'F':
+            show_favorite_var.set(not show_favorite_var.get())
+            reloadList()
 
         if event.char == 'a':
             autogenerate_checkbox.toggle()

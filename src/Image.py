@@ -32,6 +32,9 @@ class Image:
         self.got_data = 0
         self.got_metadata = 0
 
+        self.favorite = 0
+        self.hidden = 0
+
     metadata_labels=["Image number:",
                      "Image type:",
                      "Measurement mode:",
@@ -52,5 +55,8 @@ class Image:
                      "Attitude:",
                      "Position:",
                      "Time:",
-                     "Chunk ID:"
+                     "Chunk ID:",
+                     "",
+                     "Mark as hidden:",
+                     "Mark as favorite:"
                      ]

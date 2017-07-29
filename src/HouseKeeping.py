@@ -21,6 +21,9 @@ class HouseKeeping:
         self.temp_max = 0
         self.temp_min = 0
 
+        self.favorite = 0
+        self.hidden = 0
+
     housekeeping_labels=["Boot count:",
                          "Images taken:",
                          "Temperature:",
@@ -37,4 +40,12 @@ class HouseKeeping:
                          "UV2 min:",
                          "Temperature max:",
                          "Temperature min:",
+                         "",
+                         "",
+                         "",
+                         "",
+                         "",
+                         "",
+                         "Mark as hidden:",
+                         "Mark as favorite:"
                          ]
