@@ -459,6 +459,7 @@ def reloadList(new_idx=-1):
         listbox.after(10, lambda: listbox.see(Tk.END))
     else:
         listbox.after(10, lambda: listbox.selection_set(new_idx))
+        listbox.after(10, lambda: listbox.see(new_idx))
 
     global file_names
 
@@ -651,7 +652,7 @@ listbox.after(10, lambda: listbox.focus_force())
 listbox.after(10, lambda: listbox.selection_set("end"))
 listbox.after(10, lambda: listbox.see(Tk.END))
 # really we want the scrollabar to be down
-listbox.after(100, lambda: listbox.see(Tk.END))
+listbox.after(200, lambda: listbox.see(Tk.END))
 
 # autoselect the last item in the listbox after start
 # and show the metadata and the image
