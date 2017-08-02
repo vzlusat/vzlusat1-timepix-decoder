@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="1.0.5"
+version="1.0.6"
 
 files=(
 "src"
@@ -30,8 +30,8 @@ done
 # clean all .pyc files
 rm $DIR_NAME/**/**.pyc
 
-# create the tar ball
-tar -cvzf $DIR_NAME.tar.gz $DIR_NAME
+# create the zip file
+zip -r $DIR_NAME.zip $DIR_NAME
 
 # remove the dirctory
 rm -rf $DIR_NAME
