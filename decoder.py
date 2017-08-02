@@ -304,6 +304,7 @@ def showImage(image, manual):
         human_readible_time = datetime.datetime.fromtimestamp(image.time).strftime('%Y-%m-%d %H:%M:%S')
         metadatas_var[19].set(human_readible_time)
 
+        # only print chunk id if we actually got the metadata (-1 if it does not)
         if image.chunk_id >= 0:
 
             if image.type == 2:
@@ -569,11 +570,57 @@ for i in range(0, len(Image.metadata_labels)): #Rows
 
     # labels on the left containing the "labels"
     text_labels_var.append(Tk.StringVar())
-    text_labels.append(Tk.Label(frame_middle, textvariable=text_labels_var[i]).grid(row=i, column=0, sticky=Tk.E))
+    label = Tk.Label(frame_middle, textvariable=text_labels_var[i])
+    text_labels.append((label).grid(row=i, column=0, sticky=Tk.E))
 
     # lables on the right containing the "values"
     metadatas_var.append(Tk.StringVar())
     metadatas.append(Tk.Label(frame_middle, textvariable=metadatas_var[i]).grid(row=i, column=1, sticky=Tk.W))
+
+    # filtration
+    if i == 0:
+        temp_baloon = Pmw.Balloon(master=root);
+        temp_baloon.bind(label, "Unique image id. The first orbital image is 385.")
+
+    # Threshold
+    if i == 3:
+        temp_baloon = Pmw.Balloon(master=root);
+        temp_baloon.bind(label, "Threshold has not been calibrated, thus lower value means higher energy. Timepix has been calibrated at 415.")
+
+    # Bias
+    if i == 4:
+        temp_baloon = Pmw.Balloon(master=root);
+        temp_baloon.bind(label, "Bias is set in RAW value, which can be interpreted as: value 255 corresponds to 0 Volts, value 70 corresponds to 70 Volts.\n For values in between contact Tomas.")
+
+    # filtration
+    if i == 6:
+        temp_baloon = Pmw.Balloon(master=root);
+        temp_baloon.bind(label, "Whether large blobs have been filtered out.")
+
+    # nonzero pixel count
+    if i == 7:
+        temp_baloon = Pmw.Balloon(master=root);
+        temp_baloon.bind(label, "Number of non-zero pixels in the original image (before applying filtration)")
+        
+    # nonzero pixel count
+    if i == 8:
+        temp_baloon = Pmw.Balloon(master=root);
+        temp_baloon.bind(label, "Number of non-zero pixel after applying filtration (if applied)")
+
+    # min pixel value
+    if i == 9 or i == 11:
+        temp_baloon = Pmw.Balloon(master=root);
+        temp_baloon.bind(label, "Minimal nozero value over all pixels.")
+
+    # max pixel value
+    if i == 10 or i == 12:
+        temp_baloon = Pmw.Balloon(master=root);
+        temp_baloon.bind(label, "Maximum over all pixels is 255. That corresponds to ~150 keV in Energy mode.")
+
+    # ChunkID
+    if i == 20:
+        temp_baloon = Pmw.Balloon(master=root);
+        temp_baloon.bind(label, "Chunk ID contains the index (indeces) of S4P3 storage, where the data for this image are contained. If empty, the actual metadata for this image has not been downloaded yet.")
 
 # add two checkboxes for marking images favorite and hidden
 marked_as_hidden_var = Tk.IntVar()
