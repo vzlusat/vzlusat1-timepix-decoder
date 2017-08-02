@@ -218,6 +218,39 @@ def showImage(image, manual):
     metadatas_var[1].set(img_type)
 
     #{ METADATA
+    if image.got_metadata == 0:
+        # try to load metadata from other image
+        possible_names =  [1, 2, 4, 8, 16, 32]
+        for possible_name in possible_names:
+            temp_image = loadImage(image.id, possible_name)
+
+            # if we got metadata, use them
+            if temp_image.got_metadata == 1:
+               
+                print("Metadata are missing in {}_{}, replacing them from {}_{}".format(image.id, image.type, temp_image.id, temp_image.type))
+                image.mode = temp_image.mode
+                image.threshold = temp_image.threshold
+                image.bias = temp_image.bias
+                image.exposure = temp_image.exposure
+                image.filtering = temp_image.filtering
+                image.filtered_pixels = temp_image.filtered_pixels
+                image.original_pixels = temp_image.original_pixels
+                image.min_original = temp_image.min_original
+                image.max_original = temp_image.max_original
+                image.min_filtered = temp_image.min_filtered
+                image.max_filtered = temp_image.max_filtered
+                image.temperature = temp_image.temperature
+                image.temp_limit = temp_image.temp_limit
+                image.pxl_limit = temp_image.pxl_limit
+                image.uv1_thr = temp_image.uv1_thr
+                image.chunk_id = temp_image.chunk_id
+                image.attitude = temp_image.attitude
+                image.position = temp_image.position
+                image.time = temp_image.time
+                image.got_metadata = 1
+                saveImage(image)
+                break
+
     if image.got_metadata == 1:
 
         if image.mode == 0:
