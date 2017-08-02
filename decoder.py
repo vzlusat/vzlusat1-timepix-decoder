@@ -243,7 +243,7 @@ def showImage(image, manual):
                 image.temp_limit = temp_image.temp_limit
                 image.pxl_limit = temp_image.pxl_limit
                 image.uv1_thr = temp_image.uv1_thr
-                image.chunk_id = temp_image.chunk_id
+                image.chunk_id = -1;
                 image.attitude = temp_image.attitude
                 image.position = temp_image.position
                 image.time = temp_image.time
@@ -304,20 +304,22 @@ def showImage(image, manual):
         human_readible_time = datetime.datetime.fromtimestamp(image.time).strftime('%Y-%m-%d %H:%M:%S')
         metadatas_var[19].set(human_readible_time)
 
-        if image.type == 2:
-            chunk_id = str(image.chunk_id)+" to "+str(image.chunk_id+15)
-        elif image.type == 4:
-            chunk_id = str(image.chunk_id)+" to "+str(image.chunk_id+3)
-        elif image.type == 8:
-            chunk_id = str(image.chunk_id)
-        elif image.type == 16:
-            chunk_id = str(image.chunk_id)+" to "+str(image.chunk_id+7)
-        elif image.type == 32:
-            chunk_id = str(image.chunk_id)
-        elif image.type == 1:
-            chunk_id = str(image.chunk_id)+" to "+str(image.chunk_id+int(numpy.floor(image.filtered_pixels/20)))
+        if image.chunk_id >= 0:
 
-        metadatas_var[20].set(chunk_id)
+            if image.type == 2:
+                chunk_id = str(image.chunk_id)+" to "+str(image.chunk_id+15)
+            elif image.type == 4:
+                chunk_id = str(image.chunk_id)+" to "+str(image.chunk_id+3)
+            elif image.type == 8:
+                chunk_id = str(image.chunk_id)
+            elif image.type == 16:
+                chunk_id = str(image.chunk_id)+" to "+str(image.chunk_id+7)
+            elif image.type == 32:
+                chunk_id = str(image.chunk_id)
+            elif image.type == 1:
+                chunk_id = str(image.chunk_id)+" to "+str(image.chunk_id+int(numpy.floor(image.filtered_pixels/20)))
+
+            metadatas_var[20].set(chunk_id)
 
     for i in range(0, len(Image.metadata_labels)):
         text_labels_var[i].set(Image.metadata_labels[i])
