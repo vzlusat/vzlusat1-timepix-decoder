@@ -492,10 +492,10 @@ def reloadList(new_idx=-1):
     # listbox.selection_clear()
     if new_idx == -1:
         listbox.after(10, lambda: listbox.selection_set("end"))
-        listbox.after(10, lambda: listbox.see(Tk.END))
+        listbox.after(500, lambda: listbox.see(Tk.END))
     else:
         listbox.after(10, lambda: listbox.selection_set(new_idx))
-        listbox.after(10, lambda: listbox.see(new_idx))
+        listbox.after(500, lambda: listbox.see(new_idx))
 
     global file_names
 
@@ -585,7 +585,7 @@ for i in range(0, len(Image.metadata_labels)): #Rows
     # Threshold
     if i == 3:
         temp_baloon = Pmw.Balloon(master=root);
-        temp_baloon.bind(label, "Threshold has not been calibrated, thus lower value means higher energy. Timepix has been calibrated at 415.")
+        temp_baloon.bind(label, "Raw value for threshold setpoint. The sensor was calibrated at 414.")
 
     # Bias
     if i == 4:
@@ -734,7 +734,7 @@ listbox.after(10, lambda: listbox.focus_force())
 listbox.after(10, lambda: listbox.selection_set("end"))
 listbox.after(10, lambda: listbox.see(Tk.END))
 # really we want the scrollabar to be down
-listbox.after(200, lambda: listbox.see(Tk.END))
+listbox.after(500, lambda: listbox.see(Tk.END))
 
 # autoselect the last item in the listbox after start
 # and show the metadata and the image
@@ -802,7 +802,7 @@ def loadNewImages():
 
     # listbox.selection_clear()
     listbox.after(10, lambda: listbox.selection_set("end"))
-    listbox.after(10, lambda: listbox.see(Tk.END))
+    listbox.after(500, lambda: listbox.see(Tk.END))
 
     global file_names
     # autoselect the last item in the listbox after start
