@@ -301,7 +301,7 @@ def showImage(image, manual):
 
         metadatas_var[18].set(position)
 
-        human_readible_time = datetime.datetime.fromtimestamp(image.time).strftime('%Y-%m-%d %H:%M:%S')
+        human_readible_time = datetime.datetime.utcfromtimestamp(image.time).strftime('%Y-%m-%d %H:%M:%S')
         metadatas_var[19].set(human_readible_time)
 
         # only print chunk id if we actually got the metadata (-1 if it does not)
