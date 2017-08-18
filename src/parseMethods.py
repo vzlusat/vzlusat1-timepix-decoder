@@ -8,6 +8,7 @@ from src.numberConversion import bytesToInt16
 from src.numberConversion import bytesToInt32
 from src.calibration import *
 from src.exportMethods import exportImage
+from src.exportMethods import exportHouseKeeping
 from src.HouseKeeping import HouseKeeping
 
 def parseHouseKeeping(bin_data):
@@ -32,6 +33,8 @@ def parseHouseKeeping(bin_data):
     new_hk.temp_min = bin_data[28]
 
     saveHouseKeeping(new_hk);
+
+    exportHouseKeeping(new_hk);
 
     return new_hk
 

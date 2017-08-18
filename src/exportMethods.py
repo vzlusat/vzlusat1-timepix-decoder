@@ -3,8 +3,40 @@ import math
 from src.Image import Image 
 from src.baseMethods import getExportDataName
 from src.baseMethods import getExportMetadataName
+from src.baseMethods import getExportHkName
 import datetime
 import csv
+
+def exportHouseKeeping(data):
+
+    hk_array = [None] * 16;
+
+    with open(getExportHkName(data.images_taken, data.time_since_boot), "w") as hk_file:
+
+        hk_array[0] = str(data.boot_count)
+        hk_array[1] = str(data.images_taken)
+        hk_array[2] = str(data.temperature)
+        hk_array[3] = str(data.fram_status)
+        hk_array[4] = str(data.medipix_status)
+        hk_array[5] = str(data.time_since_boot)
+        hk_array[6] = str(data.TIR_max)
+        hk_array[7] = str(data.TIR_min)
+        hk_array[8] = str(data.IR_max)
+        hk_array[9] = str(data.IR_min)
+        hk_array[10] = str(data.UV1_max)
+        hk_array[11] = str(data.UV1_min)
+        hk_array[12] = str(data.UV2_max)
+        hk_array[13] = str(data.UV2_min)
+        hk_array[14] = str(data.temp_max)
+        hk_array[15] = str(data.temp_min)
+
+        for i in range(0, 16):
+
+            hk_file.write(data.housekeeping_labels[i]+" "+hk_array[i])
+
+            if i < 16:
+
+                hk_file.write("\n")
 
 def exportMetadata(image):
 
