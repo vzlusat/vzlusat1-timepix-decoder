@@ -1,11 +1,11 @@
 bone_r
 gnuplot
 gist_ncar
+nipy_spectral_r
 bone
 hot
 jet
 hsv
-Blues
 Accent
 Accent_r
 Blues
@@ -108,6 +108,7 @@ gist_gray
 gist_gray_r
 gist_heat
 gist_heat_r
+gist_ncar
 gist_ncar_r
 gist_rainbow
 gist_rainbow_r
@@ -115,6 +116,7 @@ gist_stern
 gist_stern_r
 gist_yarg
 gist_yarg_r
+gnuplot
 gnuplot2
 gnuplot2_r
 gnuplot_r
@@ -122,6 +124,7 @@ gray
 gray_r
 hot
 hot_r
+hsv
 hsv_r
 inferno
 inferno_r
