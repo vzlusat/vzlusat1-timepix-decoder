@@ -219,10 +219,16 @@ def showImage(image, manual):
 
     #{ METADATA
     if image.got_metadata == 0:
+
         # try to load metadata from other image
         possible_names =  [1, 2, 4, 8, 16, 32]
         for possible_name in possible_names:
+
             temp_image = loadImage(image.id, possible_name)
+
+            # skip if there are no metadata
+            if temp_image ==  0:
+                continue;
 
             # if we got metadata, use them
             if temp_image.got_metadata == 1:
@@ -773,7 +779,7 @@ def loadNewImages():
     if not parseInputFile(file_name, v, root):
         return
     else:
-        print("Successfully opened the file \"{}\"".format(file_name))
+        print("Successfully parsed the file \"{}\"".format(file_name))
 
     list_files = loadFiles()
 
