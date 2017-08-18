@@ -6,6 +6,9 @@ MY_PATH=`( cd "$MY_PATH" && pwd )`
 
 cd $MY_PATH/..
 
+# rsync csv
+rsync -vPr *.zip /media/google-drive/VZLUSat/orbital_data/
+
 # rsync pngs
 rsync -vPr images_png/* /media/google-drive/VZLUSat/orbital_data/png/
 
