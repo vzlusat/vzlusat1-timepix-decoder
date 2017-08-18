@@ -49,8 +49,9 @@ if sys.version_info[0] < 3:
 else:
     import tkinter as Tk
     import tkinter.filedialog
-
 #}
+
+import ttk
 
 # core methods
 
@@ -350,7 +351,7 @@ def showImage(image, manual):
                 subplot1.set_title(img_type+" n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
             # show the image
-            im = subplot1.imshow(image.data, interpolation='none', cmap=colormap)
+            im = subplot1.imshow(image.data, interpolation='none', cmap=colormap_variable.get())
 
             # create the colormap bar and place it in the correct place
             divider = make_axes_locatable(my_figure.gca())
@@ -653,6 +654,27 @@ figure_canvas._tkcanvas.pack(side=Tk.TOP)
 frame_toolbar = Tk.Frame(frame_figure);
 frame_toolbar.pack(side=Tk.BOTTOM, fill=Tk.Y, expand=1)
 
+def changeColorMap(evt):
+
+    global loaded_image_idx
+    listbox.selection_set(loaded_image_idx)
+    reloadData(loaded_image_idx, 1)
+
+# create combox for selecting the colormap
+colormap_variable = Tk.StringVar()
+colormap_variable.set("bone_r")
+colormap_combobox = ttk.Combobox(frame_toolbar, textvariable=colormap_variable)
+
+if os.path.isfile("colormaps.txt"):
+    with open("colormaps.txt") as colormap_file:
+        colormap_combobox['values'] = [line.rstrip() for line in colormap_file.readlines()]
+else:
+    colormap_combobox['values'] = ('bone_r', 'bone', 'hot', 'jet')
+
+colormap_combobox.current(0)
+colormap_combobox.bind("<<ComboboxSelected>>", changeColorMap)
+colormap_combobox.pack(side=Tk.RIGHT, expand=1)
+
 toolbar = NavigationToolbar2TkAgg(figure_canvas, frame_toolbar)
 toolbar.pack(side=Tk.LEFT)
 toolbar.update()
@@ -677,7 +699,8 @@ def numericalSort(value):
 
 # colormap is for now defined here
 # TODO: make that as a selectable option in the gui
-colormap = "bone_r"
+# colormap = "bone_r"
+# colormap = "gnuplot"
 
 # user can switch off generating pngs
 autogenerate_png_view = Tk.IntVar()
@@ -706,6 +729,7 @@ listbox_focus = 0
 
 # global loaded_image
 global loaded_image
+global loaded_image_idx
 loaded_image = []
 
 #{ LISTBOX (+SCROLLBAR) and its CALLBACK
@@ -714,6 +738,7 @@ loaded_image = []
 def onSelect(evt):
 
     global file_names
+    global loaded_image_idx
 
     w = evt.widget
 
@@ -722,6 +747,8 @@ def onSelect(evt):
 
     # extract the index of the selected item
     index = int(w.curselection()[0])
+
+    loaded_image_idx = index
 
     reloadData(index, 1)
 #}
@@ -756,6 +783,7 @@ if len(file_names) > 0:
         if image != 0:
 
             loaded_image = image
+            loaded_image_idx = len(file_names)-1
 
             showImage(image, 1)
 
@@ -893,22 +921,28 @@ show_favorite_only.pack(side=Tk.BOTTOM)
 
 def listbox_move_up():
 
+    global loaded_image_idx
+
     try:
         index = int(listbox.curselection()[0])-1
         if index >= 0:
             listbox.selection_clear(0, "end")
             listbox.selection_set(index)
+            loaded_image_idx = index
             reloadData(index, 1)
     except:
         return
 
 def listbox_move_down():
 
+    global loaded_image_idx
+
     try:
         index = int(listbox.curselection()[0])+1
         if index <= (listbox.size()-1):
             listbox.selection_clear(0, "end")
             listbox.selection_set(index)
+            loaded_image_idx = index
             reloadData(index, 1)
     except:
         return
