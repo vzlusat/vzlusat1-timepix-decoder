@@ -17,4 +17,4 @@ def getExportMetadataName(image_id, image_type):
 
 def getExportHkName(images_taken, time_since_boot):
 
-    return "images_csv/"+str(images_taken)+"_{0:05d}.pkl".format(time_since_boot) 
+    return "images_csv/"+str(images_taken)+"_{0:05d}.txt".format(time_since_boot) 
