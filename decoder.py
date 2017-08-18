@@ -46,12 +46,12 @@ from src.parseInputFile import parseInputFile
 if sys.version_info[0] < 3:
     import Tkinter as Tk
     import tkFileDialog
+    import ttk
 else:
     import tkinter as Tk
     import tkinter.filedialog
+    from tkinter import ttk
 #}
-
-import ttk
 
 # core methods
 
