@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="1.0.8"
+version="1.0.9"
 
 files=(
 "src"
@@ -8,6 +8,7 @@ files=(
 "README.md"
 "decoder.py"
 "run_as_admin.bat"
+"colormaps.txt"
 )
 
 # get the path to this script
