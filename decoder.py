@@ -539,7 +539,7 @@ if not os.path.exists("images_png"):
 # create the root window
 root = Tk.Tk()
 root.resizable(width=1, height=1)
-root.geometry('{}x{}'.format(1300, 600))
+root.geometry('{}x{}'.format(1300, 650))
 root.wm_title("VZLUSAT-1 X-Ray data decoder")
 
 # create the main Frame in the root window
@@ -673,7 +673,7 @@ else:
 
 colormap_combobox.current(0)
 colormap_combobox.bind("<<ComboboxSelected>>", changeColorMap)
-colormap_combobox.pack(side=Tk.RIGHT, expand=1)
+colormap_combobox.pack(side=Tk.TOP, expand=1)
 
 toolbar = NavigationToolbar2TkAgg(figure_canvas, frame_toolbar)
 toolbar.pack(side=Tk.LEFT)
