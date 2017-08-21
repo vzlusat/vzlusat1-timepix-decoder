@@ -11,7 +11,7 @@ def exportHouseKeeping(data):
 
     hk_array = [None] * 16;
 
-    with open(getExportHkName(data.images_taken, data.time_since_boot), "w") as hk_file:
+    with open(getExportHkName(data.images_taken, data.time_since_boot, data.boot_count), "w") as hk_file:
 
         hk_array[0] = str(data.boot_count)
         hk_array[1] = str(data.images_taken)

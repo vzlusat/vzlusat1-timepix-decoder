@@ -3,13 +3,13 @@ from src.HouseKeeping import HouseKeeping
 import os.path
 from src.baseMethods import getHkFileName
 
-def loadHouseKeeping(images_taken, time_since_boot=0):
+def loadHouseKeeping(images_taken, boot_count=0, time_since_boot=0):
 
     # deduce the filename
     if time_since_boot == 0:
         file_name = "images_bin/"+images_taken
     else:
-        file_name = getHkFileName(images_taken, time_since_boot)
+        file_name = getHkFileName(images_taken, time_since_boot, boot_count)
 
     # ask OS to locate the file
     if os.path.isfile(file_name):

@@ -107,7 +107,7 @@ def loadFiles():
                     pass
                 else:
                     file_names.append(file)
-                    list_files.append(str(housekeeeping.images_taken)+"_"+str(housekeeeping.time_since_boot)+"s_hk")
+                    list_files.append(str(housekeeeping.images_taken)+"_"+str(housekeeeping.boot_count)+"_"+str(housekeeeping.time_since_boot)+"s_hk")
             else:
                 print("could not open file "+file)
 
