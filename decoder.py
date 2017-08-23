@@ -928,6 +928,7 @@ def listbox_move_up():
         if index >= 0:
             listbox.selection_clear(0, "end")
             listbox.selection_set(index)
+            listbox.see(index)
             loaded_image_idx = index
             reloadData(index, 1)
     except:
@@ -942,6 +943,7 @@ def listbox_move_down():
         if index <= (listbox.size()-1):
             listbox.selection_clear(0, "end")
             listbox.selection_set(index)
+            listbox.see(index)
             loaded_image_idx = index
             reloadData(index, 1)
     except:
