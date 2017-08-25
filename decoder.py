@@ -183,6 +183,8 @@ def showHouseKeeping(housekeeping):
     metadatas_var[13].set(str(housekeeping.UV2_min))
     metadatas_var[14].set(str(housekeeping.temp_max))
     metadatas_var[15].set(str(housekeeping.temp_min))
+    human_readible_time = datetime.datetime.utcfromtimestamp(housekeeping.time).strftime('%Y-%m-%d %H:%M:%S')
+    metadatas_var[16].set(human_readible_time)
 
     marked_as_hidden_var.set(housekeeping.hidden)
     marked_as_favorite_var.set(housekeeping.favorite)

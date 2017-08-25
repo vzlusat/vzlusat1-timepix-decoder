@@ -11,7 +11,7 @@ from src.exportMethods import exportImage
 from src.exportMethods import exportHouseKeeping
 from src.HouseKeeping import HouseKeeping
 
-def parseHouseKeeping(bin_data):
+def parseHouseKeeping(bin_data, time):
 
     new_hk = HouseKeeping()
 
@@ -31,6 +31,7 @@ def parseHouseKeeping(bin_data):
     new_hk.UV2_min = numpy.int16(bytesToInt16(bin_data[26], bin_data[25]))
     new_hk.temp_max = bin_data[27]
     new_hk.temp_min = bin_data[28]
+    new_hk.time = time
 
     saveHouseKeeping(new_hk);
 

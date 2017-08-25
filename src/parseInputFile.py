@@ -9,11 +9,15 @@ from src.parseMethods import parseEnergyHist
 from src.parseMethods import parseRaw
 from src.parseMethods import parseHouseKeeping
 
+import datetime
+
 import sys
 if sys.version_info[0] < 3:
     import Tkinter as Tk
 else:
     import tkinter as Tk
+
+last_time = 0
 
 def parseInputFile(file_path, v, root):
 
@@ -24,6 +28,14 @@ def parseInputFile(file_path, v, root):
 
     # for all lines in the file 
     for line in infile:
+
+        # if the line contains word "time"
+        if line.find("time") > -1:
+
+            try:
+                last_time = int(line[7:16])+946684800
+            except:
+                last_time = 0
 
         # if the line contains word "data"
         if line.find("data") > -1:
@@ -99,7 +111,7 @@ def parseInputFile(file_path, v, root):
 
                 v.set("Parsing house keeping")
                 root.update()
-                parseHouseKeeping(bin_data[1:])
+                parseHouseKeeping(bin_data[1:], last_time)
 
             else:
 
