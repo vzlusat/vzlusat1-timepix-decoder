@@ -30,6 +30,7 @@ done
 
 # clean all .pyc files
 rm $DIR_NAME/**/**.pyc
+rm -rf $DIR_NAME/src/__pycache__
 
 # create the zip file
 zip -r $DIR_NAME.zip $DIR_NAME
