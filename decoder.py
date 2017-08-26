@@ -929,11 +929,11 @@ show_hidden.pack(side=Tk.BOTTOM)
 show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite", variable=show_favorite_var, command=reloadList)
 show_favorite_only.pack(side=Tk.BOTTOM)
 
-hide_without_data = Tk.Checkbutton(master=frame_left, text="hide images without data", variable=hide_without_data_var, command=reloadList)
-hide_without_data.pack(side=Tk.BOTTOM)
-
 show_only_without_data = Tk.Checkbutton(master=frame_left, text="show only without data", variable=show_only_without_data_var, command=reloadList)
 show_only_without_data.pack(side=Tk.BOTTOM)
+
+hide_without_data = Tk.Checkbutton(master=frame_left, text="hide images without data", variable=hide_without_data_var, command=reloadList)
+hide_without_data.pack(side=Tk.BOTTOM)
 
 hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping", variable=hide_housekeeping_var, command=reloadList)
 hide_housekeeping.pack(side=Tk.BOTTOM)
