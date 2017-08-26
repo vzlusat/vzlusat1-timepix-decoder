@@ -831,6 +831,7 @@ listbox_focus = 0
 # global loaded_image
 global loaded_image
 global loaded_image_idx
+loaded_image_idx = 0
 loaded_image = []
 
 #{ LISTBOX (+SCROLLBAR) and its CALLBACK
