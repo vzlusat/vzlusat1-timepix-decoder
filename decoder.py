@@ -194,7 +194,7 @@ def showHouseKeeping(housekeeping):
     metadatas_var[13].set(str(housekeeping.UV2_min))
     metadatas_var[14].set(str(housekeeping.temp_max))
     metadatas_var[15].set(str(housekeeping.temp_min))
-    human_readible_time = datetime.datetime.utcfromtimestamp(housekeeping.time).strftime('%Y-%m-%d %H:%M:%S')
+    human_readible_time = datetime.datetime.utcfromtimestamp(housekeeping.time)
     metadatas_var[16].set(human_readible_time)
 
     marked_as_hidden_var.set(housekeeping.hidden)
@@ -203,7 +203,7 @@ def showHouseKeeping(housekeeping):
     if show_globus_var.get():
         latitude, longitude, tle_date = getLatLong(housekeeping.time)
         globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
-        redrawMap(latitude, longitude)
+        redrawMap(latitude, longitude, human_readible_time)
     else:
         clearMap()
 #}
@@ -328,13 +328,13 @@ def showImage(image, manual):
 
         metadatas_var[18].set(position)
 
-        human_readible_time = datetime.datetime.utcfromtimestamp(image.time).strftime('%Y-%m-%d %H:%M:%S')
+        human_readible_time = datetime.datetime.utcfromtimestamp(image.time)
         metadatas_var[19].set(human_readible_time)
 
         if show_globus_var.get():
             latitude, longitude, tle_date = getLatLong(image.time)
             globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
-            redrawMap(latitude, longitude)
+            redrawMap(latitude, longitude, human_readible_time)
         else:
             clearMap()
 
@@ -718,7 +718,7 @@ def clearMap():
     subplot2.axis("off")
     globus_canvas.show()
 
-def redrawMap(lat, lon):
+def redrawMap(lat, lon, timestamp):
 
     my_figure2.clf()
     subplot2 = my_figure2.add_subplot(111)
@@ -742,6 +742,7 @@ def redrawMap(lat, lon):
     # draw lat/lon grid lines every 30 degrees.
     globus.drawmeridians(numpy.arange(0,360,30))
     globus.drawparallels(numpy.arange(-90,90,30))
+    globus.nightshade(timestamp)
 
     globus_canvas.show()
 
