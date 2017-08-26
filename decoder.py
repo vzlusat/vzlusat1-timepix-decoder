@@ -16,6 +16,7 @@ def installAndImport(package):
 
 installAndImport('matplotlib')
 installAndImport('Pmw')
+installAndImport('ephem')
 
 matplotlib.use('TkAgg')
 
@@ -52,6 +53,9 @@ else:
     import tkinter.filedialog
     from tkinter import ttk
 #}
+
+# for plotting the globe
+from mpl_toolkits.basemap import Basemap
 
 # core methods
 
@@ -195,6 +199,13 @@ def showHouseKeeping(housekeeping):
 
     marked_as_hidden_var.set(housekeeping.hidden)
     marked_as_favorite_var.set(housekeeping.favorite)
+
+    if show_globus_var.get():
+        latitude, longitude, tle_date = getLatLong(housekeeping.time)
+        globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
+        redrawMap(latitude, longitude)
+    else:
+        clearMap()
 #}
 
 #{ def showImage(image): resets and shows the image
@@ -317,10 +328,15 @@ def showImage(image, manual):
 
         metadatas_var[18].set(position)
 
-        print("Time  : {}".format(image.time))
-        print("TimeHR: {}".format(datetime.datetime.utcfromtimestamp(image.time)))
         human_readible_time = datetime.datetime.utcfromtimestamp(image.time).strftime('%Y-%m-%d %H:%M:%S')
         metadatas_var[19].set(human_readible_time)
+
+        if show_globus_var.get():
+            latitude, longitude, tle_date = getLatLong(image.time)
+            globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
+            redrawMap(latitude, longitude)
+        else:
+            clearMap()
 
         # only print chunk id if we actually got the metadata (-1 if it does not)
         if image.chunk_id >= 0:
@@ -342,6 +358,7 @@ def showImage(image, manual):
 
     for i in range(0, len(Image.metadata_labels)):
         text_labels_var[i].set(Image.metadata_labels[i])
+
     #}
 
     #{ IMAGE
@@ -547,10 +564,14 @@ if not os.path.exists("images_png"):
     os.makedirs("images_png")
 #}
 
+# Load TLE
+from src.tle import *
+parseTLE()
+
 # create the root window
 root = Tk.Tk()
 root.resizable(width=1, height=1)
-root.geometry('{}x{}'.format(1300, 650))
+root.geometry('{}x{}'.format(1380, 740))
 root.wm_title("VZLUSAT-1 X-Ray data decoder")
 
 # create the main Frame in the root window
@@ -558,7 +579,7 @@ frame_main = Tk.Frame(root);
 frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
 # create the figure
-my_figure = Figure(facecolor='none', figsize=(7.2, 5.8), dpi=90)
+my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=90)
 my_figure.clf()
 
 # create the status line
@@ -577,7 +598,13 @@ frame_right.pack(side=Tk.RIGHT, fill=Tk.BOTH, expand=1, padx=5, pady=5)
 
 # create the middle subframe for metadata
 frame_middle = Tk.Frame(frame_right, bd=1);
-frame_middle.pack(side=Tk.LEFT, fill=Tk.BOTH, expand=0, padx=10, pady=30)
+frame_middle.pack(side=Tk.LEFT, fill=Tk.BOTH, expand=1)
+
+frame_mid_top = Tk.Frame(frame_middle, bd=1);
+frame_mid_top.pack(side=Tk.TOP, fill=Tk.BOTH, expand=0, padx=10, pady=30)
+
+frame_mid_bottom = Tk.Frame(frame_middle, bd=1);
+frame_mid_bottom.pack(side=Tk.BOTTOM, fill=Tk.BOTH, expand=0, padx=0, pady=0)
 
 #{ create the labels for metadatas and their respective control variables
 metadatas = []
@@ -588,12 +615,12 @@ for i in range(0, len(Image.metadata_labels)): #Rows
 
     # labels on the left containing the "labels"
     text_labels_var.append(Tk.StringVar())
-    label = Tk.Label(frame_middle, textvariable=text_labels_var[i])
+    label = Tk.Label(frame_mid_top, textvariable=text_labels_var[i])
     text_labels.append((label).grid(row=i, column=0, sticky=Tk.E))
 
     # lables on the right containing the "values"
     metadatas_var.append(Tk.StringVar())
-    metadatas.append(Tk.Label(frame_middle, textvariable=metadatas_var[i]).grid(row=i, column=1, sticky=Tk.W))
+    metadatas.append(Tk.Label(frame_mid_top, textvariable=metadatas_var[i]).grid(row=i, column=1, sticky=Tk.W))
 
     # filtration
     if i == 0:
@@ -642,10 +669,10 @@ for i in range(0, len(Image.metadata_labels)): #Rows
 
 # add two checkboxes for marking images favorite and hidden
 marked_as_hidden_var = Tk.IntVar()
-metadatas.append(Tk.Checkbutton(frame_middle, text="", variable=marked_as_hidden_var, command=markHiddenCallback).grid(row=len(Image.metadata_labels)-2, column=1, sticky=Tk.W))
+metadatas.append(Tk.Checkbutton(frame_mid_top, text="", variable=marked_as_hidden_var, command=markHiddenCallback).grid(row=len(Image.metadata_labels)-2, column=1, sticky=Tk.W))
 
 marked_as_favorite_var = Tk.IntVar()
-metadatas.append(Tk.Checkbutton(frame_middle, text="", variable=marked_as_favorite_var, command=markFavoriteCallback).grid(row=len(Image.metadata_labels)-1, column=1, sticky=Tk.W))
+metadatas.append(Tk.Checkbutton(frame_mid_top, text="", variable=marked_as_favorite_var, command=markFavoriteCallback).grid(row=len(Image.metadata_labels)-1, column=1, sticky=Tk.W))
 
 housekeeping_values = []
 housekeeping_labels = []
@@ -661,11 +688,68 @@ figure_canvas.show()
 figure_canvas.get_tk_widget().pack(side=Tk.TOP)
 figure_canvas._tkcanvas.pack(side=Tk.TOP)
 
+# globus = Basemap(projection='ortho', lat_0=60.0, lon_0=30.0, resolution='l')
+# map.drawcoastlines(linewidth=0.25)
+# map.drawcountries(linewidth=0.25)
+# map.fillcontinents(color='coral',lake_color='aqua')
+# # draw the edge of the map projection region (the projection limb)
+# map.drawmapboundary(fill_color='aqua')
+# # draw lat/lon grid lines every 30 degrees.
+# map.drawmeridians(numpy.arange(0,360,30))
+# map.drawparallels(numpy.arange(-90,90,30))
+
+globus_label_var = Tk.StringVar()
+globus_label = Tk.Label(frame_mid_bottom, anchor=Tk.S, justify=Tk.CENTER,  textvariable=globus_label_var)
+globus_label.pack(side=Tk.BOTTOM)
+
+my_figure2 = Figure(facecolor='none', figsize=(2.0, 2.0), dpi=90)
+
+# create the canvas for the globus
+globus_canvas = FigureCanvasTkAgg(my_figure2, master=frame_mid_bottom)
+globus_canvas.get_tk_widget().pack(side=Tk.BOTTOM, fill=Tk.BOTH, anchor=Tk.S)
+globus_canvas._tkcanvas.pack(side=Tk.BOTTOM, fill=Tk.BOTH, anchor=Tk.S)
+
+def clearMap():
+    my_figure2.clf()
+    subplot2 = my_figure2.add_subplot(111)
+    subplot2.axes.get_xaxis().set_visible(False)
+    subplot2.axes.get_yaxis().set_visible(False)
+    subplot2.patch.set_visible(False)
+    subplot2.axis("off")
+    globus_canvas.show()
+
+def redrawMap(lat, lon):
+
+    my_figure2.clf()
+    subplot2 = my_figure2.add_subplot(111)
+
+    globus = Basemap(
+        projection='ortho',
+        lat_0=lat,
+        lon_0=lon,
+        ax=subplot2
+    )
+
+    x, y = globus(lon, lat)
+    globus.scatter(x, y, 80, marker='o', color='k', zorder=10)
+
+    # draw coastlines, country boundaries, fill continents.
+    globus.drawcoastlines(linewidth=0.25)
+    globus.drawcountries(linewidth=0.25)
+    globus.fillcontinents(color='coral', lake_color='aqua')
+    # draw the edge of the globus projection region (the projection limb)
+    globus.drawmapboundary(fill_color='aqua')
+    # draw lat/lon grid lines every 30 degrees.
+    globus.drawmeridians(numpy.arange(0,360,30))
+    globus.drawparallels(numpy.arange(-90,90,30))
+
+    globus_canvas.show()
+
 # create the toolbar for the figure
 frame_toolbar = Tk.Frame(frame_figure);
 frame_toolbar.pack(side=Tk.BOTTOM, fill=Tk.Y, expand=1)
 
-def changeColorMap(evt):
+def reloadCurrentImage(evt=0):
 
     global loaded_image_idx
     listbox.selection_set(loaded_image_idx)
@@ -683,7 +767,7 @@ else:
     colormap_combobox['values'] = ('bone_r', 'bone', 'hot', 'jet')
 
 colormap_combobox.current(0)
-colormap_combobox.bind("<<ComboboxSelected>>", changeColorMap)
+colormap_combobox.bind("<<ComboboxSelected>>", reloadCurrentImage)
 colormap_combobox.pack(side=Tk.TOP, expand=1)
 
 toolbar = NavigationToolbar2TkAgg(figure_canvas, frame_toolbar)
@@ -720,6 +804,7 @@ autogenerate_csv_load = Tk.IntVar()
 
 # user can switch on/off showing of hidden and favorite images
 show_hidden_var = Tk.IntVar()
+show_globus_var = Tk.IntVar()
 show_favorite_var = Tk.IntVar()
 hide_without_data_var = Tk.IntVar()
 show_only_without_data_var = Tk.IntVar()
@@ -930,6 +1015,10 @@ balloon.bind(autogenerate_checkbox, "When checked, png images will be re-exporte
 
 #{ CHECKBOXES for showing and hiding images
 
+show_globus = Tk.Checkbutton(master=frame_left, text="show globus", variable=show_globus_var, command=reloadCurrentImage)
+show_globus.pack(side=Tk.BOTTOM)
+# show_globus.toggle()
+
 show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList)
 show_hidden.pack(side=Tk.BOTTOM)
 
@@ -996,6 +1085,9 @@ def on_key_event(event):
 
         if event.char == 'o':
             loadNewImages()
+
+        if event.char == 'g':
+            show_globus.toggle()
 
         if event.char == 'h':
             marked_as_hidden_var.set(not marked_as_hidden_var.get())
