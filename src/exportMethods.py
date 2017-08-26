@@ -7,12 +7,7 @@ from src.baseMethods import getExportHkName
 import datetime
 import csv
 
-global autogenerate_csv_load
-
 def exportHouseKeeping(data):
-
-    if not autogenerate_csv_load:
-        return
 
     hk_array = [None] * 16;
 
