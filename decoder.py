@@ -317,6 +317,8 @@ def showImage(image, manual):
 
         metadatas_var[18].set(position)
 
+        print("Time  : {}".format(image.time))
+        print("TimeHR: {}".format(datetime.datetime.utcfromtimestamp(image.time)))
         human_readible_time = datetime.datetime.utcfromtimestamp(image.time).strftime('%Y-%m-%d %H:%M:%S')
         metadatas_var[19].set(human_readible_time)
 
@@ -842,8 +844,6 @@ def loadNewImages():
             listbox.selection_clear(0, "end")
             listbox.selection_set(idx)
             listbox.see(idx)
-
-            print("item: {}".format(item))
 
             if item[-2] != 'h':
                 try:
