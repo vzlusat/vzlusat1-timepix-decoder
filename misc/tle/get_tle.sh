@@ -1,9 +1,14 @@
-wget -rnd --no-parent --reject "index.html*" http://147.228.97.106/tle/
+TLE_DIR="147.228.97.106/tle"
 
+# get the path to this script
+MY_PATH=`dirname "$0"`
+MY_PATH=`( cd "$MY_PATH" && pwd )`
+
+wget -rN --no-parent --reject "index.html*" http://147.228.97.106/tle/
+
+cd $MY_PATH/$TLE_DIR
 rm _amateur.txt
 rm _cubesat.txt
-
-touch -f tle.tle
 
 for filename in `ls *.txt`;
 do
@@ -15,18 +20,16 @@ do
     mytime=`echo "$filename" | sed 's/cubesat-//' | sed 's/\.txt//'`
 
     # reformat the time stamp to a proper format
-    correcttime=`echo "$mytime" | vims -s 'A|^f-lyiw$p^2f-lyiwA/p^yiwA/p^3f-lyiwA p^4f-lyiwA:p^5f-lyiwA:p^df|'`
+    correcttime=`echo "$mytime" | "$MY_PATH/vims" -s 'A|^f-lyiw$p^2f-lyiwA/p^yiwA/p^3f-lyiwA p^4f-lyiwA:p^5f-lyiwA:p^df|'`
 
     # convert the human readible time stamp to unix epoch
     timestamp=`date -u --date="$correcttime" +"%s"`
 
-    echo "$timestamp" >> tle.tle
-    echo "$tle" >> tle.tle
+    echo "$timestamp" >> tle.txt
+    echo "$tle" >> tle.txt
 
   fi
 
 done
 
-rm *.txt
-
-mv tle.tle tle.txt
+mv tle.txt $MY_PATH/

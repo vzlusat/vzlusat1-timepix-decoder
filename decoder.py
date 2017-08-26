@@ -1088,6 +1088,7 @@ def on_key_event(event):
 
         if event.char == 'g':
             show_globus.toggle()
+            reloadCurrentImage()
 
         if event.char == 'h':
             marked_as_hidden_var.set(not marked_as_hidden_var.get())
