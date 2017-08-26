@@ -571,7 +571,11 @@ parseTLE()
 # create the root window
 root = Tk.Tk()
 root.resizable(width=1, height=1)
-root.geometry('{}x{}'.format(1380, 740))
+import platform
+if platform.system() == "Windows":
+    root.geometry('{}x{}'.format(1380, 840))
+else:
+    root.geometry('{}x{}'.format(1380, 740))
 root.wm_title("VZLUSAT-1 X-Ray data decoder")
 
 # create the main Frame in the root window
