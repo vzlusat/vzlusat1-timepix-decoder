@@ -7,7 +7,12 @@ from src.baseMethods import getExportHkName
 import datetime
 import csv
 
+global autogenerate_csv_load
+
 def exportHouseKeeping(data):
+
+    if not autogenerate_csv_load:
+        return
 
     hk_array = [None] * 16;
 
@@ -186,6 +191,10 @@ def exportRaw(image):
     exportMetadata(image)
 
 def exportImage(image):
+
+    global autogenerate_csv_load
+    if not autogenerate_csv_load:
+        return
 
     if image.type == 1:
 

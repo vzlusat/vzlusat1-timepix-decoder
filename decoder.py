@@ -101,7 +101,10 @@ def loadFiles():
             housekeeeping = loadHouseKeeping(file)
 
             if housekeeeping != 0:
-                if (show_favorite_var.get() and not housekeeeping.favorite):
+
+                if hide_housekeeping_var.get():
+                    pass
+                elif (show_favorite_var.get() and not housekeeeping.favorite):
                     pass
                 elif ((not show_hidden_var.get()) and (housekeeeping.hidden)):
                     pass
@@ -117,7 +120,11 @@ def loadFiles():
 
             if image != 0:
 
-                if (show_favorite_var.get() and not image.favorite):
+                if (hide_without_data_var.get() and (not image.got_data)):
+                    pass
+                elif (show_only_without_data_var.get() and image.got_data):
+                    pass
+                elif (show_favorite_var.get() and not image.favorite):
                     pass
                 elif ((not show_hidden_var.get()) and (image.hidden)):
                     pass
@@ -707,10 +714,14 @@ def numericalSort(value):
 # user can switch off generating pngs
 autogenerate_png_view = Tk.IntVar()
 autogenerate_png_load = Tk.IntVar()
+autogenerate_csv_load = Tk.IntVar()
 
 # user can switch on/off showing of hidden and favorite images
 show_hidden_var = Tk.IntVar()
 show_favorite_var = Tk.IntVar()
+hide_without_data_var = Tk.IntVar()
+show_only_without_data_var = Tk.IntVar()
+hide_housekeeping_var = Tk.IntVar()
 
 # user can mark image as favorite or hidden
 image_is_hidden = Tk.IntVar()
@@ -806,7 +817,7 @@ def loadNewImages():
     if file_name == "":
         return
 
-    if not parseInputFile(file_name, v, root):
+    if not parseInputFile(file_name, v, root, autogenerate_csv_load.get()):
         return
     else:
         print("Successfully parsed the file \"{}\"".format(file_name))
@@ -867,6 +878,10 @@ load_button.pack(side=Tk.TOP)
 
 #{ CHECKBOX for autogenerate_png_load
 
+autogenerate_checkbox3 = Tk.Checkbutton(master=frame_list, text="export csv while loading", variable=autogenerate_csv_load)
+autogenerate_checkbox3.pack(side=Tk.TOP)
+# autogenerate_checkbox3.toggle()
+
 autogenerate_checkbox2 = Tk.Checkbutton(master=frame_list, text="export pngs while loading", variable=autogenerate_png_load)
 autogenerate_checkbox2.pack(side=Tk.TOP)
 # autogenerate_checkbox2.toggle()
@@ -906,13 +921,22 @@ balloon.bind(autogenerate_checkbox, "When checked, png images will be re-exporte
 
 #}
 
-#{ CHECKBOXES for showing and hiding marked images
+#{ CHECKBOXES for showing and hiding images
 
 show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList)
 show_hidden.pack(side=Tk.BOTTOM)
 
 show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite", variable=show_favorite_var, command=reloadList)
 show_favorite_only.pack(side=Tk.BOTTOM)
+
+hide_without_data = Tk.Checkbutton(master=frame_left, text="hide images without data", variable=hide_without_data_var, command=reloadList)
+hide_without_data.pack(side=Tk.BOTTOM)
+
+show_only_without_data = Tk.Checkbutton(master=frame_left, text="show only without data", variable=show_only_without_data_var, command=reloadList)
+show_only_without_data.pack(side=Tk.BOTTOM)
+
+hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping", variable=hide_housekeeping_var, command=reloadList)
+hide_housekeeping.pack(side=Tk.BOTTOM)
 
 #}
 
