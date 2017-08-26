@@ -204,7 +204,7 @@ def showImage(image, manual):
     marked_as_favorite_var.set(image.favorite)
 
     if manual == 0 and image.got_data == 0:
-        return 
+        return
 
     # Clear the previous metadata
     for i in range(0, 21):
@@ -242,7 +242,7 @@ def showImage(image, manual):
 
             # if we got metadata, use them
             if temp_image.got_metadata == 1:
-               
+
                 print("Metadata are missing in {}_{}, replacing them from {}_{}".format(image.id, image.type, temp_image.id, temp_image.type))
                 image.mode = temp_image.mode
                 image.threshold = temp_image.threshold
@@ -473,7 +473,7 @@ def markHiddenCallback():
 
     global loaded_image
     loaded_image.hidden = marked_as_hidden_var.get()
-    
+
     if isinstance(loaded_image, Image):
         saveImage(loaded_image)
     elif isinstance(loaded_image, HouseKeeping):
@@ -528,7 +528,7 @@ def reloadList(new_idx=-1):
         else:
             image = loadImage(file_name)
             if image != 0:
-                
+
                 loaded_image = image
                 showImage(image, 1)
 
@@ -617,7 +617,7 @@ for i in range(0, len(Image.metadata_labels)): #Rows
     if i == 7:
         temp_baloon = Pmw.Balloon(master=root);
         temp_baloon.bind(label, "Number of non-zero pixels in the original image (before applying filtration)")
-        
+
     # nonzero pixel count
     if i == 8:
         temp_baloon = Pmw.Balloon(master=root);
@@ -653,7 +653,7 @@ housekeeping_labels = []
 frame_figure = Tk.Frame(frame_right);
 frame_figure.pack(side=Tk.RIGHT, fill=Tk.BOTH, expand=0, padx=5, pady=5)
 
-# create the matplotlib's figure canvas 
+# create the matplotlib's figure canvas
 figure_canvas = FigureCanvasTkAgg(my_figure, master=frame_figure)
 figure_canvas.show()
 figure_canvas.get_tk_widget().pack(side=Tk.TOP)
@@ -839,11 +839,18 @@ def loadNewImages():
             # generate pngs from
             image_filename='images_png/{}.png'.format(item)
 
-            try:
-                with open(image_filename) as file:
-                    pass
-            except IOError as e:
-                reloadData(idx, 0)
+            listbox.selection_clear(0, "end")
+            listbox.selection_set(idx)
+            listbox.see(idx)
+
+            print("item: {}".format(item))
+
+            if item[-2] != 'h':
+                try:
+                    with open(image_filename) as file:
+                        pass
+                except IOError as e:
+                    reloadData(idx, 0)
 
             idx += 1
 
@@ -863,7 +870,7 @@ def loadNewImages():
         else:
             image = loadImage(file_name)
             if image != 0:
-                
+
                 loaded_image = image
                 showImage(image, 1)
 
@@ -895,7 +902,7 @@ balloon2.bind(autogenerate_checkbox2, "When checked, png images will generated (
 
 def close_window():
     root.withdraw()
-    root.quit() 
+    root.quit()
     root.destroy()
     # sys.exit()
 
