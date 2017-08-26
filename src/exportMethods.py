@@ -192,10 +192,6 @@ def exportRaw(image):
 
 def exportImage(image):
 
-    global autogenerate_csv_load
-    if not autogenerate_csv_load:
-        return
-
     if image.type == 1:
 
         exportRaw(image)
