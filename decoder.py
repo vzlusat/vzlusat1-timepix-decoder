@@ -724,6 +724,7 @@ def clearMap():
     subplot2.patch.set_visible(False)
     subplot2.axis("off")
     globus_canvas.show()
+    globus_label_var.set("")
 
 def redrawMap(lat, lon, timestamp):
 
