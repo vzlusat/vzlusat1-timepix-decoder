@@ -17,26 +17,6 @@ def installAndImport(package):
 installAndImport('matplotlib')
 installAndImport('Pmw')
 
-import ConfigParser
-Config = ConfigParser.ConfigParser()
-Config.read("settings.txt")
-def ConfigSectionMap(section):
-    dict1 = {}
-    options = Config.options(section)
-    for option in options:
-        try:
-            dict1[option] = Config.get(section, option)
-            if dict1[option] == -1:
-                DebugPrint("skip: %s" % option)
-        except:
-            print("exception on %s!" % option)
-            dict1[option] = None
-    return dict1
-use_globus = Config.getboolean("General", "show_globe")
-
-if use_globus:
-  installAndImport('ephem')
-
 matplotlib.use('TkAgg')
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
@@ -75,9 +55,34 @@ else:
 from src.comments import *
 #}
 
+if sys.version_info[0] < 3:
+    import ConfigParser
+    Config = ConfigParser.ConfigParser()
+else:
+    import configparser
+    Config = configparser.ConfigParser()
+
+Config.read("settings.txt")
+def ConfigSectionMap(section):
+    dict1 = {}
+    options = Config.options(section)
+    for option in options:
+        try:
+            dict1[option] = Config.get(section, option)
+            if dict1[option] == -1:
+                DebugPrint("skip: %s" % option)
+        except:
+            print("exception on %s!" % option)
+            dict1[option] = None
+    return dict1
+use_globus = Config.getboolean("General", "show_globe")
+
 # for plotting the globe
 if use_globus:
   from mpl_toolkits.basemap import Basemap
+
+if use_globus:
+  installAndImport('ephem')
 
 # core methods
 
@@ -496,6 +501,10 @@ def showImage(image, manual):
 
             image_filename='images_png/{}_{}.png'.format(image.id, image.type)
             my_figure.savefig(image_filename, dpi=250, bbox_inches='tight')
+
+            if use_globus and show_globus_var.get():
+                image_globus_filename='images_png/{}_map.png'.format(image.id)
+                my_figure2.savefig(image_globus_filename, dpi=150, bbox_inches='tight')
 
     else: # we have not data to show
 
