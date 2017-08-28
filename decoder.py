@@ -33,7 +33,6 @@ def ConfigSectionMap(section):
             dict1[option] = None
     return dict1
 use_globus = Config.getboolean("General", "show_globe")
-print("use_globus: {}".format(use_globus))
 
 if use_globus:
   installAndImport('ephem')
