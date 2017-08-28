@@ -32,4 +32,4 @@ do
 
 done
 
-mv tle.txt $MY_PATH/
+mv tle.txt $MY_PATH/../../
