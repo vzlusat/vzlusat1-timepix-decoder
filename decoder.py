@@ -71,6 +71,8 @@ else:
     import tkinter as Tk
     import tkinter.filedialog
     from tkinter import ttk
+
+from src.comments import *
 #}
 
 # for plotting the globe
@@ -506,6 +508,9 @@ def showImage(image, manual):
         subplot1.axis('off')
 
     figure_canvas.show()
+
+    id_baloon.bind(label, getComment(image.id))
+    v.set(getComment(image.id))
 #}
 
 # callback for marking hidden/favorite checkboxex
@@ -609,6 +614,9 @@ frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=90)
 my_figure.clf()
 
+# import image comments
+parseComments()
+
 # create the status line
 global v # global variable, so anyone can add text to the status line
 v = Tk.StringVar()
@@ -636,6 +644,9 @@ else:
 frame_mid_bottom = Tk.Frame(frame_middle, bd=1);
 frame_mid_bottom.pack(side=Tk.BOTTOM, fill=Tk.BOTH, expand=0, padx=0, pady=0)
 
+# initialize Pmw (creates on-hover hints)
+Pmw.initialise(root)
+
 #{ create the labels for metadatas and their respective control variables
 metadatas = []
 metadatas_var = []
@@ -654,8 +665,8 @@ for i in range(0, len(Image.metadata_labels)): #Rows
 
     # filtration
     if i == 0:
-        temp_baloon = Pmw.Balloon(master=root);
-        temp_baloon.bind(label, "Unique image id. The first orbital image is 385.")
+        id_baloon = Pmw.Balloon(master=root);
+        id_baloon.bind(label, "pes")
 
     # Threshold
     if i == 3:
@@ -814,9 +825,6 @@ subplot1.axes.get_yaxis().set_visible(False)
 subplot1.patch.set_visible(False)
 subplot1.axis('off')
 figure_canvas.show()
-
-# initialize Pmw (creates on-hover hints)
-Pmw.initialise(root)
 
 # we this sort function for sorting out filenames
 numbers = re.compile(r'(\d+)')
