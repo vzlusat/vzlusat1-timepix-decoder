@@ -16,7 +16,27 @@ def installAndImport(package):
 
 installAndImport('matplotlib')
 installAndImport('Pmw')
-installAndImport('ephem')
+
+import ConfigParser
+Config = ConfigParser.ConfigParser()
+Config.read("settings.txt")
+def ConfigSectionMap(section):
+    dict1 = {}
+    options = Config.options(section)
+    for option in options:
+        try:
+            dict1[option] = Config.get(section, option)
+            if dict1[option] == -1:
+                DebugPrint("skip: %s" % option)
+        except:
+            print("exception on %s!" % option)
+            dict1[option] = None
+    return dict1
+use_globus = Config.getboolean("General", "show_globe")
+print("use_globus: {}".format(use_globus))
+
+if use_globus:
+  installAndImport('ephem')
 
 matplotlib.use('TkAgg')
 
@@ -55,7 +75,8 @@ else:
 #}
 
 # for plotting the globe
-from mpl_toolkits.basemap import Basemap
+if use_globus:
+  from mpl_toolkits.basemap import Basemap
 
 # core methods
 
@@ -200,12 +221,13 @@ def showHouseKeeping(housekeeping):
     marked_as_hidden_var.set(housekeeping.hidden)
     marked_as_favorite_var.set(housekeeping.favorite)
 
-    if show_globus_var.get():
-        latitude, longitude, tle_date = getLatLong(housekeeping.time)
-        globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
-        redrawMap(latitude, longitude, human_readible_time)
-    else:
-        clearMap()
+    if use_globus:
+      if show_globus_var.get():
+          latitude, longitude, tle_date = getLatLong(housekeeping.time)
+          globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
+          redrawMap(latitude, longitude, human_readible_time)
+      else:
+          clearMap()
 #}
 
 #{ def showImage(image): resets and shows the image
@@ -331,12 +353,13 @@ def showImage(image, manual):
         human_readible_time = datetime.datetime.utcfromtimestamp(image.time)
         metadatas_var[19].set(human_readible_time)
 
-        if show_globus_var.get():
-            latitude, longitude, tle_date = getLatLong(image.time)
-            globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
-            redrawMap(latitude, longitude, human_readible_time)
-        else:
-            clearMap()
+        if use_globus:
+          if show_globus_var.get():
+              latitude, longitude, tle_date = getLatLong(image.time)
+              globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
+              redrawMap(latitude, longitude, human_readible_time)
+          else:
+              clearMap()
 
         # only print chunk id if we actually got the metadata (-1 if it does not)
         if image.chunk_id >= 0:
@@ -565,8 +588,9 @@ if not os.path.exists("images_png"):
 #}
 
 # Load TLE
-from src.tle import *
-parseTLE()
+if use_globus:
+  from src.tle import *
+  parseTLE()
 
 # create the root window
 root = Tk.Tk()
@@ -705,16 +729,17 @@ figure_canvas._tkcanvas.pack(side=Tk.TOP)
 # map.drawmeridians(numpy.arange(0,360,30))
 # map.drawparallels(numpy.arange(-90,90,30))
 
-globus_label_var = Tk.StringVar()
-globus_label = Tk.Label(frame_mid_bottom, anchor=Tk.S, justify=Tk.CENTER,  textvariable=globus_label_var)
-globus_label.pack(side=Tk.BOTTOM)
-
-my_figure2 = Figure(facecolor='none', figsize=(2.0, 2.0), dpi=90)
-
-# create the canvas for the globus
-globus_canvas = FigureCanvasTkAgg(my_figure2, master=frame_mid_bottom)
-globus_canvas.get_tk_widget().pack(side=Tk.BOTTOM, fill=Tk.BOTH, anchor=Tk.S)
-globus_canvas._tkcanvas.pack(side=Tk.BOTTOM, fill=Tk.BOTH, anchor=Tk.S)
+if use_globus:
+  globus_label_var = Tk.StringVar()
+  globus_label = Tk.Label(frame_mid_bottom, anchor=Tk.S, justify=Tk.CENTER,  textvariable=globus_label_var)
+  globus_label.pack(side=Tk.BOTTOM)
+  
+  my_figure2 = Figure(facecolor='none', figsize=(2.0, 2.0), dpi=90)
+  
+  # create the canvas for the globus
+  globus_canvas = FigureCanvasTkAgg(my_figure2, master=frame_mid_bottom)
+  globus_canvas.get_tk_widget().pack(side=Tk.BOTTOM, fill=Tk.BOTH, anchor=Tk.S)
+  globus_canvas._tkcanvas.pack(side=Tk.BOTTOM, fill=Tk.BOTH, anchor=Tk.S)
 
 def clearMap():
     my_figure2.clf()
@@ -1025,8 +1050,9 @@ balloon.bind(autogenerate_checkbox, "When checked, png images will be re-exporte
 
 #{ CHECKBOXES for showing and hiding images
 
-show_globus = Tk.Checkbutton(master=frame_left, text="show globus", variable=show_globus_var, command=reloadCurrentImage)
-show_globus.pack(side=Tk.BOTTOM)
+if use_globus:
+  show_globus = Tk.Checkbutton(master=frame_left, text="show globus", variable=show_globus_var, command=reloadCurrentImage)
+  show_globus.pack(side=Tk.BOTTOM)
 # show_globus.toggle()
 
 show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList)
@@ -1096,9 +1122,10 @@ def on_key_event(event):
         if event.char == 'o':
             loadNewImages()
 
-        if event.char == 'g':
-            show_globus.toggle()
-            reloadCurrentImage()
+        if use_globus:
+          if event.char == 'g':
+              show_globus.toggle()
+              reloadCurrentImage()
 
         if event.char == 'h':
             marked_as_hidden_var.set(not marked_as_hidden_var.get())
