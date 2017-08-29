@@ -800,7 +800,7 @@ def redrawMap(lat, lon, timestamp):
 
 # create the toolbar for the figure
 frame_toolbar = Tk.Frame(frame_figure);
-frame_toolbar.pack(side=Tk.BOTTOM, fill=Tk.Y, expand=1)
+frame_toolbar.pack(side=Tk.TOP, expand=0)
 
 def reloadCurrentImage(evt=0):
 
@@ -824,7 +824,7 @@ colormap_combobox.bind("<<ComboboxSelected>>", reloadCurrentImage)
 colormap_combobox.pack(side=Tk.TOP, expand=1)
 
 toolbar = NavigationToolbar2TkAgg(figure_canvas, frame_toolbar)
-toolbar.pack(side=Tk.LEFT)
+toolbar.pack(side=Tk.TOP)
 toolbar.update()
 
 # create the one and only subplot in the figure
