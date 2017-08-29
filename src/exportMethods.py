@@ -6,6 +6,7 @@ from src.baseMethods import getExportMetadataName
 from src.baseMethods import getExportHkName
 import datetime
 import csv
+from src.tle import *
 
 def exportHouseKeeping(data):
 
@@ -37,6 +38,12 @@ def exportHouseKeeping(data):
             if i < 16:
 
                 hk_file.write("\n")
+
+        # print("use_globus: {}".format(use_globus))
+        # if use_globus:
+        #     latitude, longitude, tle_date = getLatLong(data.time)
+        #     hk_file.write("lat, long, tle_time: {}, {}, {}".format(latitude, longitude, tle_date))
+
 
 def exportMetadata(image):
 
@@ -130,6 +137,10 @@ def exportMetadata(image):
             if i < 20:
 
                 metadata_file.write("\n")
+
+        # if use_globus:
+        #     latitude, longitude, tle_date = getLatLong(image.time)
+        #     hk_file.write("lat, long, tle_time: {}, {}, {}".format(latitude, longitude, tle_date))
 
 def exportBinning(image):
 
