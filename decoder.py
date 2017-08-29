@@ -33,28 +33,6 @@ import datetime
 import re
 import time
 
-# my custom functions
-from src.Image import Image
-from src.HouseKeeping import HouseKeeping
-from src.loadImage import loadImage
-from src.saveImage import saveImage
-from src.saveHouseKeeping import saveHouseKeeping
-from src.loadHouseKeeping import loadHouseKeeping
-from src.parseInputFile import parseInputFile
-
-# imports that depend on the python version
-if sys.version_info[0] < 3:
-    import Tkinter as Tk
-    import tkFileDialog
-    import ttk
-else:
-    import tkinter as Tk
-    import tkinter.filedialog
-    from tkinter import ttk
-
-from src.comments import *
-#}
-
 if sys.version_info[0] < 3:
     import ConfigParser
     Config = ConfigParser.ConfigParser()
@@ -83,6 +61,28 @@ if use_globus:
 
 if use_globus:
   installAndImport('ephem')
+
+# my custom functions
+from src.Image import Image
+from src.HouseKeeping import HouseKeeping
+from src.loadImage import loadImage
+from src.saveImage import saveImage
+from src.saveHouseKeeping import saveHouseKeeping
+from src.loadHouseKeeping import loadHouseKeeping
+from src.parseInputFile import parseInputFile
+
+# imports that depend on the python version
+if sys.version_info[0] < 3:
+    import Tkinter as Tk
+    import tkFileDialog
+    import ttk
+else:
+    import tkinter as Tk
+    import tkinter.filedialog
+    from tkinter import ttk
+
+from src.comments import *
+#}
 
 # core methods
 
