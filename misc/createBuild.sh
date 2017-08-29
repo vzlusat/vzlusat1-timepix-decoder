@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="1.0.13"
+version="1.0.14"
 
 files=(
 "src"
@@ -11,6 +11,7 @@ files=(
 "colormaps.txt"
 "settings.txt"
 "tle.txt"
+"comments.txt"
 )
 
 # get the path to this script
