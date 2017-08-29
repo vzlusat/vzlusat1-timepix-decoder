@@ -675,7 +675,7 @@ for i in range(0, len(Image.metadata_labels)): #Rows
     # filtration
     if i == 0:
         id_baloon = Pmw.Balloon(master=root);
-        id_baloon.bind(label, "pes")
+        id_baloon.bind(label, "Unique ID of the image. The first orbital image was 385.")
 
     # Threshold
     if i == 3:
@@ -776,7 +776,7 @@ def redrawMap(lat, lon, timestamp):
     subplot2 = my_figure2.add_subplot(111)
 
     globus = Basemap(
-        projection='ortho',
+        projection='mill',
         lat_0=lat,
         lon_0=lon,
         ax=subplot2
