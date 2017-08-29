@@ -776,7 +776,7 @@ def redrawMap(lat, lon, timestamp):
     subplot2 = my_figure2.add_subplot(111)
 
     globus = Basemap(
-        projection='mill',
+        projection='ortho',
         lat_0=lat,
         lon_0=lon,
         ax=subplot2
