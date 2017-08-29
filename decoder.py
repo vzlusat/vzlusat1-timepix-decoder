@@ -610,7 +610,7 @@ root = Tk.Tk()
 root.resizable(width=1, height=1)
 import platform
 if platform.system() == "Windows":
-    root.geometry('{}x{}'.format(1380, 800))
+    root.geometry('{}x{}'.format(1380, 900))
 else:
     root.geometry('{}x{}'.format(1380, 740))
 root.wm_title("VZLUSAT-1 X-Ray data decoder")
