@@ -76,10 +76,12 @@ if sys.version_info[0] < 3:
     import Tkinter as Tk
     import tkFileDialog
     import ttk
+    import tkFont
 else:
     import tkinter as Tk
     import tkinter.filedialog
     from tkinter import ttk
+    import tkinter.font as tkFont
 
 from src.comments import *
 #}
@@ -607,12 +609,26 @@ if use_globus:
 
 # create the root window
 root = Tk.Tk()
+
+customfont = tkFont.Font(family="Helvetica", size=14)
+
+gpd_enabled = Config.getboolean("gpd", "enabled")
+scale = Config.getfloat("gpd", "font_scale")
+window_width = Config.getint("gpd", "window_width")
+window_height = Config.getint("gpd", "window_height")
+
+if not gpd_enabled:
+    scale = 1.0
+    window_width = 1380
+    window_height = 740
+
+root.tk.call('tk', 'scaling', scale)
 root.resizable(width=1, height=1)
 import platform
 if platform.system() == "Windows":
     root.geometry('{}x{}'.format(1380, 900))
 else:
-    root.geometry('{}x{}'.format(1380, 740))
+    root.geometry('{}x{}'.format(window_width, window_height))
 root.wm_title("VZLUSAT-1 X-Ray data decoder")
 
 # create the main Frame in the root window
@@ -620,7 +636,10 @@ frame_main = Tk.Frame(root);
 frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
 # create the figure
-my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=90)
+if not gpd_enabled:
+    my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=90)
+else:
+    my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=120)
 my_figure.clf()
 
 # import image comments
@@ -629,7 +648,7 @@ parseComments()
 # create the status line
 global v # global variable, so anyone can add text to the status line
 v = Tk.StringVar()
-status_line = Tk.Label(root, anchor=Tk.W, justify=Tk.LEFT, textvariable=v, height=1, bg="white", bd=2, highlightbackground="black")
+status_line = Tk.Label(root, anchor=Tk.W, justify=Tk.LEFT, textvariable=v, height=1, bg="white", bd=2, highlightbackground="black", font=customfont)
 status_line.pack(side=Tk.BOTTOM, fill=Tk.X, expand=0)
 
 # create the left subframe for the list
@@ -665,12 +684,12 @@ for i in range(0, len(Image.metadata_labels)): #Rows
 
     # labels on the left containing the "labels"
     text_labels_var.append(Tk.StringVar())
-    label = Tk.Label(frame_mid_top, textvariable=text_labels_var[i])
+    label = Tk.Label(frame_mid_top, textvariable=text_labels_var[i], font=customfont)
     text_labels.append((label).grid(row=i, column=0, sticky=Tk.E))
 
     # lables on the right containing the "values"
     metadatas_var.append(Tk.StringVar())
-    metadatas.append(Tk.Label(frame_mid_top, textvariable=metadatas_var[i]).grid(row=i, column=1, sticky=Tk.W))
+    metadatas.append(Tk.Label(frame_mid_top, textvariable=metadatas_var[i], font=customfont).grid(row=i, column=1, sticky=Tk.W))
 
     # filtration
     if i == 0:
@@ -750,7 +769,7 @@ figure_canvas._tkcanvas.pack(side=Tk.TOP)
 
 if use_globus:
   globus_label_var = Tk.StringVar()
-  globus_label = Tk.Label(frame_mid_bottom, anchor=Tk.S, justify=Tk.CENTER,  textvariable=globus_label_var)
+  globus_label = Tk.Label(frame_mid_bottom, anchor=Tk.S, justify=Tk.CENTER,  textvariable=globus_label_var, font=customfont)
   globus_label.pack(side=Tk.BOTTOM)
   
   my_figure2 = Figure(facecolor='none', figsize=(2.0, 2.0), dpi=90)
@@ -905,7 +924,7 @@ def onSelect(evt):
 #}
 
 scrollbar = Tk.Scrollbar(master=frame_list2, orient=Tk.VERTICAL)
-listbox = Tk.Listbox(master=frame_list2, yscrollcommand=scrollbar.set, selectmode=Tk.SINGLE)
+listbox = Tk.Listbox(master=frame_list2, yscrollcommand=scrollbar.set, selectmode=Tk.SINGLE, font=customfont)
 scrollbar.config(command=listbox.yview)
 scrollbar.pack(side=Tk.LEFT, fill=Tk.Y, expand=0)
 listbox.pack(side=Tk.LEFT, fill=Tk.Y, expand=0)
@@ -1014,18 +1033,18 @@ def loadNewImages():
 #}
 
 # spawn button for loading new images
-load_button = Tk.Button(master=frame_list, text='Load new images', command=loadNewImages)
+load_button = Tk.Button(master=frame_list, text='Load new images', command=loadNewImages, font=customfont)
 load_button.pack(side=Tk.TOP)
 
 #}
 
 #{ CHECKBOX for autogenerate_png_load
 
-autogenerate_checkbox3 = Tk.Checkbutton(master=frame_list, text="export csv while loading", variable=autogenerate_csv_load)
+autogenerate_checkbox3 = Tk.Checkbutton(master=frame_list, text="export csv while loading", variable=autogenerate_csv_load, font=customfont)
 autogenerate_checkbox3.pack(side=Tk.TOP)
 # autogenerate_checkbox3.toggle()
 
-autogenerate_checkbox2 = Tk.Checkbutton(master=frame_list, text="export pngs while loading", variable=autogenerate_png_load)
+autogenerate_checkbox2 = Tk.Checkbutton(master=frame_list, text="export pngs while loading", variable=autogenerate_png_load, font=customfont)
 autogenerate_checkbox2.pack(side=Tk.TOP)
 # autogenerate_checkbox2.toggle()
 
@@ -1047,7 +1066,7 @@ def win_deleted():
     close_window();
 
 # spawn quit button
-button = Tk.Button(master=frame_left, text='Quit', command=close_window)
+button = Tk.Button(master=frame_left, text='Quit', command=close_window, font=customfont)
 button.pack(side=Tk.BOTTOM)
 #}
 
@@ -1056,7 +1075,7 @@ button.pack(side=Tk.BOTTOM)
 def autogenerateCheckboxCallback():
     reloadList(int(listbox.curselection()[0]))
 
-autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing", variable=autogenerate_png_view, command=autogenerateCheckboxCallback)
+autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing", variable=autogenerate_png_view, command=autogenerateCheckboxCallback, font=customfont)
 autogenerate_checkbox.pack(side=Tk.BOTTOM)
 
 balloon = Pmw.Balloon(master=root);
@@ -1067,23 +1086,23 @@ balloon.bind(autogenerate_checkbox, "When checked, png images will be re-exporte
 #{ CHECKBOXES for showing and hiding images
 
 if use_globus:
-  show_globus = Tk.Checkbutton(master=frame_left, text="show globus", variable=show_globus_var, command=reloadCurrentImage)
+  show_globus = Tk.Checkbutton(master=frame_left, text="show globus", variable=show_globus_var, command=reloadCurrentImage, font=customfont)
   show_globus.pack(side=Tk.BOTTOM)
 # show_globus.toggle()
 
-show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList)
+show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList, font=customfont)
 show_hidden.pack(side=Tk.BOTTOM)
 
-show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite", variable=show_favorite_var, command=reloadList)
+show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite", variable=show_favorite_var, command=reloadList, font=customfont)
 show_favorite_only.pack(side=Tk.BOTTOM)
 
-show_only_without_data = Tk.Checkbutton(master=frame_left, text="show only without data", variable=show_only_without_data_var, command=reloadList)
+show_only_without_data = Tk.Checkbutton(master=frame_left, text="show only without data", variable=show_only_without_data_var, command=reloadList, font=customfont)
 show_only_without_data.pack(side=Tk.BOTTOM)
 
-hide_without_data = Tk.Checkbutton(master=frame_left, text="hide images without data", variable=hide_without_data_var, command=reloadList)
+hide_without_data = Tk.Checkbutton(master=frame_left, text="hide images without data", variable=hide_without_data_var, command=reloadList, font=customfont)
 hide_without_data.pack(side=Tk.BOTTOM)
 
-hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping", variable=hide_housekeeping_var, command=reloadList)
+hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping", variable=hide_housekeeping_var, command=reloadList, font=customfont)
 hide_housekeeping.pack(side=Tk.BOTTOM)
 
 #}
