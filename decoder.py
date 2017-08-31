@@ -610,7 +610,7 @@ if use_globus:
 # create the root window
 root = Tk.Tk()
 
-customfont = tkFont.Font(family="Helvetica", size=14)
+customfont = tkFont.Font(family="Arial", size=12)
 
 gpd_enabled = Config.getboolean("gpd", "enabled")
 scale = Config.getfloat("gpd", "font_scale")

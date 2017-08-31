@@ -2,7 +2,7 @@
 show_globe: true
 
 [gpd]
-enabled: true
+enabled: false
 font_scale: 1.5
 window_width: 1880
 window_height: 1140
