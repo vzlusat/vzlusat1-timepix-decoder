@@ -23,18 +23,18 @@ images = []
 for i in range(385, 416):
 
     new_image = loadImage(i, 1, path)
-    if new_image == 0:
+    if new_image == 0 or new_image.got_data == 0:
         new_image = loadImage(i, 2, path)
-    if new_image == 0:
+    if new_image == 0 or new_image.got_data == 0:
         new_image = loadImage(i, 4, path)
-    if new_image == 0:
+    if new_image == 0 or new_image.got_data == 0:
         new_image = loadImage(i, 8, path)
-    if new_image == 0:
+    if new_image == 0 or new_image.got_data == 0:
         new_image = loadImage(i, 16, path)
-    if new_image == 0:
+    if new_image == 0 or new_image.got_data == 0:
         new_image = loadImage(i, 32, path)
 
-    if new_image != 0:
+    if new_image != 0 and new_image.got_data == 1:
         images.append(new_image)
 
 doses = []
@@ -151,29 +151,11 @@ m.drawmapboundary(fill_color='white')
 # draw lat/lon grid lines every 30 degrees.
 # m.drawmeridians(numpy.arange(0,360,30))
 # m.drawparallels(numpy.arange(-90,90,30))
-m.colorbar(location="bottom",label="Z") # draw colorbar
+cb = m.colorbar(location="bottom",label="Z") # draw colorbar
 # plt.title('hexbin', fontsize=20)
 
-# # use histogram2d instead of hexbin.
-# ax = fig.add_subplot(121)
-# # remove points outside projection limb.
-# bincount, xedges, yedges = np.histogram2d(x, y, bins=bins)
-# mask = bincount == 0
-# # reset zero values to one to avoid divide-by-zero
-# bincount = np.where(bincount == 0, 1, bincount)
-# H, xedges, yedges = np.histogram2d(x, y, bins=bins, weights=z)
-# H = np.ma.masked_where(mask, H/bincount)
-# # set color of masked values to axes background (hexbin does this by default)
-# palette = plt.cm.jet
-# palette.set_bad(ax.get_axis_bgcolor(), 1.0)
-# CS = m.pcolormesh(xedges,yedges,H.T,shading='flat',cmap=palette)
-# # draw coastlines, lat/lon lines.
-# m.drawcoastlines()
-# m.drawparallels(np.arange(0,81,20))
-# m.drawmeridians(np.arange(-180,181,60))
-# m.colorbar(location="bottom",label="Z") # draw colorbar
-# plt.title('histogram2d', fontsize=20)
+cb.set_label('log10(Pixel counts)')
 
-# plt.title('Relative dose', fontsize=20)
+plt.title('Radiation map in 450 km SSO LEO orbit', fontsize=13)
 plt.gcf().set_size_inches(10,10)
 plt.show()
