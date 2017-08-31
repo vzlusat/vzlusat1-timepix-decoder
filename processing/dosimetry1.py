@@ -45,8 +45,9 @@ for i in range(len(images)):
 
     doses.append(suma)
 
-m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80,\
-            llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
+# m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80,\
+#             llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
+m = Basemap(projection='moll',lon_0=0,resolution='c')
 # m.fillcontinents(color='0.8')
 # m.fillcontinents(lake_color='white')
 m.drawcoastlines()
