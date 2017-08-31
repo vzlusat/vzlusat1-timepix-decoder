@@ -3,13 +3,13 @@ from src.Image import Image
 import os.path
 from src.baseMethods import getFileName
 
-def loadImage(image_id, image_type=0):
+def loadImage(image_id, image_type=0, path="images_bin/"):
 
     # deduce the filename
     if image_type == 0:
-        file_name = "images_bin/"+str(image_id)
+        file_name = path+str(image_id)
     else:
-        file_name = getFileName(image_id, image_type)
+        file_name = getFileName(image_id, image_type, path)
 
     # ask OS to locate the file
     if os.path.isfile(file_name):
