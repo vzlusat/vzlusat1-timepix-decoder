@@ -22,7 +22,18 @@ images = []
 
 for i in range(385, 416):
 
-    new_image = loadImage(i, 32, path)
+    new_image = loadImage(i, 1, path)
+    if new_image == 0:
+        new_image = loadImage(i, 2, path)
+    if new_image == 0:
+        new_image = loadImage(i, 4, path)
+    if new_image == 0:
+        new_image = loadImage(i, 8, path)
+    if new_image == 0:
+        new_image = loadImage(i, 16, path)
+    if new_image == 0:
+        new_image = loadImage(i, 32, path)
+
     if new_image != 0:
         images.append(new_image)
 
@@ -41,14 +52,15 @@ for i in range(len(images)):
     else:
         exposure = 60 + exposure%60000
 
-    suma = np.sum(images[i].data*kevs)/exposure
+    suma = np.sum(images[i].original_pixels)/exposure
     print("suma: {}".format(suma))
 
     doses.append(suma)
 
-# m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80,\
-#             llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
-m = Basemap(projection='moll',lon_0=0,resolution='c')
+# m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80, llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
+# m = Basemap(projection='moll',lon_0=0,resolution='c')
+m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,llcrnrlon=-180,urcrnrlon=180,resolution='c')
+
 # m.fillcontinents(color='0.8')
 # m.fillcontinents(lake_color='white')
 m.drawcoastlines()
@@ -58,8 +70,8 @@ m.drawmeridians(np.arange(-180.,181.,60.))
 m.drawmapboundary(fill_color='white')
 
 # number of points, bins to plot.
-npts = len(images)
-bins = 15
+npts = len(images)+42
+bins = 14
 
 # generate random points on a sphere,
 # so that every small area on the sphere is expected
@@ -73,14 +85,29 @@ lats = (180./np.pi)*np.arccos(2*v-1) - 90.
 # lats = np.compress(lats > 20, lats)
 # lons = np.compress(lats > 20, lons)
 
-lats = numpy.zeros(len(images))
-lons = numpy.zeros(len(images))
+lats = numpy.zeros(len(images)+42)
+lons = numpy.zeros(len(images)+42)
 
 for i in range(len(images)):
 
     latitude, longitude, tle_date = getLatLong(images[i].time)
     lats[i] = latitude
     lons[i] = longitude
+
+
+import datetime
+import re
+import time
+
+# fake the measurement that were not save, i.e. have been under 50 pixels
+for i in range(42):
+
+    time = 1503686482+i*300
+    latitude, longitude, tle_date = getLatLong(time)
+    lats[i+len(images)] = latitude
+    lons[i+len(images)] = longitude
+    doses.append(30)
+    print("time: {}".format(datetime.datetime.utcfromtimestamp(time)))
 
 # convert to map projection coordinates.
 x1, y1 = m(lons, lats)
@@ -106,7 +133,7 @@ cmap = pl.cm.gist_heat_r
 my_cmap = cmap(numpy.arange(cmap.N))
 
 # Set alpha
-my_cmap[:,-1] = numpy.linspace(0.2, 1, cmap.N)
+my_cmap[:,-1] = numpy.linspace(0.4, 1, cmap.N)
 
 # Create new colormap
 my_cmap = ListedColormap(my_cmap)
@@ -147,5 +174,6 @@ m.colorbar(location="bottom",label="Z") # draw colorbar
 # m.colorbar(location="bottom",label="Z") # draw colorbar
 # plt.title('histogram2d', fontsize=20)
 
+# plt.title('Relative dose', fontsize=20)
 plt.gcf().set_size_inches(10,10)
 plt.show()
