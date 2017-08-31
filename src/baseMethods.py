@@ -1,7 +1,7 @@
 # generate respective file names for the binary image files using image_id and the type of the image
-def getFileName(image_id, image_type):
+def getFileName(image_id, image_type, path="images_bin/"):
 
-    return "images_bin/"+str(image_id)+"_{0:02d}.pkl".format(image_type) 
+    return path+str(image_id)+"_{0:02d}.pkl".format(image_type) 
 
 def getHkFileName(images_taken, time_since_boot, boot_count):
 
