@@ -484,10 +484,13 @@ def showImage(image, manual):
             subplot1.relim()
             subplot1.autoscale_view()
 
-            if image.mode == 0:
-                subplot1.set_xlabel("Particle counts [-]")
+            if image.got_metadata == 1:
+                if image.mode == 0:
+                    subplot1.set_xlabel("Particle counts [-]")
+                else:
+                    subplot1.set_xlabel("Energy [keV]")
             else:
-                subplot1.set_xlabel("Energy [keV]")
+                subplot1.set_xlabel("Pixel values [-]")
 
             subplot1.set_ylabel("Counts [-]")
 
