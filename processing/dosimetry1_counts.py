@@ -118,7 +118,7 @@ my_cmap[:,-1] = numpy.linspace(0.4, 1, cmap.N)
 my_cmap = ListedColormap(my_cmap)
 
 # make plot using hexbin
-CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=14, cmap=my_cmap, mincnt=0, zorder=10)
+CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=18, cmap=my_cmap, mincnt=0, zorder=10)
 
 cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 cb.set_label('log10(Pixel counts)')
