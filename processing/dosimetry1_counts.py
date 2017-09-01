@@ -20,21 +20,28 @@ path = "../images_bin/"
 # load the images
 images = []
 
-for i in range(385, 416):
+from_idx = 385
+to = 796
+fake = 42
+
+for i in range(from_idx, to):
 
     new_image = loadImage(i, 1, path)
-    if new_image == 0 or new_image.got_data == 0:
+    if new_image == 0 or new_image.got_data == 0 or new_image.got_metadata == 0:
         new_image = loadImage(i, 2, path)
-    if new_image == 0 or new_image.got_data == 0:
+    if new_image == 0 or new_image.got_data == 0 or new_image.got_metadata == 0:
         new_image = loadImage(i, 4, path)
-    if new_image == 0 or new_image.got_data == 0:
+    if new_image == 0 or new_image.got_data == 0 or new_image.got_metadata == 0:
         new_image = loadImage(i, 8, path)
-    if new_image == 0 or new_image.got_data == 0:
+    if new_image == 0 or new_image.got_data == 0 or new_image.got_metadata == 0:
         new_image = loadImage(i, 16, path)
-    if new_image == 0 or new_image.got_data == 0:
+    if new_image == 0 or new_image.got_data == 0 or new_image.got_metadata == 0:
         new_image = loadImage(i, 32, path)
 
-    if new_image != 0 and new_image.got_data == 1:
+    # if new_image != 0 and new_image.got_data == 1:
+    #     images.append(new_image)
+
+    if new_image != 0 and new_image.got_metadata == 1 and new_image.got_data == 1:
         images.append(new_image)
 
 doses = []
@@ -52,7 +59,7 @@ for i in range(len(images)):
     else:
         exposure = 60 + exposure%60000
 
-    suma = np.sum(images[i].original_pixels)/exposure
+    suma = images[i].original_pixels/exposure
     print("suma: {}".format(suma))
 
     doses.append(suma)
@@ -70,7 +77,7 @@ m.drawmeridians(np.arange(-180.,181.,60.))
 m.drawmapboundary(fill_color='white')
 
 # number of points, bins to plot.
-npts = len(images)+42
+npts = len(images)+fake
 bins = 14
 
 # generate random points on a sphere,
@@ -85,8 +92,8 @@ lats = (180./np.pi)*np.arccos(2*v-1) - 90.
 # lats = np.compress(lats > 20, lats)
 # lons = np.compress(lats > 20, lons)
 
-lats = numpy.zeros(len(images)+42)
-lons = numpy.zeros(len(images)+42)
+lats = numpy.zeros(len(images)+fake)
+lons = numpy.zeros(len(images)+fake)
 
 for i in range(len(images)):
 
@@ -94,13 +101,12 @@ for i in range(len(images)):
     lats[i] = latitude
     lons[i] = longitude
 
-
 import datetime
 import re
 import time
 
 # fake the measurement that were not save, i.e. have been under 50 pixels
-for i in range(42):
+for i in range(fake):
 
     time = 1503686482+i*300
     latitude, longitude, tle_date = getLatLong(time)
