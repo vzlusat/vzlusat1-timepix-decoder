@@ -41,7 +41,7 @@ for i in range(from_idx, to):
     # if new_image != 0 and new_image.got_data == 1:
     #     images.append(new_image)
 
-    if new_image != 0 and new_image.got_metadata == 1 and new_image.got_data == 1:
+    if new_image != 0 and new_image.got_metadata == 1:
         images.append(new_image)
 
 doses = []
