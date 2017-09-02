@@ -35,7 +35,7 @@ def fmt(x, pos):
 
 image_bin_path = "../images_bin/"
 
-from_idx = 385
+from_idx = 417
 to_idx = 796
 
 # # the number of image in the first dosimetry
@@ -88,7 +88,8 @@ plt.figure(1)
 plt.subplot(131)
 # m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80, llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
 # m = Basemap(projection='moll',lon_0=0,resolution='c')
-m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+# m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
 
 # draw continents
 m.drawcoastlines()
@@ -148,12 +149,13 @@ doses = np.array(doses)
 doses_log = np.where(doses > 0, np.log(doses), doses)
 
 XX, YY = np.meshgrid(tlat, tlon)
-rbf = Rbf(lats, lons, doses_log, function='multiquadric', epsilon=0.1, smooth=10)
+rbf = Rbf(lats, lons, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
 ZZ = rbf(XX, YY)
 
 plt.subplot(132)
 
-m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+# m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
 
 # draw continents
 m.drawcoastlines()
@@ -180,13 +182,14 @@ tlon = np.linspace(-180, 180, n)
 doses = np.array(doses)
 
 XX, YY = np.meshgrid(tlat, tlon)
-rbf = Rbf(lats, lons, doses, function='multiquadric', epsilon=0.1, smooth=10)
+rbf = Rbf(lats, lons, doses, function='multiquadric', epsilon=0.1, smooth=0)
 ZZ = rbf(XX, YY)
 ZZ = np.where(ZZ < 0, 0, ZZ)
 
 plt.subplot(133)
 
-m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+# m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
 
 # draw continents
 m.drawcoastlines()
