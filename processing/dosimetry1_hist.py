@@ -125,8 +125,8 @@ my_cmap = ListedColormap(my_cmap)
 CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=13, cmap=my_cmap, mincnt=0, reduce_C_function=np.max, zorder=10)
 
 cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-cb.set_label('log10(Pixel counts)')
-plt.title('Radiation map in 450 km SSO LEO orbit', fontsize=13)
+cb.set_label('log10(Total energy)')
+plt.title('Radiation map in 510 km SSO LEO orbit', fontsize=13)
 
 plt.show()
 
