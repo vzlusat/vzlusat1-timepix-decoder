@@ -27,8 +27,8 @@ from scipy.interpolate import griddata
 
 image_bin_path = "../images_bin/"
 
-from_idx = 417
-to_idx = 796
+from_idx = 405
+to_idx = 1000
 
 # # the number of image in the first dosimetry
 dosimetry_1_n = 0
@@ -71,7 +71,7 @@ for i in range(len(images)):
 
 # create the map plot
 plt.figure(1)
-plt.subplot(121)
+# plt.subplot(121)
 # m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80, llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
 # m = Basemap(projection='moll',lon_0=0,resolution='c')
 m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,llcrnrlon=-180,urcrnrlon=180,resolution='c')
@@ -101,7 +101,7 @@ for i in range(len(images)):
 #     latitude, longitude, tle_date = getLatLong(time)
 #     lats[i+len(images)] = latitude
 #     lons[i+len(images)] = longitude
-#     doses.append(30)
+#     doses.append(50)
 
 # project lats and long to the map coordinates
 x1, y1 = m(lons, lats)
@@ -111,60 +111,62 @@ cmap = pl.cm.jet
 # get the original colormap colors
 my_cmap = cmap(numpy.arange(cmap.N))
 # set alpha
-my_cmap[:,-1] = numpy.linspace(0.01, 1, cmap.N)
+my_cmap[:,-1] = numpy.linspace(0.1, 1, cmap.N)
 # create the new colormap
 my_cmap = ListedColormap(my_cmap)
 
 # make plot using hexbin
-CS = m.hexbin(x1, y1, C=numpy.array(doses), gridsize=20, cmap=my_cmap, mincnt=0, zorder=10)
+CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=20, cmap=my_cmap, mincnt=0, zorder=10)
 
 cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 cb.set_label('log10(Pixel counts)')
 plt.title('Radiation map in 450 km SSO LEO orbit', fontsize=13)
 
-plt.subplot(122)
-m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,llcrnrlon=-180,urcrnrlon=180,resolution='c')
-
-# draw continents
-m.drawcoastlines()
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
-
-lats = np.reshape(lats, (len(lats), 1))
-lons = np.reshape(lons, (len(lons), 1))
-points = np.hstack((lats, lons))
-print("np.shape(points): {}".format(np.shape(points)))
-grid_x, grid_y = np.mgrid[(-1.57):1:1.57j, (-3.14):1:3.14j]
-print("grid_x: {}".format(grid_x))
-# grid_z2 = griddata(points, doses, (grid_x, grid_y), method='cubic')
-
-# print("grid_z2: {}".format(grid_z2))
-
-tck = interpolate.bisplrep(lats, lons, np.array(doses), s=0)
-znew = interpolate.bisplev(grid_x[:,0], grid_y[0,:], tck)
-
-# x1, y1 = m(xnew, ynew)
-
-print("x1: {}".format(np.shape(x1)))
-print("x1: {}".format(np.shape(y1)))
-print("x1: {}".format(np.shape(np.array(doses))))
-
-u = np.linspace(0, 1, 10)
-print("u: {}".format(np.shape(u)))
-
-# m.pcolormesh(x1, y1, np.array(doses))
-
 plt.show()
 
-# x = np.arange(-5.01, 5.01, 0.25)
-# y = np.arange(-5.01, 5.01, 0.25)
-# xx, yy = np.meshgrid(x, y)
-# z = np.sin(xx**2+yy**2)
-# f = interpolate.interp2d(x, y, z, kind='cubic')
+# plt.subplot(122)
+# m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,llcrnrlon=-180,urcrnrlon=180,resolution='c')
 
-# xnew = np.arange(-5.01, 5.01, 1e-2)
-# ynew = np.arange(-5.01, 5.01, 1e-2)
-# znew = f(xnew, ynew)
-# plt.plot(x, z[0, :], 'ro-', xnew, znew[0, :], 'b-')
+# # draw continents
+# m.drawcoastlines()
+# m.drawparallels(np.arange(-90.,91.,30.))
+# m.drawmeridians(np.arange(-180.,181.,60.))
+# m.drawmapboundary(fill_color='white')
+
+# lats = np.reshape(lats, (len(lats), 1))
+# lons = np.reshape(lons, (len(lons), 1))
+# points = np.hstack((lats, lons))
+# print("np.shape(points): {}".format(np.shape(points)))
+# grid_x, grid_y = np.mgrid[(-1.57):1:1.57j, (-3.14):1:3.14j]
+# print("grid_x: {}".format(grid_x))
+# # grid_z2 = griddata(points, doses, (grid_x, grid_y), method='cubic')
+
+# # print("grid_z2: {}".format(grid_z2))
+
+# tck = interpolate.bisplrep(lats, lons, np.array(doses), s=0)
+# znew = interpolate.bisplev(grid_x[:,0], grid_y[0,:], tck)
+
+# # x1, y1 = m(xnew, ynew)
+
+# print("x1: {}".format(np.shape(x1)))
+# print("x1: {}".format(np.shape(y1)))
+# print("x1: {}".format(np.shape(np.array(doses))))
+
+# u = np.linspace(0, 1, 10)
+# print("u: {}".format(np.shape(u)))
+
+# # m.pcolormesh(x1, y1, np.array(doses))
+
 # plt.show()
+
+# # x = np.arange(-5.01, 5.01, 0.25)
+# # y = np.arange(-5.01, 5.01, 0.25)
+# # xx, yy = np.meshgrid(x, y)
+# # z = np.sin(xx**2+yy**2)
+# # f = interpolate.interp2d(x, y, z, kind='cubic')
+
+# # xnew = np.arange(-5.01, 5.01, 1e-2)
+# # ynew = np.arange(-5.01, 5.01, 1e-2)
+# # znew = f(xnew, ynew)
+# # plt.plot(x, z[0, :], 'ro-', xnew, znew[0, :], 'b-')
+# # plt.show()
