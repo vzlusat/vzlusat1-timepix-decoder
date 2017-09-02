@@ -27,8 +27,8 @@ from scipy.interpolate import griddata
 
 image_bin_path = "../images_bin/"
 
-from_idx = 405
-to_idx = 1000
+from_idx = 385
+to_idx = 796
 
 # # the number of image in the first dosimetry
 dosimetry_1_n = 0
@@ -50,7 +50,10 @@ for i in range(from_idx, to_idx):
         print("image {} could not be loaded".format(i))
     else:
         if new_image.got_metadata == 1:
-            images.append(new_image)
+            if new_image.got_data == 1:
+                images.append(new_image)
+            else:
+                print("image {} does not have data".format(i))
         else:
             print("image {} does not have metadata".format(i))
 
@@ -66,6 +69,9 @@ for i in range(len(images)):
 
     # calculate the doses base on counts
     total_dose = np.sum(images[i].data*kevs)/exposure
+
+    # if images[i].original_pixels > 10000:
+    #     print("{} {}".format(images[i].id, images[i].original_pixels))
 
     doses.append(total_dose)
 
@@ -116,7 +122,7 @@ my_cmap[:,-1] = numpy.linspace(0.1, 1, cmap.N)
 my_cmap = ListedColormap(my_cmap)
 
 # make plot using hexbin
-CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=20, cmap=my_cmap, mincnt=0, zorder=10)
+CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=13, cmap=my_cmap, mincnt=0, reduce_C_function=np.max, zorder=10)
 
 cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 cb.set_label('log10(Pixel counts)')
