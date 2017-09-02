@@ -3,6 +3,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from mpl_toolkits.basemap import Basemap
+from math import *
+from scipy.interpolate import Rbf
+import matplotlib.ticker as ticker
 
 # to also allow loading from a parent directory
 import sys
@@ -24,6 +27,11 @@ parseTLE()
 # interpolation
 from scipy import interpolate
 from scipy.interpolate import griddata
+
+def fmt(x, pos):
+    a, b = '{:.0e}'.format(x).split('e')
+    b = int(b)
+    return r'${} \times 10^{{{}}}$'.format(a, b)
 
 image_bin_path = "../images_bin/"
 
@@ -77,13 +85,14 @@ for i in range(len(images)):
 
 # create the map plot
 plt.figure(1)
-# plt.subplot(121)
+plt.subplot(131)
 # m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80, llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
 # m = Basemap(projection='moll',lon_0=0,resolution='c')
-m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,llcrnrlon=-180,urcrnrlon=180,resolution='c')
+m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
 
 # draw continents
 m.drawcoastlines()
+# m.fillcontinents(color='coral',lake_color='aqua')
 m.drawparallels(np.arange(-90.,91.,30.))
 m.drawmeridians(np.arange(-180.,181.,60.))
 m.drawmapboundary(fill_color='white')
@@ -122,16 +131,80 @@ my_cmap[:,-1] = numpy.linspace(0.1, 1, cmap.N)
 my_cmap = ListedColormap(my_cmap)
 
 # make plot using hexbin
-CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=16, cmap=my_cmap, mincnt=0, reduce_C_function=np.max, zorder=10)
+CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=64, cmap=my_cmap, mincnt=0, reduce_C_function=np.max, zorder=10)
 
 cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-cb.set_label('log10(Total energy)')
-plt.title('Radiation map in 510 km SSO LEO orbit', fontsize=13)
+cb.set_label('log10(Total energy) [keV/s]')
+plt.title('Measurements in 510 km LEO orbit', fontsize=13)
 
-plt.show()
+#################################################################################
 
-# plt.subplot(122)
-# m = Basemap(projection='cyl',llcrnrlat=-90,urcrnrlat=90,llcrnrlon=-180,urcrnrlon=180,resolution='c')
+n = 100
+
+tlat = np.linspace(-90, 90, n)
+tlon = np.linspace(-180, 180, n)
+
+doses = np.array(doses)
+doses_log = np.where(doses > 0, np.log(doses), doses)
+
+XX, YY = np.meshgrid(tlat, tlon)
+rbf = Rbf(lats, lons, doses_log, function='multiquadric', epsilon=0.1, smooth=10)
+ZZ = rbf(XX, YY)
+
+plt.subplot(132)
+
+m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+
+# draw continents
+m.drawcoastlines()
+# m.fillcontinents(color='coral',lake_color='aqua')
+m.drawparallels(np.arange(-90.,91.,30.))
+m.drawmeridians(np.arange(-180.,181.,60.))
+m.drawmapboundary(fill_color='white')
+
+new_x1, new_y1 = m(YY, XX)
+
+m.pcolormesh(new_x1, new_y1, ZZ, cmap=my_cmap)
+
+cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+cb.set_label('log10(Total energy) [keV/s]')
+plt.title('RBF multiquadric (eps=10e-1), log10 scale', fontsize=13)
+
+##################################################################################
+
+n = 100
+
+tlat = np.linspace(-90, 90, n)
+tlon = np.linspace(-180, 180, n)
+
+doses = np.array(doses)
+
+XX, YY = np.meshgrid(tlat, tlon)
+rbf = Rbf(lats, lons, doses, function='multiquadric', epsilon=0.1, smooth=10)
+ZZ = rbf(XX, YY)
+ZZ = np.where(ZZ < 0, 0, ZZ)
+
+plt.subplot(133)
+
+m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+
+# draw continents
+m.drawcoastlines()
+m.drawparallels(np.arange(-90.,91.,30.))
+m.drawmeridians(np.arange(-180.,181.,60.))
+m.drawmapboundary(fill_color='white')
+
+new_x1, new_y1 = m(YY, XX)
+
+m.pcolormesh(new_x1, new_y1, ZZ, cmap=my_cmap)
+
+cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
+cb.set_label('Total energy [keV/s]')
+plt.title('RBF multiquadric (eps=10e-1), linear scale', fontsize=13)
+
+# plt.subplot(133)
+
+# m = Basemap(projection='cyl', llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
 
 # # draw continents
 # m.drawcoastlines()
@@ -142,37 +215,12 @@ plt.show()
 # lats = np.reshape(lats, (len(lats), 1))
 # lons = np.reshape(lons, (len(lons), 1))
 # points = np.hstack((lats, lons))
-# print("np.shape(points): {}".format(np.shape(points)))
-# grid_x, grid_y = np.mgrid[(-1.57):1:1.57j, (-3.14):1:3.14j]
-# print("grid_x: {}".format(grid_x))
-# # grid_z2 = griddata(points, doses, (grid_x, grid_y), method='cubic')
+# grid_z2 = griddata(points, doses, (XX, YY), method='cubic')
 
-# # print("grid_z2: {}".format(grid_z2))
+# m.imshow(grid_z2.T, extent=(0, 1, 0, 1), origin='lower', cmap=my_cmap)
 
-# tck = interpolate.bisplrep(lats, lons, np.array(doses), s=0)
-# znew = interpolate.bisplev(grid_x[:,0], grid_y[0,:], tck)
+# cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+# cb.set_label('Total energy [keV]')
+# plt.title('Cubic interpolation, linear scale', fontsize=13)
 
-# # x1, y1 = m(xnew, ynew)
-
-# print("x1: {}".format(np.shape(x1)))
-# print("x1: {}".format(np.shape(y1)))
-# print("x1: {}".format(np.shape(np.array(doses))))
-
-# u = np.linspace(0, 1, 10)
-# print("u: {}".format(np.shape(u)))
-
-# # m.pcolormesh(x1, y1, np.array(doses))
-
-# plt.show()
-
-# # x = np.arange(-5.01, 5.01, 0.25)
-# # y = np.arange(-5.01, 5.01, 0.25)
-# # xx, yy = np.meshgrid(x, y)
-# # z = np.sin(xx**2+yy**2)
-# # f = interpolate.interp2d(x, y, z, kind='cubic')
-
-# # xnew = np.arange(-5.01, 5.01, 1e-2)
-# # ynew = np.arange(-5.01, 5.01, 1e-2)
-# # znew = f(xnew, ynew)
-# # plt.plot(x, z[0, :], 'ro-', xnew, znew[0, :], 'b-')
-# # plt.show()
+plt.show()
