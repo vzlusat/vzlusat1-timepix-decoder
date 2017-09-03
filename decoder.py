@@ -627,7 +627,7 @@ else:
 if not gpd_enabled:
     scale = 1.0
     window_width = 1380
-    window_height = 740
+    window_height = 750
 
 root.tk.call('tk', 'scaling', scale)
 root.resizable(width=1, height=1)
