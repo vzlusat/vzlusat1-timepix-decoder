@@ -1,17 +1,17 @@
 #!/bin/bash
 
-version="1.0.14"
+version="1.0.15"
 
 files=(
-"src"
+"colormaps.txt"
+"comments.txt"
+"decoder.py"
 "orbital_data"
 "README.md"
-"decoder.py"
 "run_as_admin.bat"
-"colormaps.txt"
 "settings.txt"
+"src"
 "tle.txt"
-"comments.txt"
 )
 
 # get the path to this script
