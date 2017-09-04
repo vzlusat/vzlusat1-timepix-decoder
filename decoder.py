@@ -27,39 +27,19 @@ from matplotlib.figure import Figure
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 import os
-import sys
 import numpy
 import datetime
 import re
 import time
+import sys
 
-if sys.version_info[0] < 3:
-    import ConfigParser
-    Config = ConfigParser.ConfigParser()
-else:
-    import configparser
-    Config = configparser.ConfigParser()
-
-Config.read("settings.txt")
-def ConfigSectionMap(section):
-    dict1 = {}
-    options = Config.options(section)
-    for option in options:
-        try:
-            dict1[option] = Config.get(section, option)
-            if dict1[option] == -1:
-                DebugPrint("skip: %s" % option)
-        except:
-            print("exception on %s!" % option)
-            dict1[option] = None
-    return dict1
-use_globus = Config.getboolean("General", "show_globe")
+# import module which handles settings across other our modules
+import src.settings as settings
+settings.initSettings()
 
 # for plotting the globe
-if use_globus:
+if settings.use_globus:
   from mpl_toolkits.basemap import Basemap
-
-if use_globus:
   installAndImport('ephem')
 
 # my custom functions
@@ -229,7 +209,7 @@ def showHouseKeeping(housekeeping):
     marked_as_hidden_var.set(housekeeping.hidden)
     marked_as_favorite_var.set(housekeeping.favorite)
 
-    if use_globus:
+    if settings.use_globus:
       if show_globus_var.get():
           latitude, longitude, tle_date = getLatLong(housekeeping.time)
           globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
@@ -361,7 +341,7 @@ def showImage(image, manual):
         human_readible_time = datetime.datetime.utcfromtimestamp(image.time)
         metadatas_var[19].set(human_readible_time)
 
-        if use_globus:
+        if settings.use_globus:
           if show_globus_var.get():
               latitude, longitude, tle_date = getLatLong(image.time)
               globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
@@ -507,7 +487,7 @@ def showImage(image, manual):
             image_filename='images_png/{}_{}.png'.format(image.id, image.type)
             my_figure.savefig(image_filename, dpi=250, bbox_inches='tight')
 
-            if use_globus and show_globus_var.get():
+            if settings.use_globus and show_globus_var.get():
                 image_globus_filename='images_png/{}_map.png'.format(image.id)
                 my_figure2.savefig(image_globus_filename, dpi=150, bbox_inches='tight')
 
@@ -606,36 +586,30 @@ if not os.path.exists("images_png"):
 #}
 
 # Load TLE
-if use_globus:
+if settings.use_globus:
   from src.tle import *
   parseTLE()
 
 # create the root window
 root = Tk.Tk()
 
-
-gpd_enabled = Config.getboolean("gpd", "enabled")
-scale = Config.getfloat("gpd", "font_scale")
-window_width = Config.getint("gpd", "window_width")
-window_height = Config.getint("gpd", "window_height")
-
-if gpd_enabled:
+if settings.gpd_enabled:
     customfont = tkFont.Font(family="Arial", size=8)
 else:
     customfont = tkFont.Font(family="Arial", size=12)
 
-if not gpd_enabled:
-    scale = 1.0
-    window_width = 1380
-    window_height = 750
+if not settings.gpd_enabled:
+    settings.scale = 1.0
+    settings.window_width = 1380
+    settings.window_height = 750
 
-root.tk.call('tk', 'scaling', scale)
+root.tk.call('tk', 'scaling', settings.scale)
 root.resizable(width=1, height=1)
 import platform
 if platform.system() == "Windows":
     root.geometry('{}x{}'.format(1380, 900))
 else:
-    root.geometry('{}x{}'.format(window_width, window_height))
+    root.geometry('{}x{}'.format(settings.window_width, settings.window_height))
 root.wm_title("VZLUSAT-1 X-Ray data decoder")
 
 # create the main Frame in the root window
@@ -643,7 +617,7 @@ frame_main = Tk.Frame(root);
 frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
 # create the figure
-if not gpd_enabled:
+if not settings.gpd_enabled:
     my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=90)
 else:
     my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=120)
@@ -774,7 +748,7 @@ figure_canvas._tkcanvas.pack(side=Tk.TOP)
 # map.drawmeridians(numpy.arange(0,360,30))
 # map.drawparallels(numpy.arange(-90,90,30))
 
-if use_globus:
+if settings.use_globus:
   globus_label_var = Tk.StringVar()
   globus_label = Tk.Label(frame_mid_bottom, anchor=Tk.S, justify=Tk.CENTER,  textvariable=globus_label_var, font=customfont)
   globus_label.pack(side=Tk.BOTTOM)
@@ -1092,7 +1066,7 @@ balloon.bind(autogenerate_checkbox, "When checked, png images will be re-exporte
 
 #{ CHECKBOXES for showing and hiding images
 
-if use_globus:
+if settings.use_globus:
   show_globus = Tk.Checkbutton(master=frame_left, text="show globus", variable=show_globus_var, command=reloadCurrentImage, font=customfont)
   show_globus.pack(side=Tk.BOTTOM)
 # show_globus.toggle()
@@ -1164,7 +1138,7 @@ def on_key_event(event):
         if event.char == 'o':
             loadNewImages()
 
-        if use_globus:
+        if settings.use_globus:
           if event.char == 'g':
               show_globus.toggle()
               reloadCurrentImage()

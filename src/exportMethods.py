@@ -7,6 +7,7 @@ from src.baseMethods import getExportHkName
 import datetime
 import csv
 from src.tle import *
+import src.settings as settings
 
 def exportHouseKeeping(data):
 
@@ -39,10 +40,9 @@ def exportHouseKeeping(data):
 
                 hk_file.write("\n")
 
-        # print("use_globus: {}".format(use_globus))
-        # if use_globus:
-        #     latitude, longitude, tle_date = getLatLong(data.time)
-        #     hk_file.write("lat, long, tle_time: {}, {}, {}".format(latitude, longitude, tle_date))
+        if settings.use_globus:
+            latitude, longitude, tle_date = getLatLong(data.time)
+            hk_file.write("lat, long, tle_time: {}, {}, {}".format(latitude, longitude, tle_date))
 
 
 def exportMetadata(image):
@@ -133,14 +133,15 @@ def exportMetadata(image):
         for i in range(0, 21):
 
             metadata_file.write(image.metadata_labels[i]+" "+metadatas_array[i])
+            metadata_file.write("\n")
 
-            if i < 20:
+        if settings.use_globus:
+            latitude, longitude, tle_date = getLatLong(image.time)
+            metadata_file.write("lat, long, tle_time: {}, {}, {}\n".format(latitude, longitude, tle_date))
 
-                metadata_file.write("\n")
-
-        # if use_globus:
-        #     latitude, longitude, tle_date = getLatLong(image.time)
-        #     hk_file.write("lat, long, tle_time: {}, {}, {}".format(latitude, longitude, tle_date))
+        if image.type == 32:
+            metadata_file.write("Histogram bins [bin1_min, bin1_max=bin2_min, ..., bind16_max], the last bin contains also all higher energies.\n")
+            metadata_file.write("[2.9807, 4.2275, 6.4308, 10.3875, 16.6394, 24.7081, 33.7833, 43.3679, 53.2233, 63.2344, 73.3415, 83.5115, 93.7248, 103.9691, 114.2361, 124.5204, 134.8182]\n")
 
 def exportBinning(image):
 
