@@ -113,6 +113,14 @@ def parseInputFile(file_path, v, root, autogenerate_csv):
                 root.update()
                 parseHouseKeeping(bin_data[1:], last_time, autogenerate_csv)
 
+            elif data[0] == 19:
+
+                if data[1] == 234:
+
+                    v.set("Parsing HKC house keeping")
+                    root.update()
+                    parseHouseKeeping(bin_data[3:], last_time, autogenerate_csv)
+
             else:
 
                 print("UNKNOWN packet")
