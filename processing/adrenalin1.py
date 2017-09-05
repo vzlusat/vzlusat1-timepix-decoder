@@ -10,6 +10,8 @@ from include.filtration import *
 from src.loadImage import *
 from src.Image import *
 
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 path = "../images_bin/"
 
 # load the images
@@ -19,6 +21,8 @@ images_filtered = []
 images.append(loadImage(401, 1, path))
 images.append(loadImage(402, 1, path))
 images.append(loadImage(404, 1, path))
+images.append(loadImage(807, 1, path))
+images.append(loadImage(808, 1, path))
 
 for i in range(len(images)):
 
@@ -38,9 +42,51 @@ for i in range(len(images)):
 
 print("printing merged image")
 
-plt.figure(1)
-plt.subplot(1, 2, 1)
-plt.imshow(merged, interpolation='none', cmap='nipy_spectral_r')
-plt.subplot(1, 2, 2)
-plt.imshow(merged_filtered, interpolation='none', cmap='nipy_spectral_r')
+fig = plt.figure(1)
+
+ax = fig.add_subplot(1, 2, 1)
+im = ax.imshow(merged, interpolation='none', cmap='nipy_spectral_r')
+ax.set_xlabel("Column [-]")
+ax.set_ylabel("Row [-]")
+ax.set_title("Stacket images, no filtering")
+
+divider = make_axes_locatable(fig.gca())
+cax = divider.append_axes("right", size="5%", pad=0.2)
+cbar = fig.colorbar(im, cax)
+cbar.ax.set_ylabel('[keV]', rotation=270)
+
+ax = fig.add_subplot(1, 2, 2)
+im = ax.imshow(merged_filtered, interpolation='none', cmap='nipy_spectral_r')
+ax.set_xlabel("Column [-]")
+ax.set_ylabel("Row [-]")
+ax.set_title("Stacket images, individually filtered")
+
+divider = make_axes_locatable(fig.gca())
+cax = divider.append_axes("right", size="5%", pad=0.2)
+cbar = fig.colorbar(im, cax)
+cbar.ax.set_ylabel('[keV]', rotation=270)
+
+# create sum
+
+sums = numpy.zeros(shape=[256, 1])
+
+for j in range(0, 255):
+
+    sum = 0
+
+    for i in range(0, 255):
+
+        if merged_filtered[i, j] > 0:
+
+            sum += 1
+
+    sums[j] = sum
+
+fig = plt.figure(2)
+ax = fig.add_subplot(1, 1, 1)
+x = numpy.linspace(1, 256, 256)
+ax.plot(x, sums)
+
+ax.axis([1, 256, numpy.min(sums), numpy.max(sums)])
+
 plt.show()
