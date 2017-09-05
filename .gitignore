@@ -15,6 +15,7 @@ for_distribution
 for_distribution/*
 *.*~
 *.swp
+*.swo
 orbital_data/all/147.228.97.106/download/old*
 *.wav
 

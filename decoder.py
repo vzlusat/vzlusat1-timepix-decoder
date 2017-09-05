@@ -1017,16 +1017,24 @@ def loadNewImages():
 #{ exportCsv() callback
 def exportCsvData():
 
-    all_files = loadFiles()
+    v.set("Exporting images to csv")
+    root.update()
 
-    for file_name in all_files:
+    for file_name in file_names:
 
-        if file_name[-2] == 'h':
-            housekeeping = loadHouseKeeping(file_name+".pkl")
+        if file_name[-5] == 'h':
+            housekeeping = loadHouseKeeping(file_name)
             exportCsv(housekeeping)
+            v.set("Exporting HK")
+            root.update()
         else:
-            image = loadImage(file_name+".pkl")
+            image = loadImage(file_name)
             exportCsv(image)
+            v.set("Exporting image {}".format(image.id))
+            root.update()
+
+    v.set("Images exported")
+    root.update()
 
 #}
 

@@ -119,7 +119,7 @@ def parseInputFile(file_path, v, root):
 
                     v.set("Parsing HKC house keeping")
                     root.update()
-                    parseHouseKeeping(bin_data[3:], last_time, autogenerate_csv)
+                    parseHouseKeeping(bin_data[3:], last_time)
 
             else:
 
