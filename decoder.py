@@ -1042,18 +1042,6 @@ def exportCsvData():
 load_button = Tk.Button(master=frame_list, text='Load new images', command=loadNewImages, font=customfont)
 load_button.pack(side=Tk.TOP)
 
-# spawn button for exporting csv
-export_csv_button = Tk.Button(master=frame_list, text='Export CSV', command=exportCsvData, font=customfont)
-export_csv_button.pack(side=Tk.TOP)
-
-#}
-
-#{ CHECKBOX for autogenerate_png_load
-
-# autogenerate_checkbox3 = Tk.Checkbutton(master=frame_list, text="export csv while loading", variable=autogenerate_csv_load, font=customfont)
-# autogenerate_checkbox3.pack(side=Tk.TOP)
-# autogenerate_checkbox3.toggle()
-
 autogenerate_checkbox2 = Tk.Checkbutton(master=frame_list, text="export pngs while loading", variable=autogenerate_png_load, font=customfont)
 autogenerate_checkbox2.pack(side=Tk.TOP)
 # autogenerate_checkbox2.toggle()
@@ -1084,6 +1072,10 @@ button.pack(side=Tk.BOTTOM)
 
 def autogenerateCheckboxCallback():
     reloadList(int(listbox.curselection()[0]))
+
+# spawn button for exporting csv
+export_csv_button = Tk.Button(master=frame_list, text='Export CSV', command=exportCsvData, font=customfont)
+export_csv_button.pack(side=Tk.BOTTOM)
 
 autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing", variable=autogenerate_png_view, command=autogenerateCheckboxCallback, font=customfont)
 autogenerate_checkbox.pack(side=Tk.BOTTOM)
