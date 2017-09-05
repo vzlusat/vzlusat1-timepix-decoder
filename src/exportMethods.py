@@ -8,6 +8,7 @@ import datetime
 import csv
 from src.tle import *
 import src.settings as settings
+from src.HouseKeeping import *
 
 def exportHouseKeeping(data):
 
@@ -214,3 +215,13 @@ def exportImage(image):
     elif image.type == 32:
 
         exportHistogram(image)
+
+def exportCsv(data):
+
+    if isinstance(data, HouseKeeping):
+
+        exportHouseKeeping(data)
+
+    elif isinstance(data, Image):
+
+        exportImage(data)

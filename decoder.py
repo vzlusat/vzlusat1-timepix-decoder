@@ -50,6 +50,7 @@ from src.saveImage import saveImage
 from src.saveHouseKeeping import saveHouseKeeping
 from src.loadHouseKeeping import loadHouseKeeping
 from src.parseInputFile import parseInputFile
+from src.exportMethods import exportCsv
 
 # imports that depend on the python version
 if sys.version_info[0] < 3:
@@ -850,7 +851,7 @@ def numericalSort(value):
 # user can switch off generating pngs
 autogenerate_png_view = Tk.IntVar()
 autogenerate_png_load = Tk.IntVar()
-autogenerate_csv_load = Tk.IntVar()
+# autogenerate_csv_load = Tk.IntVar()
 
 # user can switch on/off showing of hidden and favorite images
 show_hidden_var = Tk.IntVar()
@@ -955,7 +956,7 @@ def loadNewImages():
     if file_name == "":
         return
 
-    if not parseInputFile(file_name, v, root, autogenerate_csv_load.get()):
+    if not parseInputFile(file_name, v, root):
         return
     else:
         print("Successfully parsed the file \"{}\"".format(file_name))
@@ -1013,16 +1014,36 @@ def loadNewImages():
     v.set("All images loaded")
 #}
 
+#{ exportCsv() callback
+def exportCsvData():
+
+    all_files = loadFiles()
+
+    for file_name in all_files:
+
+        if file_name[-2] == 'h':
+            housekeeping = loadHouseKeeping(file_name+".pkl")
+            exportCsv(housekeeping)
+        else:
+            image = loadImage(file_name+".pkl")
+            exportCsv(image)
+
+#}
+
 # spawn button for loading new images
 load_button = Tk.Button(master=frame_list, text='Load new images', command=loadNewImages, font=customfont)
 load_button.pack(side=Tk.TOP)
+
+# spawn button for exporting csv
+export_csv_button = Tk.Button(master=frame_list, text='Export CSV', command=exportCsvData, font=customfont)
+export_csv_button.pack(side=Tk.TOP)
 
 #}
 
 #{ CHECKBOX for autogenerate_png_load
 
-autogenerate_checkbox3 = Tk.Checkbutton(master=frame_list, text="export csv while loading", variable=autogenerate_csv_load, font=customfont)
-autogenerate_checkbox3.pack(side=Tk.TOP)
+# autogenerate_checkbox3 = Tk.Checkbutton(master=frame_list, text="export csv while loading", variable=autogenerate_csv_load, font=customfont)
+# autogenerate_checkbox3.pack(side=Tk.TOP)
 # autogenerate_checkbox3.toggle()
 
 autogenerate_checkbox2 = Tk.Checkbutton(master=frame_list, text="export pngs while loading", variable=autogenerate_png_load, font=customfont)

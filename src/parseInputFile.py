@@ -19,7 +19,7 @@ else:
 
 last_time = 0
 
-def parseInputFile(file_path, v, root, autogenerate_csv):
+def parseInputFile(file_path, v, root):
 
     try:
         infile = open(file_path, "r")
@@ -63,55 +63,55 @@ def parseInputFile(file_path, v, root, autogenerate_csv):
 
                 v.set("Parsing metadata")
                 root.update()
-                parseMetadata(bin_data[1:], autogenerate_csv)
+                parseMetadata(bin_data[1:])
 
             elif data[0] == ord('B'):
 
                 v.set("Parsing image (raw)")
                 root.update()
-                parseRaw(bin_data[1:], autogenerate_csv)
+                parseRaw(bin_data[1:])
                 
             elif data[0] == ord('D'):
 
                 v.set("Parsing image (binning-8)")
                 root.update()
-                parseBinning8(bin_data[1:], autogenerate_csv)
+                parseBinning8(bin_data[1:])
 
             elif data[0] == ord('E'):
 
                 v.set("Parsing image (binning-16)")
                 root.update()
-                parseBinning16(bin_data[1:], autogenerate_csv)
+                parseBinning16(bin_data[1:])
 
             elif data[0] == ord('F'):
 
                 v.set("Parsing image (binning-32)")
                 root.update()
-                parseBinning32(bin_data[1:], autogenerate_csv)
+                parseBinning32(bin_data[1:])
 
             elif data[0] == ord('h'):
 
                 v.set("Parsing image (rows summ)")
                 root.update()
-                parseRowsSums(bin_data[1:], autogenerate_csv)
+                parseRowsSums(bin_data[1:])
 
             elif data[0] == ord('H'):
 
                 v.set("Parsing image (cols summ)")
                 root.update()
-                parseColsSums(bin_data[1:], autogenerate_csv)
+                parseColsSums(bin_data[1:])
 
             elif data[0] == ord('e'):
 
                 v.set("Parsing image (energy hist.)")
                 root.update()
-                parseEnergyHist(bin_data[1:], autogenerate_csv)
+                parseEnergyHist(bin_data[1:])
 
             elif data[0] == ord('Z'):
 
                 v.set("Parsing house keeping")
                 root.update()
-                parseHouseKeeping(bin_data[1:], last_time, autogenerate_csv)
+                parseHouseKeeping(bin_data[1:], last_time)
 
             elif data[0] == 19:
 

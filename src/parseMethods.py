@@ -11,7 +11,7 @@ from src.exportMethods import exportImage
 from src.exportMethods import exportHouseKeeping
 from src.HouseKeeping import HouseKeeping
 
-def parseHouseKeeping(bin_data, time, autogenerate_csv):
+def parseHouseKeeping(bin_data, time):
 
     new_hk = HouseKeeping()
 
@@ -35,9 +35,6 @@ def parseHouseKeeping(bin_data, time, autogenerate_csv):
 
     saveHouseKeeping(new_hk);
 
-    if autogenerate_csv:
-        exportHouseKeeping(new_hk);
-
     return new_hk
 
 def parseImageHeader(bin_data, image_type):
@@ -58,7 +55,7 @@ def parseImageHeader(bin_data, image_type):
 
     return image
 
-def parseMetadata(bin_data, autogenerate_csv):
+def parseMetadata(bin_data):
 
     image_type = bin_data[0]
     image_id = bytesToInt16(bin_data[1], bin_data[2])
@@ -105,10 +102,7 @@ def parseMetadata(bin_data, autogenerate_csv):
 
     saveImage(image)
     
-    if autogenerate_csv:
-        exportImage(image)
-
-def parseBinning8(bin_data, autogenerate_csv):
+def parseBinning8(bin_data):
 
     image = parseImageHeader(bin_data, 2)
 
@@ -128,11 +122,8 @@ def parseBinning8(bin_data, autogenerate_csv):
     image.got_data = 1
 
     saveImage(image)
-    
-    if autogenerate_csv:
-        exportImage(image)
 
-def parseBinning16(bin_data, autogenerate_csv):
+def parseBinning16(bin_data):
 
     image = parseImageHeader(bin_data, 4)
 
@@ -152,11 +143,8 @@ def parseBinning16(bin_data, autogenerate_csv):
     image.got_data = 1
 
     saveImage(image)
-    
-    if autogenerate_csv:
-        exportImage(image)
 
-def parseBinning32(bin_data, autogenerate_csv):
+def parseBinning32(bin_data):
 
     image = parseImageHeader(bin_data, 8)
 
@@ -180,10 +168,7 @@ def parseBinning32(bin_data, autogenerate_csv):
 
     saveImage(image)
 
-    if autogenerate_csv:
-        exportImage(image)
-
-def parseColsSums(bin_data, autogenerate_csv):
+def parseColsSums(bin_data):
 
     image = parseImageHeader(bin_data, 16)
 
@@ -200,10 +185,7 @@ def parseColsSums(bin_data, autogenerate_csv):
 
     saveImage(image)
     
-    if autogenerate_csv:
-        exportImage(image)
-    
-def parseRowsSums(bin_data, autogenerate_csv):
+def parseRowsSums(bin_data):
 
     image = parseImageHeader(bin_data, 16)
 
@@ -219,11 +201,8 @@ def parseRowsSums(bin_data, autogenerate_csv):
     image.got_data = 1
 
     saveImage(image)
-    
-    if autogenerate_csv:
-        exportImage(image)
 
-def parseEnergyHist(bin_data, autogenerate_csv):
+def parseEnergyHist(bin_data):
 
     image = parseImageHeader(bin_data, 32)
 
@@ -238,11 +217,8 @@ def parseEnergyHist(bin_data, autogenerate_csv):
     image.got_data = 1
 
     saveImage(image)
-    
-    if autogenerate_csv:
-        exportImage(image)
 
-def parseRaw(bin_data, autogenerate_csv):
+def parseRaw(bin_data):
 
     image = parseImageHeader(bin_data, 1)
 
@@ -274,6 +250,3 @@ def parseRaw(bin_data, autogenerate_csv):
     image.got_data = 1
 
     saveImage(image)
-   
-    if autogenerate_csv:
-        exportImage(image)
