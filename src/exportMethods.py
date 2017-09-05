@@ -58,7 +58,7 @@ def exportMetadata(image):
         metadatas_array[0] = str(image.id)
 
         if image.type == 1:
-            img_type = "RAW"
+            img_type = "Full resolution"
         elif image.type == 2:
             img_type = "Binning 8"
         elif image.type == 4:
@@ -66,16 +66,16 @@ def exportMetadata(image):
         elif image.type == 8:
             img_type = "Binning 32"
         elif image.type == 16:
-            img_type = "Sums"
+            img_type = "Column and row sums"
         elif image.type == 32:
-            img_type = "Energy histogram"
+            img_type = "Histogram"
 
         metadatas_array[1] = str(img_type)
 
         if image.mode == 0:
-            mode = "Medipix (Counting)"
+            mode = "MPX (Counting)"
         else:
-            mode = "Timepix (Energy)"
+            mode = "TOT (Energy)"
 
         metadatas_array[2] = str(mode)
         metadatas_array[3] = str(image.threshold)
