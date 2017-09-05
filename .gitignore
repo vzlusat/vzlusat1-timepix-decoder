@@ -14,8 +14,9 @@ images_csv
 for_distribution
 for_distribution/*
 *.*~
-
 *.swp
+orbital_data/all/147.228.97.106/download/old*
+*.wav
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

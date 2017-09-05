@@ -15,42 +15,46 @@ touch "$outdata"
 
 datadir="../all/147.228.97.106/download"
 
-for filename in `find $datadir -type f | sort -n -k7.4`;
+filelist=`find $datadir -type f | sort | grep txt`
+
+for filename in $filelist;
 do
 
-  echo "Parsing file $filename"
+  ishkc=$( echo "$filename" | grep S1P58C)
 
-  istxt=`echo "$filename" | grep txt`
+  if [ ! -z "$ishkc" ]; then
 
-  if [ ! -z "$istxt" ]; then
+    cat $filename | grep 13ea5a -B 4 >> "$outhkc"
+    echo "Parsing HKC from $filename"
 
-    cat $filename | grep 13ea5a -A 1 -B 4 >> "$outhkc"
+  fi 
 
-    ishk=`echo "$filename" | grep S4P1`
+  ishk=$( echo "$filename" | grep S4P1C )
 
-    if [ ! -z "$ishk" ]; then
+  if [ ! -z "$ishk" ]; then
 
-      cat $filename >> "$outhk"
+    cat $filename >> "$outhk"
+    echo "Parsing HKD from $filename"
 
-    fi 
+  fi 
 
-    ismetadata=`echo "$filename" | grep S4P2`
+  ismetadata=$( echo "$filename" | grep S4P2C )
 
-    if [ ! -z "$ismetadata" ]; then
+  if [ ! -z "$ismetadata" ]; then
 
-      cat $filename >> "$outmetadata"
+    cat $filename >> "$outmetadata"
+    echo "Parsing metadata from $filename"
 
-    fi 
+  fi 
 
-    isdata=`echo "$filename" | grep S4P3`
+  isdata=$( echo "$filename" | grep S4P3C )
 
-    if [ ! -z "$isdata" ]; then
+  if [ ! -z "$isdata" ]; then
 
-      cat $filename >> "$outdata"
+    cat $filename >> "$outdata"
+    echo "Parsing image from $filename"
 
-    fi 
-
-  fi
+  fi 
 
 done
 

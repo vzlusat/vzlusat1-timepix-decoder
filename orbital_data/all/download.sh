@@ -5,3 +5,4 @@ MY_PATH=`( cd "$MY_PATH" && pwd )`
 wget -rN --no-parent --reject "index.html*" http://147.228.97.106/download/
 
 git rm ./**/*.wav
+git rm ./147.228.97.106/download/old*
