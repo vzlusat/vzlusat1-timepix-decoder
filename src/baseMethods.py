@@ -11,6 +11,10 @@ def getExportDataName(image_id, image_type):
 
     return "images_csv/"+str(image_id)+"_{0:02d}.txt".format(image_type) 
 
+def getExportDescriptionFileName(image_id, image_type):
+
+    return "images_csv/"+str(image_id)+"_{0:02d}.txt.dsc".format(image_type) 
+
 def getExportMetadataName(image_id, image_type):
 
     return "images_csv/"+str(image_id)+"_{0:02d}.metadata.txt".format(image_type) 

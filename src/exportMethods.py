@@ -4,6 +4,7 @@ from src.Image import Image
 from src.baseMethods import getExportDataName
 from src.baseMethods import getExportMetadataName
 from src.baseMethods import getExportHkName
+from src.baseMethods import getExportDescriptionFileName
 import datetime
 import csv
 from src.tle import *
@@ -39,12 +40,105 @@ def exportHouseKeeping(data):
 
             if i < 16:
 
-                hk_file.write("\n")
+                hk_file.write("\r\n")
 
         if settings.use_globus:
             latitude, longitude, tle_date = getLatLong(data.time)
             hk_file.write("lat, long, tle_time: {}, {}, {}".format(latitude, longitude, tle_date))
 
+def exportDescriptionFile(image):
+
+    if image.got_metadata == 0:
+        return
+
+    with open(getExportDescriptionFileName(image.id, image.type), "w") as dsc_file:
+
+        width=0
+        height=0
+        mode=1
+
+        if image.type == 1:
+            width=256
+            height=256
+            mode=image.mode
+        elif image.type == 2:
+            width=32
+            height=32
+            mode=0
+        elif image.type == 4:
+            width=16
+            height=16
+            mode=0
+        elif image.type == 8:
+            width=8
+            height=8
+            mode=0
+        elif image.type == 16:
+            width=256
+            height=2
+            mode=0
+        elif image.type == 32:
+            width=16
+            height=1
+            mode=image.mode
+
+        dsc_file.write("A000000001\r\n\
+[F0]\r\n\
+Type=u32 matrix width={} height={}\r\n\
+\"Acq mode\" (\"Acquisition mode\"):\r\n\
+i32[1]\r\n\
+{}\r\n\
+".format(width, height, image.mode))
+
+        dsc_file.write("\r\n")
+
+        exposure = image.exposure
+        if image.exposure <= 60000:
+            exposure = image.exposure*0.001
+        else:
+            exposure = 60 + image.exposure%60000
+
+        dsc_file.write("\"Acq time\" (\"Acquisition time [s]\"):\r\n\
+double[1]\r\n\
+{}\r\n".format(exposure))
+
+        dsc_file.write("\r\n")
+
+        dsc_file.write("\"dacs\" (\"dacs values of all chips\"):\r\n\
+u16[14]\r\n\
+1 100 255 127 127 0 314 7 130 128 80 85 128 128\r\n")
+
+        dsc_file.write("\r\n")
+
+        dsc_file.write("\"HV\" (\"Bias voltage [V]\"):\r\n\
+double[1]\r\n\
+70.0\r\n")
+
+        dsc_file.write("\"Mpx type\" (\"Medipix type (1-2.1, 2-MXR, 3-TPX)\"):\r\n\
+i32[1]\r\n\
+3\r\n")
+
+        dsc_file.write("\r\n")
+
+        starttime=image.time - exposure
+
+        dsc_file.write("\"Start time\" (\"Acquisition start time\"):\r\n\
+double[1]\r\n\
+{}\r\n".format(starttime))
+
+        dsc_file.write("\r\n")
+
+        time_hr=datetime.datetime.utcfromtimestamp(image.time)
+
+        dsc_file.write("\"Start time (string)\" (\"Acquisition start time (string)\"):\r\n\
+char[64]\r\n\
+{}\r\n".format(time_hr))
+
+        dsc_file.write("\r\n")
+
+        dsc_file.write("\"ChipboardID\" (\"Medipix or chipboard ID\"):\r\n\
+uchar[10]\r\n\
+I07-W0167")
 
 def exportMetadata(image):
 
@@ -134,15 +228,15 @@ def exportMetadata(image):
         for i in range(0, 21):
 
             metadata_file.write(image.metadata_labels[i]+" "+metadatas_array[i])
-            metadata_file.write("\n")
+            metadata_file.write("\r\n")
 
         if settings.use_globus:
             latitude, longitude, tle_date = getLatLong(image.time)
-            metadata_file.write("lat, long, tle_time: {}, {}, {}\n".format(latitude, longitude, tle_date))
+            metadata_file.write("lat, long, tle_time: {}, {}, {}\r\n".format(latitude, longitude, tle_date))
 
         if image.type == 32:
-            metadata_file.write("Histogram bins [bin1_min, bin1_max=bin2_min, ..., bind16_max], the last bin contains also all higher energies.\n")
-            metadata_file.write("[2.9807, 4.2275, 6.4308, 10.3875, 16.6394, 24.7081, 33.7833, 43.3679, 53.2233, 63.2344, 73.3415, 83.5115, 93.7248, 103.9691, 114.2361, 124.5204, 134.8182]\n")
+            metadata_file.write("Histogram bins [bin1_min, bin1_max=bin2_min, ..., bind16_max], the last bin contains also all higher energies.\r\n")
+            metadata_file.write("[2.9807, 4.2275, 6.4308, 10.3875, 16.6394, 24.7081, 33.7833, 43.3679, 53.2233, 63.2344, 73.3415, 83.5115, 93.7248, 103.9691, 114.2361, 124.5204, 134.8182]\r\n")
 
 def exportBinning(image):
 
@@ -225,3 +319,4 @@ def exportCsv(data):
     elif isinstance(data, Image):
 
         exportImage(data)
+        exportDescriptionFile(data)
