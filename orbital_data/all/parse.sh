@@ -20,6 +20,14 @@ filelist=`find $datadir -type f | sort | grep txt`
 for filename in $filelist;
 do
 
+  isold=$( echo "$filename" | grep old)
+
+  if [ ! -z "$isold" ]; then
+
+    continue
+
+  fi 
+
   ishkc=$( echo "$filename" | grep S1P58C)
 
   if [ ! -z "$ishkc" ]; then
