@@ -29,6 +29,9 @@ def parseComments():
 
 def getComment(idx):
 
-    comment_idx = ids.index(idx)
-
-    return comments[comment_idx]
+    try:
+        comment_idx = ids.index(idx)
+        comment = comments[comment_idx]
+        return comment
+    except:
+        return ""

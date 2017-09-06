@@ -10,6 +10,7 @@ import csv
 from src.tle import *
 import src.settings as settings
 from src.HouseKeeping import *
+from src.comments import getComment
 
 def exportHouseKeeping(data):
 
@@ -37,14 +38,11 @@ def exportHouseKeeping(data):
         for i in range(0, 16):
 
             hk_file.write(data.housekeeping_labels[i]+" "+hk_array[i])
-
-            if i < 16:
-
-                hk_file.write("\r\n")
+            hk_file.write("\r\n")
 
         if settings.use_globus:
             latitude, longitude, tle_date = getLatLong(data.time)
-            hk_file.write("lat, long, tle_time: {}, {}, {}".format(latitude, longitude, tle_date))
+            hk_file.write("lat, long, tle_time: {}, {}, {}\n\r".format(latitude, longitude, tle_date))
 
 def exportDescriptionFile(image):
 
@@ -229,6 +227,9 @@ def exportMetadata(image):
 
             metadata_file.write(image.metadata_labels[i]+" "+metadatas_array[i])
             metadata_file.write("\r\n")
+
+        metadata_file.write("comment: {}\r\n".format(getComment(image.id)))
+
 
         if settings.use_globus:
             latitude, longitude, tle_date = getLatLong(image.time)

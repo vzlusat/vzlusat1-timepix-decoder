@@ -63,9 +63,10 @@ else:
     import tkinter.filedialog
     from tkinter import ttk
     import tkinter.font as tkFont
-
-from src.comments import *
 #}
+
+from src.comments import parseComments
+from src.comments import getComment
 
 # core methods
 
