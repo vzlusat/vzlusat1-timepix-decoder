@@ -85,7 +85,7 @@ for i in range(len(images)):
 
 # create the map plot
 plt.figure(1)
-plt.subplot(131)
+ax1 = plt.subplot2grid((2, 2), (0, 0), colspan=2)
 # m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80, llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
 # m = Basemap(projection='moll',lon_0=0,resolution='c')
 # m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
@@ -132,7 +132,7 @@ my_cmap[:,-1] = numpy.linspace(0.1, 1, cmap.N)
 my_cmap = ListedColormap(my_cmap)
 
 # make plot using hexbin
-CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=16, cmap=my_cmap, mincnt=0, reduce_C_function=np.max, zorder=10)
+CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=64, cmap=my_cmap, mincnt=0, reduce_C_function=np.max, zorder=10)
 
 cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 cb.set_label('log10(Total energy) [keV/s]')
@@ -152,7 +152,7 @@ XX, YY = np.meshgrid(tlat, tlon)
 rbf = Rbf(lats, lons, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
 ZZ = rbf(XX, YY)
 
-plt.subplot(132)
+ax2 = plt.subplot2grid((2, 2), (1, 0))
 
 # m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
 m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
@@ -186,7 +186,7 @@ rbf = Rbf(lats, lons, doses, function='multiquadric', epsilon=0.1, smooth=0)
 ZZ = rbf(XX, YY)
 ZZ = np.where(ZZ < 0, 0, ZZ)
 
-plt.subplot(133)
+ax3 = plt.subplot2grid((2, 2), (1, 1))
 
 # m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
 m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
@@ -225,5 +225,7 @@ plt.title('RBF multiquadric (eps=10e-1), linear scale', fontsize=13)
 # cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 # cb.set_label('Total energy [keV]')
 # plt.title('Cubic interpolation, linear scale', fontsize=13)
+
+plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.05)
 
 plt.show()
