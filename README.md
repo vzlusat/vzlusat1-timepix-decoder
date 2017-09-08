@@ -18,7 +18,7 @@ sudo apt-get install python2.7-dev python-matplotlib python3-pip python3-tk pyth
 
 1. Install the latest Python3 from the website: https://www.python.org/downloads/
  
-If you want to have a TwoLineElements+Globus, follow the next three bullet points, otherwise skip to 2 and disable the feature in _settings.txt_. Following bullet points may take very long time on Windows...
+If you want to have a TwoLineElements+Globus, follow the next three bullet points, otherwise skip to the point 2 and disable the globus feature in _settings.txt_. Following bullet points may take very long time on Windows...
 
 - Install Visual C++ Build tools 2015 from: http://landinghub.visualstudio.com/visual-cpp-build-tools
 - Install Anaconda: https://repo.continuum.io/archive/Anaconda3-4.4.0-Windows-x86_64.exe
