@@ -47,11 +47,6 @@ kevs = [3.6041, 5.32915, 8.40915, 13.51345, 20.67375, 29.2457, 38.5756, 48.2956,
 # load images
 for i in range(from_idx, to_idx):
 
-    if i % 4 == 0:
-        pass
-    else:
-        continue
-
     # for count mode only
     # load anything that has metadata and any data, so presumably it is a proper image
     new_image = loadImage(i, 32, image_bin_path)
