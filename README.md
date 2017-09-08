@@ -19,6 +19,7 @@ sudo apt-get install python2.7-dev python-matplotlib python3-pip python3-tk pyth
 1. Install the latest Python3 from the website: https://www.python.org/downloads/
  
 If you want to have a TwoLineElements+Globus, follow to point a), b) and c), otherwise skip to 5 and disable the feature in _settings.txt_.
+
 a) Install Visual C++ Build tools 2015 from: http://landinghub.visualstudio.com/visual-cpp-build-tools
 b) Install Anaconda: https://repo.continuum.io/archive/Anaconda3-4.4.0-Windows-x86_64.exe
 c) Run Anaconda Prompt (Start menu->Anaconda Prompt) and input following command to the command line: ```conda install -c conda-forge basemap```
