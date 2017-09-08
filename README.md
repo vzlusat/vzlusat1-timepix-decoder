@@ -2,7 +2,9 @@
 
 ## Prerequisities
 
-Running the **decoder** on Linux requires installing python and matplotlib on both Linux and Windows. Follow these instructions:
+Running the **decoder** on Linux requires installing python libraries on both Linux and Windows.
+Thought, it is much easier to run it on Linux...
+Follow these instructions:
 
 ### Linux
 
@@ -16,7 +18,7 @@ sudo apt-get install python2.7-dev python-matplotlib python3-pip python3-tk pyth
 
 1. Install the latest Python3 from the website: https://www.python.org/downloads/
  
-If you want to have a TLE+Globus, follow to point 2., 3. and 4., otherwise skip to 5.
+If you want to have a TwoLineElements+Globus, follow to point 2., 3. and 4., otherwise skip to 5 and disable the feature in _settings.txt_.
 2. Install Visual C++ Build tools 2015 from: http://landinghub.visualstudio.com/visual-cpp-build-tools
 3. Install Anaconda: https://repo.continuum.io/archive/Anaconda3-4.4.0-Windows-x86_64.exe
 4. Run Anaconda Prompt (Start menu->Anaconda Prompt) and input following command to the command line: ```conda install -c conda-forge basemap```
@@ -35,7 +37,11 @@ Open a Terminal window and run followoing command in the directory of the decode
 python decoder.py
 ```
 
+It might be neccessary to re-run the program multiple times, before it correctly loads its libraries for the first time.
+
 ## Windows
 
 Doubleclick the **decoder.py** file.
+
+It might be neccessary to re-run the program multiple times, before it correctly loads its libraries for the first time.
 
