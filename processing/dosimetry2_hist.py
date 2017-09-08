@@ -38,6 +38,9 @@ image_bin_path = "../images_bin/"
 from_idx = 417
 to_idx = 796
 
+# # the number of image in the first dosimetry
+dosimetry_1_n = 0
+
 # prepare arrays
 images = []
 doses = []
@@ -73,7 +76,10 @@ for i in range(len(images)):
         exposure = 60 + exposure%60000
 
     # calculate the doses base on counts
-    total_dose = images[i].original_pixels/exposure
+    total_dose = np.sum(images[i].data*kevs)/exposure
+
+    # if images[i].original_pixels > 10000:
+    #     print("{} {}".format(images[i].id, images[i].original_pixels))
 
     doses.append(total_dose)
 
@@ -93,8 +99,8 @@ m.drawmeridians(np.arange(-180.,181.,60.))
 m.drawmapboundary(fill_color='white')
 
 # prepare numpy arrays for the lats and longs
-lats = numpy.zeros(len(images))
-lons = numpy.zeros(len(images))
+lats = numpy.zeros(len(images)+dosimetry_1_n)
+lons = numpy.zeros(len(images)+dosimetry_1_n)
 
 # decode lat and longs from tle
 for i in range(len(images)):
@@ -102,6 +108,16 @@ for i in range(len(images)):
     latitude, longitude, tle_date = getLatLong(images[i].time)
     lats[i] = latitude
     lons[i] = longitude
+
+# # reate artificial measurement in places, where data were not produced
+# # during the first dosimetry (scanning mode)
+# for i in range(dosimetry_1_n):
+
+#     time = 1503686482+i*300
+#     latitude, longitude, tle_date = getLatLong(time)
+#     lats[i+len(images)] = latitude
+#     lons[i+len(images)] = longitude
+#     doses.append(50)
 
 # project lats and long to the map coordinates
 x1, y1 = m(lons, lats)
@@ -116,7 +132,7 @@ my_cmap[:,-1] = numpy.linspace(0.1, 1, cmap.N)
 my_cmap = ListedColormap(my_cmap)
 
 # make plot using hexbin
-CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=32, cmap=my_cmap, mincnt=0, reduce_C_function=np.max, zorder=10)
+CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=64, cmap=my_cmap, mincnt=0, reduce_C_function=np.max, zorder=10)
 
 cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 cb.set_label('log10(Total energy) [keV/s]')

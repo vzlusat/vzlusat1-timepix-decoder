@@ -35,8 +35,8 @@ def fmt(x, pos):
 
 image_bin_path = "../images_bin/"
 
-from_idx = 417
-to_idx = 796
+from_idx = 813
+to_idx = 906
 
 # prepare arrays
 images = []
@@ -55,10 +55,7 @@ for i in range(from_idx, to_idx):
         print("image {} could not be loaded".format(i))
     else:
         if new_image.got_metadata == 1:
-            if new_image.got_data == 1:
-                images.append(new_image)
-            else:
-                print("image {} does not have data".format(i))
+            images.append(new_image)
         else:
             print("image {} does not have metadata".format(i))
 
