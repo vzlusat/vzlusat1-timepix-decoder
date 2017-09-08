@@ -375,7 +375,7 @@ def showImage(image, manual):
     #}
 
     #{ IMAGE
-    if image.got_data == 1:
+    if image.got_data == 1 and dont_redraw_var.get() == 0:
 
         if image.type >= 1 and image.type <= 8:
 
@@ -412,7 +412,7 @@ def showImage(image, manual):
         #}
 
         #{ SUMS
-        elif image.type == 16:
+        elif image.type == 16 and dont_redraw_var.get() == 0:
 
             my_figure.clf()
             a1 = my_figure.add_subplot(211)
@@ -443,7 +443,7 @@ def showImage(image, manual):
         #}
 
         #{ HISTOGRAM
-        elif image.type == 32:
+        elif image.type == 32 and dont_redraw_var.get() == 0:
 
             my_figure.clf()
             subplot1 = my_figure.add_subplot(111)
@@ -497,7 +497,10 @@ def showImage(image, manual):
 
         my_figure.clf()
         subplot1 = my_figure.add_subplot(111)
-        subplot1.text(0.5, 0.5, 'No data', horizontalalignment='center',verticalalignment='center', transform = subplot1.transAxes)
+        if dont_redraw_var.get() == 0:
+            subplot1.text(0.5, 0.5, 'No data', horizontalalignment='center',verticalalignment='center', transform = subplot1.transAxes)
+        else:
+            subplot1.text(0.5, 0.5, 'Plotting disabled', horizontalalignment='center',verticalalignment='center', transform = subplot1.transAxes)
         subplot1.axes.get_xaxis().set_visible(False)
         subplot1.axes.get_yaxis().set_visible(False)
         subplot1.patch.set_visible(False)
@@ -857,6 +860,7 @@ autogenerate_png_load = Tk.IntVar()
 # user can switch on/off showing of hidden and favorite images
 show_hidden_var = Tk.IntVar()
 show_globus_var = Tk.IntVar()
+dont_redraw_var = Tk.IntVar()
 show_favorite_var = Tk.IntVar()
 hide_without_data_var = Tk.IntVar()
 show_only_without_data_var = Tk.IntVar()
@@ -1092,6 +1096,9 @@ if settings.use_globus:
   show_globus = Tk.Checkbutton(master=frame_left, text="show globus", variable=show_globus_var, command=reloadCurrentImage, font=customfont)
   show_globus.pack(side=Tk.BOTTOM)
 # show_globus.toggle()
+
+just_metadata = Tk.Checkbutton(master=frame_left, text="Show just metadata", variable=dont_redraw_var, command=reloadCurrentImage, font=customfont)
+just_metadata.pack(side=Tk.BOTTOM)
 
 show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList, font=customfont)
 show_hidden.pack(side=Tk.BOTTOM)
