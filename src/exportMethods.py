@@ -84,7 +84,7 @@ def exportDescriptionFile(image):
 [F0]\r\n\
 Type=u32 matrix width={} height={}\r\n\
 \"Acq mode\" (\"Acquisition mode\"):\r\n\
-i32[1]\r\n\
+double[1]\r\n\
 {}\r\n\
 ".format(width, height, image.mode))
 
