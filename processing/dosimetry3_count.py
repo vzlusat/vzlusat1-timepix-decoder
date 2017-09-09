@@ -36,7 +36,7 @@ def fmt(x, pos):
 image_bin_path = "../images_bin/"
 
 from_idx = 813
-to_idx = 1118
+to_idx = 1200
 
 # prepare arrays
 images = []
