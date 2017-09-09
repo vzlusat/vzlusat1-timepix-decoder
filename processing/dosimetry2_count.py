@@ -304,19 +304,31 @@ m.drawmapboundary(fill_color='white')
 n = 100
 
 tlat = np.linspace(-75, 0, n)
-tlon = np.linspace(-90, 90, n)
+tlon = np.linspace(-89, 89, n)
 
 doses = np.array(doses_wide)
 
 doses_log = np.where(doses > 0, np.log(doses), doses)
 
+carx, cary = m(tlat, tlon)
+
+# remove points outside projection limb.
+filx = np.compress(np.logical_or(carx < 1.e20, cary < 1.e20), tlat)
+fily = np.compress(np.logical_or(carx < 1.e20, cary < 1.e20), tlon)
+
+print("filx: {}".format(filx))
+
 XX, YY = np.meshgrid(tlat, tlon)
 rbf = Rbf(lats_wide, lons_wide, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
 ZZ = rbf(XX, YY)
 
-new_x1, new_y1 = m(YY, XX)
+print("XX: {}".format(XX))
 
-m.pcolormesh(new_x1, new_y1, ZZ, cmap=my_cmap)
+x1, y1 = m(XX, XX)
+
+print("x1: {}".format(x1))
+
+m.pcolormesh(x1, y1, ZZ, cmap=my_cmap)
 
 cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 cb.set_label('log10(Total energy) [keV/s]')
