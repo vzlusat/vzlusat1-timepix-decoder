@@ -60,11 +60,6 @@ kevs = [3.6041, 5.32915, 8.40915, 13.51345, 20.67375, 29.2457, 38.5756, 48.2956,
 # load d2 images
 for i in range(d2_from_idx, d2_to_idx):
 
-    if i % 4 == 0:
-        pass
-    else:
-        continue
-
     # for count mode only
     # load anything that has metadata and any data, so presumably it is a proper image
     new_image = loadImage(i, 32, image_bin_path)
@@ -231,10 +226,10 @@ n = 100
 tlat = np.linspace(-90, 90, n)
 tlon = np.linspace(-180, 180, n)
 
-d2_doses_subset = np.array(d2_doses_subset)
+d3_doses = np.array(d3_doses)
 
 XX, YY = np.meshgrid(tlat, tlon)
-rbf = Rbf(lats, lons, d2_doses_subset, function='multiquadric', epsilon=0.1, smooth=0)
+rbf = Rbf(lats, lons, d3_doses, function='multiquadric', epsilon=0.1, smooth=0)
 ZZ = rbf(XX, YY)
 ZZ = np.where(ZZ < 0, 0, ZZ)
 
@@ -256,27 +251,6 @@ m.pcolormesh(new_x1, new_y1, ZZ, cmap=my_cmap)
 cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
 cb.set_label('Total energy [keV/s]')
 plt.title('RBF multiquadric (eps=10e-1), linear scale', fontsize=13)
-
-# plt.subplot(133)
-
-# m = Basemap(projection='cyl', llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-
-# # draw continents
-# m.drawcoastlines()
-# m.drawparallels(np.arange(-90.,91.,30.))
-# m.drawmeridians(np.arange(-180.,181.,60.))
-# m.drawmapboundary(fill_color='white')
-
-# lats = np.reshape(lats, (len(lats), 1))
-# lons = np.reshape(lons, (len(lons), 1))
-# points = np.hstack((lats, lons))
-# grid_z2 = griddata(points, doses, (XX, YY), method='cubic')
-
-# m.imshow(grid_z2.T, extent=(0, 1, 0, 1), origin='lower', cmap=my_cmap)
-
-# cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-# cb.set_label('Total energy [keV]')
-# plt.title('Cubic interpolation, linear scale', fontsize=13)
 
 plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.05)
 
@@ -393,27 +367,6 @@ m.pcolormesh(new_x1, new_y1, ZZ, cmap=my_cmap)
 cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
 cb.set_label('Total energy [keV/s]')
 plt.title('RBF multiquadric (eps=10e-1), linear scale', fontsize=13)
-
-# plt.subplot(133)
-
-# m = Basemap(projection='cyl', llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-
-# # draw continents
-# m.drawcoastlines()
-# m.drawparallels(np.arange(-90.,91.,30.))
-# m.drawmeridians(np.arange(-180.,181.,60.))
-# m.drawmapboundary(fill_color='white')
-
-# lats = np.reshape(lats, (len(lats), 1))
-# lons = np.reshape(lons, (len(lons), 1))
-# points = np.hstack((lats, lons))
-# grid_z2 = griddata(points, doses, (XX, YY), method='cubic')
-
-# m.imshow(grid_z2.T, extent=(0, 1, 0, 1), origin='lower', cmap=my_cmap)
-
-# cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-# cb.set_label('Total energy [keV]')
-# plt.title('Cubic interpolation, linear scale', fontsize=13)
 
 plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.05)
 
