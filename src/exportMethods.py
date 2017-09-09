@@ -251,7 +251,7 @@ def exportBinning(image):
         
         with open(getExportDataName(image.id, image.type), "w") as data_file:
 
-            writer = csv.writer(data_file, quoting=csv.QUOTE_NONE)
+            writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
         
             for i in range(0, size):
                 writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[i, :]])
@@ -263,7 +263,7 @@ def exportSums(image):
     if image.got_data == 1:
         with open(getExportDataName(image.id, image.type), "w") as data_file:
 
-            writer = csv.writer(data_file, quoting=csv.QUOTE_NONE)
+            writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
         
             writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[0, :]])
             writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[1, :]])
@@ -275,7 +275,7 @@ def exportHistogram(image):
     if image.got_data == 1:
         with open(getExportDataName(image.id, image.type), "w") as data_file:
 
-            writer = csv.writer(data_file, quoting=csv.QUOTE_NONE)
+            writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
         
             writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[0, :]])
         
@@ -286,7 +286,7 @@ def exportRaw(image):
     if image.got_data == 1:
         with open(getExportDataName(image.id, image.type), "w") as data_file:
 
-            writer = csv.writer(data_file, quoting=csv.QUOTE_NONE)
+            writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
         
             for i in range(0, 256):
                 writer.writerow(["{0:.2f}".format(x) for x in image.data[i, :]])
