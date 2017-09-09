@@ -83,7 +83,7 @@ for i in range(len(images)):
 
 #{ Scatter plot
 plt.figure(1)
-ax1 = plt.subplot2grid((2, 2), (0, 0), colspan=2)
+ax1 = plt.subplot2grid((2, 3), (0, 0))
 m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
 
 # draw continents
@@ -141,7 +141,7 @@ XX, YY = np.meshgrid(tlat, tlon)
 rbf = Rbf(lats, lons, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
 ZZ = rbf(XX, YY)
 
-ax2 = plt.subplot2grid((2, 2), (1, 0))
+ax1 = plt.subplot2grid((2, 3), (0, 1))
 
 m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
 
@@ -175,7 +175,7 @@ rbf = Rbf(lats, lons, doses, function='multiquadric', epsilon=0.1, smooth=0)
 ZZ = rbf(XX, YY)
 ZZ = np.where(ZZ < 0, 0, ZZ)
 
-ax3 = plt.subplot2grid((2, 2), (1, 1))
+ax1 = plt.subplot2grid((2, 3), (0, 2))
 
 m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
 
@@ -203,8 +203,8 @@ plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace
 
 #{ North pole
 
-plt.figure(2)
-ax1 = plt.subplot2grid((2, 2), (0, 0))
+# plt.figure(2)
+ax1 = plt.subplot2grid((2, 3), (1, 0))
 # new globus
 m = Basemap(projection='ortho', lat_0=-90, lon_0=0, resolution='l')
 m.drawcoastlines()
@@ -242,7 +242,7 @@ plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace
 
 #{ South pole
 
-ax1 = plt.subplot2grid((2, 2), (0, 1))
+ax1 = plt.subplot2grid((2, 3), (1, 1))
 # new globus
 m = Basemap(projection='ortho', lat_0=90, lon_0=0, resolution='l')
 m.drawcoastlines()
@@ -282,7 +282,7 @@ plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace
 
 #{ Anomaly
 
-ax1 = plt.subplot2grid((2, 2), (1, 0))
+ax1 = plt.subplot2grid((2, 3), (1, 2))
 
 # new globus
 m = Basemap(projection='ortho', lat_0=-36, lon_0=-53, resolution='l')
