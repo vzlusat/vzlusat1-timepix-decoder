@@ -2,7 +2,9 @@
 
 ## Prerequisities
 
-Running the **decoder** on Linux requires installing python and matplotlib on both Linux and Windows. Follow these instructions:
+Running the **decoder** on Linux requires installing python libraries on both Linux and Windows.
+Thought, it is much easier to run it on Linux...
+Follow these instructions:
 
 ### Linux
 
@@ -16,12 +18,13 @@ sudo apt-get install python2.7-dev python-matplotlib python3-pip python3-tk pyth
 
 1. Install the latest Python3 from the website: https://www.python.org/downloads/
  
-If you want to have a TLE+Globus, follow to point 2., 3. and 4., otherwise skip to 5.
-2. Install Visual C++ Build tools 2015 from: http://landinghub.visualstudio.com/visual-cpp-build-tools
-3. Install Anaconda: https://repo.continuum.io/archive/Anaconda3-4.4.0-Windows-x86_64.exe
-4. Run Anaconda Prompt (Start menu->Anaconda Prompt) and input following command to the command line: ```conda install -c conda-forge basemap```
+If you want to have a TwoLineElements+Globus, follow the next three bullet points, otherwise skip to the point 2 and disable the globus feature in _settings.txt_. Following bullet points may take very long time on Windows...
+
+- Install Visual C++ Build tools 2015 from: http://landinghub.visualstudio.com/visual-cpp-build-tools
+- Install Anaconda: https://repo.continuum.io/archive/Anaconda3-4.4.0-Windows-x86_64.exe
+- Run Anaconda Prompt (Start menu->Anaconda Prompt) and input following command to the command line: ```conda install -c conda-forge basemap```
  
-5. Run "run_as_admin.bat" script as Administrator (right click on it and click on "Run as administrator").
+2. Run "run_as_admin.bat" script as Administrator (right click on it and click on "Run as administrator").
 Doing this is neccessary just for the first time (it installs required library).
 After that, double-clicking decoder.py should be sufficient.
 
@@ -35,7 +38,11 @@ Open a Terminal window and run followoing command in the directory of the decode
 python decoder.py
 ```
 
+It might be neccessary to re-run the program multiple times, before it correctly loads its libraries for the first time.
+
 ## Windows
 
 Doubleclick the **decoder.py** file.
+
+It might be neccessary to re-run the program multiple times, before it correctly loads its libraries for the first time.
 
