@@ -11,6 +11,6 @@ def saveImage(image):
     with open(file_name, 'wb') as output:
     
         try:
-            pickle.dump(image, output, pickle.HIGHEST_PROTOCOL)
+           pickle.dump(image, output, pickle.HIGHEST_PROTOCOL)
         except:
             print("file \"{}\" not be saved".format(file_name))

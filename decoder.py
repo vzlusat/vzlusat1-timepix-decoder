@@ -73,7 +73,7 @@ from src.comments import getComment
 #{ def reloadData(index): reloads and shows metadata and image for a particular index in the listbox
 def reloadData(index, manual):
 
-    list_files = loadFiles()
+    # list_files = loadFiles()
     global file_names
     file_name = file_names[index]
 
@@ -98,6 +98,8 @@ def reloadData(index, manual):
 
 #{ def loadFiles(): inspects "images_bin" folders and prepares the content for the listbox
 def loadFiles():
+
+    print("Reloading file list")
 
     # updated the filename list
     global file_names
@@ -148,6 +150,8 @@ def loadFiles():
                     list_files.append(str(image.id)+"_"+str(image.type))
             else:
                 print("could not open file "+file)
+
+    print("File list reloaded")
 
     return list_files
 #}
@@ -977,6 +981,7 @@ def loadNewImages():
 
     # generate pngs
     if autogenerate_png_load.get() == 1:
+        print("Generating png images")
         idx=0
         for item in list_files:
 
@@ -992,9 +997,11 @@ def loadNewImages():
                     with open(image_filename) as file:
                         pass
                 except IOError as e:
+                    print("Exporting image ...")
                     reloadData(idx, 0)
 
             idx += 1
+        print("png images generated")
 
     # listbox.selection_clear()
     listbox.after(10, lambda: listbox.selection_set("end"))
