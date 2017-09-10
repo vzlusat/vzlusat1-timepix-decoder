@@ -9,12 +9,12 @@ from include.baseMethods import *
 
 from_idx = 813
 to_idx = 1200
-outliers=[]
+outliers=[849]
 
 date_range = '8-9.9.2017'
 x_units = '[pix/s]'
 x_label = 'Aprox. relative dose'
-general_label = '2nd dosimetry, 510 km LEO, VZLUSAT-1'
+general_label = '3rd dosimetry, 510 km LEO, VZLUSAT-1'
 
 # prepare data
 images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
