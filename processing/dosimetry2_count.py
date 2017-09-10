@@ -24,17 +24,20 @@ doses_log = np.where(doses > 0, np.log(doses), doses)
 
 lats_orig, lons_orig = extractPositions(images)
 
+doses_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses, lats_orig, lons_orig)
+doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig, lons_orig)
+
 #{ RBF interpolation
 
 # create meshgrid for RBF
 x_meshgrid, y_meshgrid = createMeshGrid(100)
 
 # calculate RBF from log data
-rbf_lin = Rbf(lats_orig, lons_orig, doses, function='multiquadric', epsilon=0.1, smooth=0)
+rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=0.1, smooth=0)
 doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 
 # calculate RBF from lin data
-rbf_log = Rbf(lats_orig, lons_orig, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
+rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=0.1, smooth=0)
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 #} end of RBF interpolation
@@ -141,7 +144,7 @@ def plot_everything(*args):
 
 #} end of anomaly, log rbf
 
-    plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace=0.2)
+    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
 
     #} end of Figure 1
 
