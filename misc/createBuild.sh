@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="1.0.15"
+version="1.0.16"
 
 files=(
 "colormaps.txt"
