@@ -20,11 +20,27 @@ kevs = [3.6041, 5.32915, 8.40915, 13.51345, 20.67375, 29.2457, 38.5756, 48.2956,
 from src.tle import *
 parseTLE()
 
+def colormapToTransparent(original):
+
+    # mutate the colormap of a choice to be transparent at the low end
+    cmap = original
+    # get the original colormap colors
+    my_cmap = cmap(numpy.arange(cmap.N))
+    # set alpha
+    my_cmap[:,-1] = numpy.linspace(0.1, 1, cmap.N)
+    # create the new colormap
+    my_cmap = ListedColormap(my_cmap)
+
+    return my_cmap
+
+# prepare a transparent colormap
+my_cm = colormapToTransparent(pl.cm.jet)
+
 # formatting log scale lables
 def fmt(x, pos):
     a, b = '{:.0e}'.format(x).split('e')
     b = int(b)
-    return r'${} \times 10^{{{}}}$'.format(a, b)
+    return r'${}e{{{}}}$'.format(a, b)
 
 def extractPositions(images):
 
@@ -42,7 +58,7 @@ def extractPositions(images):
     return lats, lons
 
 # load reange of images having a particular type
-def loadImageRange(from_idx, to_idx, type):
+def loadImageRange(from_idx, to_idx, image_type, require_data=0, require_metadata=0):
 
     images = []
 
@@ -51,11 +67,19 @@ def loadImageRange(from_idx, to_idx, type):
 
         # for count mode only
         # load anything that has metadata and any data, so presumably it is a proper image
-        new_image = loadImage(i, type, image_bin_path)
+        new_image = loadImage(i, image_type, image_bin_path)
 
         if new_image == 0:
             print("image {} could not be loaded".format(i))
         else:
+            if require_data and not new_image.got_data:
+                print("image {} does not contain data".format(i))
+                continue 
+
+            if require_metadata and not new_image.got_data:
+                print("image {} does not contain metadata".format(i))
+                continue 
+
             images.append(new_image)
 
     return images
@@ -130,19 +154,6 @@ def createMap(projection, lat=0, lon=0):
     m.drawmapboundary(fill_color='white')
 
     return m
-
-def colormapToTransparent(original):
-
-    # mutate the colormap of a choice to be transparent at the low end
-    cmap = original
-    # get the original colormap colors
-    my_cmap = cmap(numpy.arange(cmap.N))
-    # set alpha
-    my_cmap[:,-1] = numpy.linspace(0.1, 1, cmap.N)
-    # create the new colormap
-    my_cmap = ListedColormap(my_cmap)
-
-    return my_cmap
 
 def wrapAround(doses, lats, lons):
 
