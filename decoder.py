@@ -297,9 +297,9 @@ def showImage(image, manual):
     if image.got_metadata == 1:
 
         if image.mode == 0:
-            mode = "Medipix (Counting)"
+            mode = "MPX"
         else:
-            mode = "Timepix (Energy)"
+            mode = "TOT"
 
         metadatas_var[2].set(mode)
 
@@ -390,8 +390,10 @@ def showImage(image, manual):
             subplot1.set_xlabel("Column [-]")
             subplot1.set_ylabel("Row [-]")
 
+            human_readible_time = datetime.datetime.utcfromtimestamp(image.time)
+
             if image.got_metadata == 1:
-                subplot1.set_title(img_type+" n.{0}, {1} s exposure, ".format(image.id, exposure)+mode+" mode", fontsize=13, y=1.02)
+                subplot1.set_title(img_type+" n.{0}, {1} s exposure, ".format(image.id, exposure)+mode+" mode, {}".format(human_readible_time), fontsize=13, y=1.02)
             else:
                 subplot1.set_title(img_type+" n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
@@ -429,15 +431,17 @@ def showImage(image, manual):
             a1.axis([1, 256, numpy.min(image.data[0, :]), numpy.max(image.data[0, :])])
             a2.axis([1, 256, numpy.min(image.data[1, :]), numpy.max(image.data[1, :])])
 
+            human_readible_time = datetime.datetime.utcfromtimestamp(image.time)
+
             if image.got_metadata == 1:
-                a1.set_title("Row summs n.{0}, {1} s exposure ".format(image.id, exposure), fontsize=13, y=1.02)
+                a1.set_title("Row summs n.{0}, {1} s exposure, {2}".format(image.id, exposure, human_readible_time), fontsize=13, y=1.02)
             else:
                 a1.set_title("Row summs n.{0}, ??? s exposure ".format(image.id), fontsize=13, y=1.02)
             a1.set_xlabel("Row [-]")
             a1.set_ylabel("Active pixel count [-]")
 
             if image.got_metadata == 1:
-                a2.set_title("Column summs n.{0}, {1} s exposure ".format(image.id, exposure), fontsize=13, y=1.02)
+                a2.set_title("Column summs n.{0}, {1} s exposure, {2}".format(image.id, exposure, human_readible_time), fontsize=13, y=1.02)
             else:
                 a2.set_title("Column summs n.{0}, ??? s exposure ".format(image.id), fontsize=13, y=1.02)
             a2.set_xlabel("Column [-]")
@@ -480,8 +484,10 @@ def showImage(image, manual):
 
             subplot1.set_ylabel("Counts [-]")
 
+            human_readible_time = datetime.datetime.utcfromtimestamp(image.time)
+
             if image.got_metadata == 1:
-                subplot1.set_title("Image histogram n.{0}, {1} s exposure, ".format(image.id, exposure)+mode+" mode", fontsize=13, y=1.02)
+                subplot1.set_title("Image histogram n.{0}, {1} s exposure, ".format(image.id, exposure)+mode+" mode, {}".format(human_readible_time), fontsize=13, y=1.02)
             else:
                 subplot1.set_title("Image histogram n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
