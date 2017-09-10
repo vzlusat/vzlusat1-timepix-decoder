@@ -58,12 +58,18 @@ def extractPositions(images):
     return lats, lons
 
 # load reange of images having a particular type
-def loadImageRange(from_idx, to_idx, image_type, require_data=0, require_metadata=0):
+def loadImageRange(from_idx, to_idx, image_type, require_data=0, require_metadata=0, outliers=[]):
 
     images = []
 
     # load images
     for i in range(from_idx, to_idx):
+
+        try:
+            dev_null = outliers.index(i)
+            continue
+        except:
+            pass
 
         # for count mode only
         # load anything that has metadata and any data, so presumably it is a proper image
@@ -76,7 +82,7 @@ def loadImageRange(from_idx, to_idx, image_type, require_data=0, require_metadat
                 print("image {} does not contain data".format(i))
                 continue 
 
-            if require_metadata and not new_image.got_data:
+            if require_metadata and not new_image.got_metadata:
                 print("image {} does not contain metadata".format(i))
                 continue 
 

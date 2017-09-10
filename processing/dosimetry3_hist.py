@@ -9,6 +9,7 @@ from include.baseMethods import *
 
 from_idx = 813
 to_idx = 1200
+outliers=[849]
 
 date_range = '8-9.9.2017'
 x_units = '[keV/s]'
@@ -16,7 +17,7 @@ x_label = 'Total energy'
 general_label = '3rd dosimetry 510 LEO, VZLUSAT-1'
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 32, 1, 0)
+images = loadImageRange(from_idx, to_idx, 32, 1, 0, outliers)
 
 doses = calculateEnergyDose(images)
 doses_log = np.where(doses > 0, np.log(doses), doses)

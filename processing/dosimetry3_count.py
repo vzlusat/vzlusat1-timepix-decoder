@@ -1,321 +1,152 @@
 #!/usr/bin/python
 
+import os
 import matplotlib.pyplot as plt
-import numpy as np
-from mpl_toolkits.basemap import Basemap, addcyclic
-from math import *
 from scipy.interpolate import Rbf
-import matplotlib.ticker as ticker
+import matplotlib.ticker as ticker # for colorbar
 
-# to also allow loading from a parent directory
-import sys
-sys.path.append('../')
-
-from include.filtration import *
-from src.loadImage import *
-from src.Image import *
-
-# for modifying existing colormap to be transparent
-import matplotlib.pylab as pl
-from matplotlib.colors import ListedColormap
-
-# we will need two-line elements
-import datetime
-from src.tle import *
-parseTLE()
-
-# interpolation
-from scipy import interpolate
-from scipy.interpolate import griddata
-
-def fmt(x, pos):
-    a, b = '{:.0e}'.format(x).split('e')
-    b = int(b)
-    return r'${} \times 10^{{{}}}$'.format(a, b)
-
-image_bin_path = "../images_bin/"
+from include.baseMethods import *
 
 from_idx = 813
 to_idx = 1200
+outliers=[]
 
-# prepare arrays
-images = []
-doses = []
+date_range = '8-9.9.2017'
+x_units = '[pix/s]'
+x_label = 'Aprox. relative dose'
+general_label = '2nd dosimetry, 510 km LEO, VZLUSAT-1'
 
-kevs = [3.6041, 5.32915, 8.40915, 13.51345, 20.67375, 29.2457, 38.5756, 48.2956, 58.22885, 68.28795, 78.4265, 88.61815, 98.84695, 109.1026, 119.37825, 129.6693]
+# prepare data
+images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
 
-# load images
-for i in range(from_idx, to_idx):
-
-    # for count mode only
-    # load anything that has metadata and any data, so presumably it is a proper image
-    new_image = loadImage(i, 32, image_bin_path)
-
-    if new_image == 0:
-        print("image {} could not be loaded".format(i))
-    else:
-        if new_image.got_metadata == 1:
-            images.append(new_image)
-        else:
-            print("image {} does not have metadata".format(i))
-
-# calculate the doses in those images
-for i in range(len(images)):
-
-    # calculate the exposure time in seconds
-    exposure = images[i].exposure
-    if exposure <= 60000:
-        exposure = exposure*0.001
-    else:
-        exposure = 60 + exposure%60000
-
-    # calculate the doses base on counts
-    total_dose = images[i].original_pixels/exposure
-
-    doses.append(total_dose)
-
-# create the map plot
-
-#{ Figure 1
-
-#{ Scatter plot
-plt.figure(1)
-ax1 = plt.subplot2grid((2, 3), (0, 0))
-m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-
-# draw continents
-m.drawcoastlines()
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
-
-# prepare numpy arrays for the lats and longs
-lats = numpy.zeros(len(images))
-lons = numpy.zeros(len(images))
-
-# decode lat and longs from tle
-for i in range(len(images)):
-
-    latitude, longitude, tle_date = getLatLong(images[i].time)
-    lats[i] = latitude
-    lons[i] = longitude
-
-doses_wide = np.concatenate([doses, doses, doses, doses, doses])
-lons_wide = np.concatenate([lons-360, lons, lons+360, lons, lons])
-lats_wide = np.concatenate([lats, lats, lats, lats+360, lats-360])
-
-# project lats and long to the map coordinates
-x1, y1 = m(lons, lats)
-
-# mutate the colormap of a choice to be transparent at the low end
-cmap = pl.cm.jet
-# get the original colormap colors
-my_cmap = cmap(numpy.arange(cmap.N))
-# set alpha
-my_cmap[:,-1] = numpy.linspace(0.1, 1, cmap.N)
-# create the new colormap
-my_cmap = ListedColormap(my_cmap)
-
-# make plot using hexbin
-CS = m.hexbin(x1, y1, C=numpy.array(doses), bins='log', gridsize=32, cmap=my_cmap, mincnt=0, reduce_C_function=np.max, zorder=10)
-
-cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-cb.set_label('log10(pixels) [pixels/s]')
-plt.title('Measurements in 510 km LEO orbit, 7-9.9.2017', fontsize=13)
-
-#}
-
-#{ Log-scale RBF
-
-n = 100
-tlat = np.linspace(-90, 90, n)
-tlon = np.linspace(-180, 180, n)
-
-doses = np.array(doses)
+doses = calculateTotalPixelCount(images)
 doses_log = np.where(doses > 0, np.log(doses), doses)
 
-XX, YY = np.meshgrid(tlat, tlon)
-rbf = Rbf(lats, lons, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
-ZZ = rbf(XX, YY)
+lats_orig, lons_orig = extractPositions(images)
 
-ax1 = plt.subplot2grid((2, 3), (0, 1))
+#{ RBF interpolation
 
-m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+# create meshgrid for RBF
+x_meshgrid, y_meshgrid = createMeshGrid(100)
 
-# draw continents
-m.drawcoastlines()
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
+# calculate RBF from log data
+rbf_lin = Rbf(lats_orig, lons_orig, doses, function='multiquadric', epsilon=0.1, smooth=0)
+doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 
-new_x1, new_y1 = m(YY, XX)
+# calculate RBF from lin data
+rbf_log = Rbf(lats_orig, lons_orig, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
+doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
-m.pcolormesh(new_x1, new_y1, ZZ, cmap=my_cmap)
+#} end of RBF interpolation
 
-cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-cb.set_label('log10(pixels) [pixels/s]')
-plt.title('RBF multiquadric (eps=10e-1), log10 scale,  7-9.9.2017', fontsize=13)
+def plot_everything(*args):
 
-#}
+    plt.figure(1)
 
-#{ Lin-scale RBF
+    #{ Figure 1
 
-n = 100
+    ax1 = plt.subplot2grid((2, 3), (0, 0))
 
-tlat = np.linspace(-90, 90, n)
-tlon = np.linspace(-180, 180, n)
+#{ log-scale scatter
 
-doses = np.array(doses)
+    m = createMap('cyl')
 
-XX, YY = np.meshgrid(tlat, tlon)
-rbf = Rbf(lats, lons, doses, function='multiquadric', epsilon=0.1, smooth=0)
-ZZ = rbf(XX, YY)
-ZZ = np.where(ZZ < 0, 0, ZZ)
+    x_m, y_m = m(lons_orig, lats_orig) # project points
 
-ax1 = plt.subplot2grid((2, 3), (0, 2))
+    CS = m.hexbin(x_m, y_m, C=numpy.array(doses), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10)
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
-m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title(general_label+', '+date_range, fontsize=13)
 
-# draw continents
-m.drawcoastlines()
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
+#} end of log-scale scatter
 
-new_x1, new_y1 = m(YY, XX)
+    ax2 = plt.subplot2grid((2, 3), (0, 1))
 
-m.pcolormesh(new_x1, new_y1, ZZ, cmap=my_cmap)
+#{ log-scale rbf
 
-cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
-cb.set_label('Total energy [pixels/s]')
-plt.title('RBF multiquadric (eps=10e-1), linear scale, 7-9.9.2017', fontsize=13)
+    m = createMap('cyl')
 
-plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace=0.2)
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-#}
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm)
 
-#}
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
 
-#{ Figure 2
+#} end of log-scale rbf
 
-#{ North pole
+    ax3 = plt.subplot2grid((2, 3), (0, 2))
 
-# plt.figure(2)
-ax1 = plt.subplot2grid((2, 3), (1, 0))
-# new globus
-m = Basemap(projection='ortho', lat_0=-90, lon_0=0, resolution='l')
-m.drawcoastlines()
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
+#{ linear rbf
 
-n = 100
+    m = createMap('cyl')
 
-tlat = np.linspace(-90, 90, n)
-tlon = np.linspace(-180, 180, n)
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-# create numpy array of doses
-doses = np.array(doses_wide)
-doses_log = np.where(doses > 0, np.log(doses), doses)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_lin, cmap=my_cm)
 
-rbf = Rbf(lats_wide, lons_wide, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
+    cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
+    cb.set_label(x_label+' '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), linear scale, '+date_range, fontsize=13)
 
-# create a meshgrid and project it
-XX, YY = np.meshgrid(tlat, tlon)
-ZZ = rbf(XX, YY)
+#} end of linear rbf
 
-# project the estimated data
-new_x1, new_y1 = m(YY, XX)
+    ax3 = plt.subplot2grid((2, 3), (1, 0))
 
-m.pcolor(new_x1, new_y1, ZZ, cmap=my_cmap)
+#{ south-pole, log rbf
 
-cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-cb.set_label('log10(pixels) [pixels/s]')
-plt.title('RBF multiquadric (eps=10e-1), log10 scale, 7-9.9.2017', fontsize=13)
+    m = createMap('ortho', -90, 0)
 
-plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace=0.2)
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-#}
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm)
 
-#{ South pole
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log scale, '+date_range, fontsize=13)
 
-ax1 = plt.subplot2grid((2, 3), (1, 1))
-# new globus
-m = Basemap(projection='ortho', lat_0=90, lon_0=0, resolution='l')
-m.drawcoastlines()
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
+#} end of south-pole, log rbf
 
-n = 100
+    ax3 = plt.subplot2grid((2, 3), (1, 1))
 
-tlat = np.linspace(-90, 90, n)
-tlon = np.linspace(-180, 180, n)
+#{ north-pole, log rbf
 
-# create numpy array of doses
-doses = np.array(doses_wide)
-doses_log = np.where(doses > 0, np.log(doses), doses)
+    m = createMap('ortho', 90, 0)
 
-rbf = Rbf(lats_wide, lons_wide, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-# create a meshgrid and project it
-XX, YY = np.meshgrid(tlat, tlon)
-ZZ = rbf(XX, YY)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm)
 
-# project the estimated data
-new_x1, new_y1 = m(YY, XX)
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log scale, '+date_range, fontsize=13)
 
-m.pcolor(new_x1, new_y1, ZZ, cmap=my_cmap)
+#} end of north-pole, log rbf
 
-cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-cb.set_label('log10(pixels) [pixels/s]')
-plt.title('RBF multiquadric (eps=10e-1), log10 scale, 7-9.9.2017', fontsize=13)
+    ax3 = plt.subplot2grid((2, 3), (1, 2))
 
-plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace=0.2)
+#{ anomaly, log rbf
 
-plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace=0.2)
+    m = createMap('ortho', -30, -50)
 
-#}
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-#{ Anomaly
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm)
 
-ax1 = plt.subplot2grid((2, 3), (1, 2))
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log scale, '+date_range, fontsize=13)
 
-# new globus
-m = Basemap(projection='ortho', lat_0=-36, lon_0=-53, resolution='l')
-m.drawcoastlines()
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
+#} end of anomaly, log rbf
 
-n = 100
+    plt.subplots_adjust(left=0.1, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace=0.2)
 
-tlat = np.linspace(-90, 90, n)
-tlon = np.linspace(-180, 180, n)
+    #} end of Figure 1
 
-# create numpy array of doses
-doses = np.array(doses_wide)
-doses_log = np.where(doses > 0, np.log(doses), doses)
+    plt.show()
 
-rbf = Rbf(lats_wide, lons_wide, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
-
-# create a meshgrid and project it
-XX, YY = np.meshgrid(tlat, tlon)
-ZZ = rbf(XX, YY)
-
-# project the estimated data
-new_x1, new_y1 = m(YY, XX)
-
-m.pcolor(new_x1, new_y1, ZZ, cmap=my_cmap)
-
-cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-cb.set_label('log10(pixels) [pixels/s]')
-plt.title('RBF multiquadric (eps=10e-1), log10 scale, 7-9.9.2017', fontsize=13)
-
-plt.subplots_adjust(left=0.05, bottom=0.05, right=0.9, top=0.9, wspace=0.2, hspace=0.2)
-
-#}
-
-#}
-
-plt.show()
+pid = os.fork()
+if pid == 0:
+    plot_everything()
