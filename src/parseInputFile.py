@@ -8,18 +8,13 @@ from src.parseMethods import parseRowsSums
 from src.parseMethods import parseEnergyHist
 from src.parseMethods import parseRaw
 from src.parseMethods import parseHouseKeeping
+import sys
 
 import datetime
 
-import sys
-if sys.version_info[0] < 3:
-    import Tkinter as Tk
-else:
-    import tkinter as Tk
-
 last_time = 0
 
-def parseInputFile(file_path, v, root):
+def parseInputFile(file_path, root):
 
     try:
         infile = open(file_path, "r")
@@ -61,64 +56,44 @@ def parseInputFile(file_path, v, root):
 
             if data[0] == ord('A'):
 
-                v.set("Parsing metadata")
-                root.update()
                 parseMetadata(bin_data[1:])
 
             elif data[0] == ord('B'):
 
-                v.set("Parsing image (raw)")
-                root.update()
                 parseRaw(bin_data[1:])
                 
             elif data[0] == ord('D'):
 
-                v.set("Parsing image (binning-8)")
-                root.update()
                 parseBinning8(bin_data[1:])
 
             elif data[0] == ord('E'):
 
-                v.set("Parsing image (binning-16)")
-                root.update()
                 parseBinning16(bin_data[1:])
 
             elif data[0] == ord('F'):
 
-                v.set("Parsing image (binning-32)")
-                root.update()
                 parseBinning32(bin_data[1:])
 
             elif data[0] == ord('h'):
 
-                v.set("Parsing image (rows summ)")
-                root.update()
                 parseRowsSums(bin_data[1:])
 
             elif data[0] == ord('H'):
 
-                v.set("Parsing image (cols summ)")
-                root.update()
                 parseColsSums(bin_data[1:])
 
             elif data[0] == ord('e'):
 
-                v.set("Parsing image (energy hist.)")
-                root.update()
                 parseEnergyHist(bin_data[1:])
 
             elif data[0] == ord('Z'):
 
-                v.set("Parsing house keeping")
-                root.update()
                 parseHouseKeeping(bin_data[1:], last_time)
 
             elif data[0] == 19:
 
                 if data[1] == 234:
 
-                    v.set("Parsing HKC house keeping")
-                    root.update()
                     parseHouseKeeping(bin_data[3:], last_time)
 
             else:

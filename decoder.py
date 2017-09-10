@@ -513,7 +513,7 @@ def showImage(image, manual):
     figure_canvas.show()
 
     id_baloon.bind(label, getComment(image.id))
-    v.set(getComment(image.id))
+    statusLine.set(getComment(image.id))
 #}
 
 # callback for marking hidden/favorite checkboxex
@@ -602,6 +602,8 @@ if settings.use_globus:
 # create the root window
 root = Tk.Tk()
 
+import src.statusLine as statusLine
+
 if settings.gpd_enabled:
     customfont = tkFont.Font(family="Arial", size=8)
 else:
@@ -636,10 +638,9 @@ my_figure.clf()
 parseComments()
 
 # create the status line
-global v # global variable, so anyone can add text to the status line
-v = Tk.StringVar()
-status_line = Tk.Label(root, anchor=Tk.W, justify=Tk.LEFT, textvariable=v, height=1, bg="white", bd=2, highlightbackground="black", font=customfont)
-status_line.pack(side=Tk.BOTTOM, fill=Tk.X, expand=0)
+# initStatusLine(root)
+
+statusLine.init(root, customfont)
 
 # create the left subframe for the list
 frame_left = Tk.Frame(frame_main, bd=1);
@@ -924,11 +925,12 @@ for item in list_files:
     listbox.insert(Tk.END, item)
 
 # select the last item in the listbox
-listbox.after(10, lambda: listbox.focus_force())
+# listbox.after(10, lambda: listbox.focus_force())
 listbox.after(10, lambda: listbox.selection_set("end"))
 listbox.after(10, lambda: listbox.see(Tk.END))
 # really we want the scrollabar to be down
 listbox.after(500, lambda: listbox.see(Tk.END))
+listbox.after(750, lambda: listbox.focus_force())
 
 # autoselect the last item in the listbox after start
 # and show the metadata and the image
@@ -965,7 +967,7 @@ def loadNewImages():
     if file_name == "":
         return
 
-    if not parseInputFile(file_name, v, root):
+    if not parseInputFile(file_name, root):
         return
     else:
         print("Successfully parsed the file \"{}\"".format(file_name))
@@ -974,7 +976,7 @@ def loadNewImages():
 
     listbox.delete(0, Tk.END)
 
-    v.set("Saving new png images")
+    statusLine.set("Saving new png images")
 
     for item in list_files:
         listbox.insert(Tk.END, item)
@@ -1022,30 +1024,26 @@ def loadNewImages():
                 loaded_image = image
                 showImage(image, 1)
 
-    v.set("All images loaded")
+    statusLine.set("All images loaded")
 #}
 
 #{ exportCsv() callback
 def exportCsvData():
 
-    v.set("Exporting images to csv")
-    root.update()
+    statusLine.set("Exporting images to csv")
 
     for file_name in file_names:
 
         if file_name[-5] == 'h':
             housekeeping = loadHouseKeeping(file_name)
             exportCsv(housekeeping)
-            v.set("Exporting HK")
-            root.update()
+            statusLine.set("Exporting HK")
         else:
             image = loadImage(file_name)
             exportCsv(image)
-            v.set("Exporting image {}".format(image.id))
-            root.update()
+            statusLine.set("Exporting image {}".format(image.id))
 
-    v.set("Images exported")
-    root.update()
+    statusLine.set("Images exported")
 
 #}
 

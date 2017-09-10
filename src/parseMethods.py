@@ -10,6 +10,7 @@ from src.calibration import *
 from src.exportMethods import exportImage
 from src.exportMethods import exportHouseKeeping
 from src.HouseKeeping import HouseKeeping
+import src.statusLine as statusLine
 
 def parseHouseKeeping(bin_data, time):
 
@@ -32,6 +33,8 @@ def parseHouseKeeping(bin_data, time):
     new_hk.temp_max = bin_data[27]
     new_hk.temp_min = bin_data[28]
     new_hk.time = time
+
+    statusLine.set("Parsing house keeping {}_{}_{}".format(new_hk.boot_count, new_hk.images_taken, new_hk.time_since_boot))
 
     saveHouseKeeping(new_hk);
 
@@ -59,6 +62,8 @@ def parseMetadata(bin_data):
 
     image_type = bin_data[0]
     image_id = bytesToInt16(bin_data[1], bin_data[2])
+
+    statusLine.set("Parsing metadata {}_{}".format(image_id, image_type))
 
     # try to load already saved image
     image = loadImage(image_id, image_type) 
@@ -105,6 +110,8 @@ def parseMetadata(bin_data):
 def parseBinning8(bin_data):
 
     image = parseImageHeader(bin_data, 2)
+
+    statusLine.set("Parsing binning {}".format(image.id))
 
     packet_id = bin_data[2]
 
@@ -189,6 +196,8 @@ def parseRowsSums(bin_data):
 
     image = parseImageHeader(bin_data, 16)
 
+    statusLine.set("Parsing sums {}".format(image.id))
+
     packet_id = bin_data[2]
 
     if (image.data.shape[0] != 2) or (image.data.shape[1] != 256):
@@ -206,6 +215,8 @@ def parseEnergyHist(bin_data):
 
     image = parseImageHeader(bin_data, 32)
 
+    statusLine.set("Parsing histogram {}".format(image.id))
+
     if (image.data.shape[0] != 1) or (image.data.shape[1] != 16):
         image.data = numpy.ones(shape=[1, 16])
 
@@ -221,6 +232,8 @@ def parseEnergyHist(bin_data):
 def parseRaw(bin_data):
 
     image = parseImageHeader(bin_data, 1)
+
+    statusLine.set("Parsing full resolution {}".format(image.id))
 
     if image.data.shape[0] != 256 or image.data.shape[1] != 256:
         image.data = numpy.zeros((256, 256))
