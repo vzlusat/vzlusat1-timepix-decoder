@@ -997,7 +997,6 @@ def loadNewImages():
                     with open(image_filename) as file:
                         pass
                 except IOError as e:
-                    print("Exporting image ...")
                     reloadData(idx, 0)
 
             idx += 1
