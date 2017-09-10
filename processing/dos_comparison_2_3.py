@@ -39,7 +39,7 @@ d2_from_idx = 417
 d2_to_idx = 796
 
 d3_from_idx = 813
-d3_to_idx = 993
+d3_to_idx = 1200
 
 # prepare arrays
 d3_images = []
