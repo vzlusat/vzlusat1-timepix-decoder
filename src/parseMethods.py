@@ -11,6 +11,7 @@ from src.exportMethods import exportImage
 from src.exportMethods import exportHouseKeeping
 from src.HouseKeeping import HouseKeeping
 import src.statusLine as statusLine
+from src.baseMethods import getFileName
 
 def parseHouseKeeping(bin_data, time):
 
@@ -40,41 +41,43 @@ def parseHouseKeeping(bin_data, time):
 
     return new_hk
 
-def parseImageHeader(bin_data, image_type):
+def parseImageHeader(bin_data, image_type, image_dict):
 
     image_id = bytesToInt16(bin_data[0], bin_data[1])
     packet_id = bin_data[2]
 
-    # try to load already saved image
-    image = loadImage(image_id, image_type) 
+    file_name = getFileName(image_id, image_type)
+    if file_name  in image_dict:
+        image = image_dict[file_name]
+    else:
+        # try to load already saved image
+        image = loadImage(image_id, image_type) 
 
     if image == 0: # if the image file does not exist
 
         # instantiate new image object
         image = Image(image_id, image_type)
 
-        # save it to its apropriate file
-        saveImage(image);
-
     return image
 
-def parseMetadata(bin_data):
+def parseMetadata(bin_data, image_dict):
 
     image_type = bin_data[0]
     image_id = bytesToInt16(bin_data[1], bin_data[2])
 
     statusLine.set("Parsing metadata {}_{}".format(image_id, image_type))
 
-    # try to load already saved image
-    image = loadImage(image_id, image_type) 
+    file_name = getFileName(image_id, image_type)
+    if file_name  in image_dict:
+        image = image_dict[file_name]
+    else:
+        # try to load already saved image
+        image = loadImage(image_id, image_type) 
 
     if image == 0: # if the image file does not exist
 
         # instantiate new image object
         image = Image(image_id, image_type)
-
-        # save it to its apropriate file
-        saveImage(image);
 
     # fill all the particular image properties
 
@@ -105,11 +108,11 @@ def parseMetadata(bin_data):
 
     image.got_metadata = 1
 
-    saveImage(image)
+    return image
     
-def parseBinning8(bin_data):
+def parseBinning8(bin_data, image_dict):
 
-    image = parseImageHeader(bin_data, 2)
+    image = parseImageHeader(bin_data, 2, image_dict)
 
     statusLine.set("Parsing binning {}".format(image.id))
 
@@ -128,11 +131,11 @@ def parseBinning8(bin_data):
 
     image.got_data = 1
 
-    saveImage(image)
+    return image
 
-def parseBinning16(bin_data):
+def parseBinning16(bin_data, image_dict):
 
-    image = parseImageHeader(bin_data, 4)
+    image = parseImageHeader(bin_data, 4, image_dict)
 
     packet_id = bin_data[2]
 
@@ -149,11 +152,11 @@ def parseBinning16(bin_data):
 
     image.got_data = 1
 
-    saveImage(image)
+    return image
 
-def parseBinning32(bin_data):
+def parseBinning32(bin_data, image_dict):
 
-    image = parseImageHeader(bin_data, 8)
+    image = parseImageHeader(bin_data, 8, image_dict)
 
     packet_id = bin_data[2]
 
@@ -173,11 +176,11 @@ def parseBinning32(bin_data):
 
     image.got_data = 1
 
-    saveImage(image)
+    return image
 
-def parseColsSums(bin_data):
+def parseColsSums(bin_data, image_dict):
 
-    image = parseImageHeader(bin_data, 16)
+    image = parseImageHeader(bin_data, 16, image_dict)
 
     packet_id = bin_data[2]
 
@@ -190,11 +193,11 @@ def parseColsSums(bin_data):
 
     image.got_data = 1
 
-    saveImage(image)
+    return image
     
-def parseRowsSums(bin_data):
+def parseRowsSums(bin_data, image_dict):
 
-    image = parseImageHeader(bin_data, 16)
+    image = parseImageHeader(bin_data, 16, image_dict)
 
     statusLine.set("Parsing sums {}".format(image.id))
 
@@ -209,11 +212,11 @@ def parseRowsSums(bin_data):
 
     image.got_data = 1
 
-    saveImage(image)
+    return image
 
-def parseEnergyHist(bin_data):
+def parseEnergyHist(bin_data, image_dict):
 
-    image = parseImageHeader(bin_data, 32)
+    image = parseImageHeader(bin_data, 32, image_dict)
 
     statusLine.set("Parsing histogram {}".format(image.id))
 
@@ -227,11 +230,11 @@ def parseEnergyHist(bin_data):
 
     image.got_data = 1
 
-    saveImage(image)
+    return image
 
-def parseRaw(bin_data):
+def parseRaw(bin_data, image_dict):
 
-    image = parseImageHeader(bin_data, 1)
+    image = parseImageHeader(bin_data, 1, image_dict)
 
     statusLine.set("Parsing full resolution {}".format(image.id))
 
@@ -262,4 +265,4 @@ def parseRaw(bin_data):
 
     image.got_data = 1
 
-    saveImage(image)
+    return image

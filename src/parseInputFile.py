@@ -8,6 +8,9 @@ from src.parseMethods import parseRowsSums
 from src.parseMethods import parseEnergyHist
 from src.parseMethods import parseRaw
 from src.parseMethods import parseHouseKeeping
+from src.Image import *
+from src.saveImage import *
+from src.baseMethods import getFileName
 import sys
 
 import datetime
@@ -20,6 +23,8 @@ def parseInputFile(file_path, root):
         infile = open(file_path, "r")
     except:
         return 0
+
+    files_to_save = {}
 
     # for all lines in the file 
     for line in infile:
@@ -48,6 +53,8 @@ def parseInputFile(file_path, root):
                  print("Unhexification failed on data: {}".format(hex_data))
                  continue
 
+            temp_image = 0
+
             if sys.version_info[0] < 3:
                 bin_data = [ord(x) for x in data]
                 data = bin_data
@@ -56,35 +63,35 @@ def parseInputFile(file_path, root):
 
             if data[0] == ord('A'):
 
-                parseMetadata(bin_data[1:])
+                temp_image = parseMetadata(bin_data[1:], files_to_save)
 
             elif data[0] == ord('B'):
 
-                parseRaw(bin_data[1:])
+                temp_image = parseRaw(bin_data[1:], files_to_save)
                 
             elif data[0] == ord('D'):
 
-                parseBinning8(bin_data[1:])
+                temp_image = parseBinning8(bin_data[1:], files_to_save)
 
             elif data[0] == ord('E'):
 
-                parseBinning16(bin_data[1:])
+                temp_image = parseBinning16(bin_data[1:], files_to_save)
 
             elif data[0] == ord('F'):
 
-                parseBinning32(bin_data[1:])
+                temp_image = parseBinning32(bin_data[1:], files_to_save)
 
             elif data[0] == ord('h'):
 
-                parseRowsSums(bin_data[1:])
+                temp_image = parseRowsSums(bin_data[1:], files_to_save)
 
             elif data[0] == ord('H'):
 
-                parseColsSums(bin_data[1:])
+                temp_image = parseColsSums(bin_data[1:], files_to_save)
 
             elif data[0] == ord('e'):
 
-                parseEnergyHist(bin_data[1:])
+                temp_image = parseEnergyHist(bin_data[1:], files_to_save)
 
             elif data[0] == ord('Z'):
 
@@ -100,5 +107,11 @@ def parseInputFile(file_path, root):
 
                 print("UNKNOWN packet")
                 print(hex_data)
+
+            if isinstance(temp_image, Image):
+                files_to_save[getFileName(temp_image.id, temp_image.type)] = temp_image
+
+    for filename, image in files_to_save.iteritems():
+        saveImage(image)
 
     return 1

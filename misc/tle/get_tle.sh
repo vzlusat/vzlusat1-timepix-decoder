@@ -22,7 +22,7 @@ do
     # reformat the time stamp to a proper format
     correcttime=`echo "$mytime" | "$MY_PATH/vims" -s 'A|^f-lyiw$p^2f-lyiwA/p^yiwA/p^3f-lyiwA p^4f-lyiwA:p^5f-lyiwA:p^df|'`
 
-    # convert the human readible time stamp to unix epoch
+    # convert the human readable time stamp to unix epoch
     timestamp=`date -u --date="$correcttime" +"%s"`
 
     echo "$timestamp" >> tle.txt
