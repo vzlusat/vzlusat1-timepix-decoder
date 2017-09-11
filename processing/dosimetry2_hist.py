@@ -13,8 +13,8 @@ outliers=[]
 
 date_range = '30-31.8.2017'
 x_units = '[keV/s]'
-x_label = 'Total energy'
-general_label = '2nd dosimetry, 510 km LEO, VZLUSAT-1'
+x_label = 'Total dose in 14x14x0.3 mm Si'
+general_label = '2nd dosimetry 510 km LEO, VZLUSAT-1'
 
 # prepare data
 images = loadImageRange(from_idx, to_idx, 32, 1, 0, outliers)
