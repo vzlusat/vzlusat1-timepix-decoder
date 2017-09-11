@@ -8,8 +8,8 @@ import matplotlib.ticker as ticker # for colorbar
 from include.baseMethods import *
 
 from_idx = 813
-to_idx = 1200
-outliers=[849]
+to_idx = 994
+outliers=[]
 
 date_range = '8-9.9.2017'
 x_units = '[pix/s]'

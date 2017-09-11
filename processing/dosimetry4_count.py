@@ -7,19 +7,19 @@ import matplotlib.ticker as ticker # for colorbar
 
 from include.baseMethods import *
 
-from_idx = 813
-to_idx = 994
-outliers=[]
+from_idx = 994
+to_idx = 1388
+outliers=[1148]
 
-date_range = '8-9.9.2017'
-x_units = '[keV/s]'
-x_label = 'Total energy'
-general_label = '3rd dosimetry 510 LEO, VZLUSAT-1'
-
+date_range = '9-10.9.2017'
+x_units = '[pix/s]'
+x_label = 'Aprox. relative dose'
+general_label = '3rd dosimetry, 510 km LEO, VZLUSAT-1'
+88
 # prepare data
-images = loadImageRange(from_idx, to_idx, 32, 1, 0, outliers)
+images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
 
-doses = calculateEnergyDose(images)
+doses = calculateTotalPixelCount(images)
 doses_log = np.where(doses > 0, np.log(doses), doses)
 
 lats_orig, lons_orig = extractPositions(images)
@@ -106,9 +106,9 @@ def plot_everything(*args):
 
     m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm)
 
-    cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
-    cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), linear scale, '+date_range, fontsize=13)
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log scale, '+date_range, fontsize=13)
 
 #} end of south-pole, log rbf
 
@@ -122,9 +122,9 @@ def plot_everything(*args):
 
     m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm)
 
-    cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
-    cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), linear scale, '+date_range, fontsize=13)
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log scale, '+date_range, fontsize=13)
 
 #} end of north-pole, log rbf
 
@@ -138,9 +138,9 @@ def plot_everything(*args):
 
     m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm)
 
-    cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
-    cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), linear scale, '+date_range, fontsize=13)
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log scale, '+date_range, fontsize=13)
 
 #} end of anomaly, log rbf
 

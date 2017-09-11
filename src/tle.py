@@ -47,7 +47,11 @@ def getLatLong(timestamp):
     tle = ephem.readtle("0 VZLUSAT", tle1[closest_tle_idx], tle2[closest_tle_idx])
 
     # find the location at the time
-    tle.compute(datetime.datetime.utcfromtimestamp(timestamp))
+    try:
+        tle.compute(datetime.datetime.utcfromtimestamp(timestamp))
+    except:
+        print("Could not compute tle for timestamp {}".format(timestamp))
+        return 0, 0, 0
 
     # calculate latitude and longitude in degrees
     lon = float(repr(tle.sublong))*(180/3.141592654)

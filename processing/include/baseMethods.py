@@ -52,6 +52,10 @@ def extractPositions(images):
     for i in range(len(images)):
 
         latitude, longitude, tle_date = getLatLong(images[i].time)
+
+        if latitude == 0 and longitude == 0 and tle_date == 0:
+            print("could not extract position from {}_{}".format(images[i].id, images[i].type))
+
         lats[i] = latitude
         lons[i] = longitude
 

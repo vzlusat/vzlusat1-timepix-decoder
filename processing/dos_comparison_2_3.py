@@ -1,375 +1,269 @@
 #!/usr/bin/python
 
+import os
 import matplotlib.pyplot as plt
-import numpy as np
-from mpl_toolkits.basemap import Basemap
-from math import *
 from scipy.interpolate import Rbf
-import matplotlib.ticker as ticker
+import matplotlib.ticker as ticker # for colorbar
+from copy import deepcopy
 
-# to also allow loading from a parent directory
-import sys
-sys.path.append('../')
-
-from include.filtration import *
-from src.loadImage import *
-from src.Image import *
-
-# for modifying existing colormap to be transparent
-import matplotlib.pylab as pl
-from matplotlib.colors import ListedColormap
-
-# we will need two-line elements
-import datetime
-from src.tle import *
-parseTLE()
-
-# interpolation
-from scipy import interpolate
-from scipy.interpolate import griddata
-
-def fmt(x, pos):
-    a, b = '{:.0e}'.format(x).split('e')
-    b = int(b)
-    return r'${} \times 10^{{{}}}$'.format(a, b)
-
-image_bin_path = "../images_bin/"
+from include.baseMethods import *
 
 d2_from_idx = 417
 d2_to_idx = 796
 
 d3_from_idx = 813
-d3_to_idx = 1200
+d3_to_idx = 994
 
-# prepare arrays
-d3_images = []
-d2_images = []
-d2_images_subset = []
+d4_from_idx = 800
+d4_to_idx = 1388
+
+outliers=[849, 1148]
+
+date_range = ''
+x_units = '[pix/s]'
+x_label = 'Aprox. relative dose'
+general_label = 'Dosimetry, 510 km LEO, VZLUSAT-1'
+
+# prepare data
+d2_images = loadImageRange(d2_from_idx, d2_to_idx, 32, 0, 1, outliers)
+d3_images = loadImageRange(d3_from_idx, d3_to_idx, 32, 0, 1, outliers)
+d4_images = loadImageRange(d4_from_idx, d4_to_idx, 32, 0, 1, outliers)
+
+d2_doses = calculateTotalPixelCount(d2_images)
+d3_doses = calculateTotalPixelCount(d3_images)
+d4_doses = calculateTotalPixelCount(d4_images)
+d2_doses_log = np.where(d2_doses > 0, np.log(d2_doses), d2_doses)
+d3_doses_log = np.where(d3_doses > 0, np.log(d3_doses), d3_doses)
+d4_doses_log = np.where(d4_doses > 0, np.log(d4_doses), d4_doses)
+
+d2_lats, d2_lons = extractPositions(d2_images)
+d3_lats, d3_lons = extractPositions(d3_images)
+d4_lats, d4_lons = extractPositions(d4_images)
+
+d2_lats_original = d2_lats
+d2_lons_original = d2_lons
+d4_lats_original = d4_lats
+d4_lons_original = d4_lons
+d2_images_original = d2_images
+d4_images_original = d4_images
 
 d2_doses_subset = []
-d3_doses = []
-
-d2_lats = []
-d2_lons = []
-
-d2_subset_lats = []
-d2_subset_lons = []
-
-kevs = [3.6041, 5.32915, 8.40915, 13.51345, 20.67375, 29.2457, 38.5756, 48.2956, 58.22885, 68.28795, 78.4265, 88.61815, 98.84695, 109.1026, 119.37825, 129.6693]
-
-# load d2 images
-for i in range(d2_from_idx, d2_to_idx):
-
-    # for count mode only
-    # load anything that has metadata and any data, so presumably it is a proper image
-    new_image = loadImage(i, 32, image_bin_path)
-
-    if new_image == 0:
-        print("image {} could not be loaded".format(i))
-    else:
-        if new_image.got_metadata == 1:
-            d2_images.append(new_image)
-        else:
-            print("image {} does not have metadata".format(i))
-
-# prepare numpy arrays for the lats and longs
-d2_lats = numpy.zeros(len(d2_images))
-d2_lons = numpy.zeros(len(d2_images))
-
-# decode lats and lons for d2 images
-for i in range(len(d2_images)):
-
-    latitude, longitude, tle_date = getLatLong(d2_images[i].time)
-    d2_lats[i] = latitude
-    d2_lons[i] = longitude
-
-# load d3_images
-for i in range(d3_from_idx, d3_to_idx):
-
-    # for count mode only
-    # load anything that has metadata and any data, so presumably it is a proper image
-    new_image = loadImage(i, 32, image_bin_path)
-
-    if new_image == 0:
-        print("image {} could not be loaded".format(i))
-    else:
-        if new_image.got_metadata == 1:
-            d3_images.append(new_image)
-        else:
-            print("image {} does not have metadata".format(i))
+d2_images_subset = []
 
 d2_subset_lats = numpy.zeros(len(d3_images))
 d2_subset_lons = numpy.zeros(len(d3_images))
 
-# calculate the doses in d2_images
-for i in range(len(d3_images)):
+d4_doses_subset = []
+d4_images_subset = []
 
-    # calculate the exposure time in seconds
-    exposure = d3_images[i].exposure
-    if exposure <= 60000:
-        exposure = exposure*0.001
-    else:
-        exposure = 60 + exposure%60000
+d4_subset_lats = numpy.zeros(len(d3_images))
+d4_subset_lons = numpy.zeros(len(d3_images))
+
+#{ doses for d2
+for i in range(len(d3_images)):
 
     # find the closest point in d2 to d3
     latitude, longitude, tle_date = getLatLong(d3_images[i].time)
-    idx = min(range(len(d2_images)), key=lambda i: numpy.sqrt(pow(d2_lats[i]-latitude, 2) + pow(d2_lons[i]-longitude, 2)))
-
-    # calculate the doses base on counts
-    total_dose = d2_images[idx].original_pixels/exposure
-
-    d2_doses_subset.append(total_dose)
-    d2_images_subset.append(d2_images[idx])
-    d2_subset_lats[i] = latitude
-    d2_subset_lons[i] = longitude
-
-# calculate the doses in those d3_images
-for i in range(len(d3_images)):
+    d2_idx = min(range(len(d2_images)), key=lambda j: numpy.sqrt(pow(d2_lats[j]-latitude, 2) + pow(d2_lons[j]-longitude, 2)))
+    d4_idx = min(range(len(d4_images)), key=lambda j: numpy.sqrt(pow(d4_lats[j]-latitude, 2) + pow(d4_lons[j]-longitude, 2)))
 
     # calculate the exposure time in seconds
-    exposure = d3_images[i].exposure
-    if exposure <= 60000:
-        exposure = exposure*0.001
+    d2_exposure = d2_images[d2_idx].exposure
+    if d2_exposure <= 60000:
+        d2_exposure = d2_exposure*0.001
     else:
-        exposure = 60 + exposure%60000
+        d2_exposure = 60 + d2_exposure%60000
 
     # calculate the doses base on counts
-    total_dose = d3_images[i].original_pixels/exposure
+    total_dose = d2_images[d2_idx].original_pixels/d2_exposure
 
-    d3_doses.append(total_dose)
+    d2_doses_subset.append(deepcopy(total_dose))
+    d2_images_subset.append(deepcopy(d2_images[d2_idx]))
+    d2_subset_lats[i] = deepcopy(d2_lats[d2_idx])
+    d2_subset_lons[i] = deepcopy(d2_lons[d2_idx])
 
-# create the map plot
+    d2_images.remove(d2_images[d2_idx])
+    d2_lats = np.delete(d2_lats, d2_idx)
+    d2_lons = np.delete(d2_lons, d2_idx)
 
-#{ Figure 1
-plt.figure(1)
-ax1 = plt.subplot2grid((2, 2), (0, 0), colspan=2)
-# m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80, llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
-# m = Basemap(projection='moll',lon_0=0,resolution='c')
-# m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+    # calculate the exposure time in seconds
+    d4_exposure = d4_images[d4_idx].exposure
+    if d4_exposure <= 60000:
+        d4_exposure = d4_exposure*0.001
+    else:
+        d4_exposure = 60 + d4_exposure%60000
 
-# draw continents
-m.drawcoastlines()
-# m.fillcontinents(color='coral',lake_color='aqua')
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
+    # calculate the doses base on counts
+    total_dose = d4_images[d4_idx].original_pixels/d4_exposure
 
-# prepare numpy arrays for the lats and longs
-lats = numpy.zeros(len(d3_images))
-lons = numpy.zeros(len(d3_images))
+    d4_doses_subset.append(total_dose)
+    d4_images_subset.append(d4_images[d4_idx])
+    d4_subset_lats[i] = d4_lats[d4_idx]
+    d4_subset_lons[i] = d4_lons[d4_idx]
 
-# decode lat and longs from tle
-for i in range(len(d3_images)):
+    d4_images.remove(d4_images[d4_idx])
+    d4_lats = np.delete(d4_lats, d4_idx)
+    d4_lons = np.delete(d4_lons, d4_idx)
 
-    latitude, longitude, tle_date = getLatLong(d3_images[i].time)
-    lats[i] = latitude
-    lons[i] = longitude
-
-# project lats and long to the map coordinates
-x1, y1 = m(lons, lats)
-
-# mutate the colormap of a choice to be transparent at the low end
-cmap = pl.cm.jet
-# get the original colormap colors
-my_cmap = cmap(numpy.arange(cmap.N))
-# set alpha
-my_cmap[:,-1] = numpy.linspace(0.1, 1, cmap.N)
-# create the new colormap
-my_cmap = ListedColormap(my_cmap)
-
-# make plot using hexbin
-CS = m.hexbin(x1, y1, C=numpy.array(d3_doses), bins='log', gridsize=32, cmap=my_cmap, mincnt=0, reduce_C_function=np.max, zorder=10)
-
-cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-cb.set_label('log10(Total energy) [keV/s]')
-plt.title('Measurements in 510 km LEO orbit', fontsize=13)
-
-#################################################################################
-
-n = 100
-
-tlat = np.linspace(-90, 90, n)
-tlon = np.linspace(-180, 180, n)
-
-d3_doses = np.array(d3_doses)
-doses_log = np.where(d3_doses > 0, np.log(d3_doses), d3_doses)
-
-XX, YY = np.meshgrid(tlat, tlon)
-rbf = Rbf(lats, lons, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
-ZZ = rbf(XX, YY)
-
-ax2 = plt.subplot2grid((2, 2), (1, 0))
-
-# m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-
-# draw continents
-m.drawcoastlines()
-# m.fillcontinents(color='coral',lake_color='aqua')
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
-
-new_x1, new_y1 = m(YY, XX)
-
-m.pcolormesh(new_x1, new_y1, ZZ, cmap=my_cmap)
-
-cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-cb.set_label('log10(Total energy) [keV/s]')
-plt.title('RBF multiquadric (eps=10e-1), log10 scale', fontsize=13)
-
-##################################################################################
-
-n = 100
-
-tlat = np.linspace(-90, 90, n)
-tlon = np.linspace(-180, 180, n)
-
-d3_doses = np.array(d3_doses)
-
-XX, YY = np.meshgrid(tlat, tlon)
-rbf = Rbf(lats, lons, d3_doses, function='multiquadric', epsilon=0.1, smooth=0)
-ZZ = rbf(XX, YY)
-ZZ = np.where(ZZ < 0, 0, ZZ)
-
-ax3 = plt.subplot2grid((2, 2), (1, 1))
-
-# m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-
-# draw continents
-m.drawcoastlines()
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
-
-new_x1, new_y1 = m(YY, XX)
-
-m.pcolormesh(new_x1, new_y1, ZZ, cmap=my_cmap)
-
-cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
-cb.set_label('Total energy [keV/s]')
-plt.title('RBF multiquadric (eps=10e-1), linear scale', fontsize=13)
-
-plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.05)
-
-#}
-
-#{ Figure 2
-plt.figure(2)
-ax1 = plt.subplot2grid((2, 2), (0, 0), colspan=2)
-# m = Basemap(projection='merc',llcrnrlat=-80,urcrnrlat=80, llcrnrlon=-180,urcrnrlon=180,lat_ts=20,resolution='c')
-# m = Basemap(projection='moll',lon_0=0,resolution='c')
-# m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-
-# draw continents
-m.drawcoastlines()
-# m.fillcontinents(color='coral',lake_color='aqua')
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
-
-# prepare numpy arrays for the lats and longs
-lats = numpy.zeros(len(d2_images_subset))
-lons = numpy.zeros(len(d2_images_subset))
-
-# decode lat and longs from tle
-for i in range(len(d2_images_subset)):
-
-    latitude, longitude, tle_date = getLatLong(d2_images_subset[i].time)
-    lats[i] = latitude
-    lons[i] = longitude
-
-# project lats and long to the map coordinates
-x1, y1 = m(lons, lats)
-
-# mutate the colormap of a choice to be transparent at the low end
-cmap = pl.cm.jet
-# get the original colormap colors
-my_cmap = cmap(numpy.arange(cmap.N))
-# set alpha
-my_cmap[:,-1] = numpy.linspace(0.1, 1, cmap.N)
-# create the new colormap
-my_cmap = ListedColormap(my_cmap)
-
-# make plot using hexbin
-CS = m.hexbin(x1, y1, C=numpy.array(d2_doses_subset), bins='log', gridsize=32, cmap=my_cmap, mincnt=0, reduce_C_function=np.max, zorder=10)
-
-cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-cb.set_label('log10(Total energy) [keV/s]')
-plt.title('Measurements in 510 km LEO orbit', fontsize=13)
-
-#################################################################################
-
-n = 100
-
-tlat = np.linspace(-90, 90, n)
-tlon = np.linspace(-180, 180, n)
+    if d3_images[i].original_pixels > 50000:
+        print("d3_images.id: {}".format(d3_images[i].id))
 
 d2_doses_subset = np.array(d2_doses_subset)
-doses_log = np.where(d2_doses_subset > 0, np.log(d2_doses_subset), d2_doses_subset)
+d2_doses_subset_log = np.where(d2_doses_subset > 0, np.log(d2_doses_subset), d2_doses_subset)
 
-XX, YY = np.meshgrid(tlat, tlon)
-rbf = Rbf(d2_subset_lats, d2_subset_lons, doses_log, function='multiquadric', epsilon=0.1, smooth=0)
-ZZ = rbf(XX, YY)
-
-ax2 = plt.subplot2grid((2, 2), (1, 0))
-
-# m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-
-# draw continents
-m.drawcoastlines()
-# m.fillcontinents(color='coral',lake_color='aqua')
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
-
-new_x1, new_y1 = m(YY, XX)
-
-m.pcolormesh(new_x1, new_y1, ZZ, cmap=my_cmap)
-
-cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-cb.set_label('log10(Total energy) [keV/s]')
-plt.title('RBF multiquadric (eps=10e-1), log10 scale', fontsize=13)
-
-##################################################################################
-
-n = 100
-
-tlat = np.linspace(-90, 90, n)
-tlon = np.linspace(-180, 180, n)
-
-d2_doses_subset = np.array(d2_doses_subset)
-
-XX, YY = np.meshgrid(tlat, tlon)
-rbf = Rbf(d2_subset_lats, d2_subset_lons, d2_doses_subset, function='multiquadric', epsilon=0.1, smooth=0)
-ZZ = rbf(XX, YY)
-ZZ = np.where(ZZ < 0, 0, ZZ)
-
-ax3 = plt.subplot2grid((2, 2), (1, 1))
-
-# m = Basemap(projection='eck4', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-m = Basemap(projection='cyl', lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
-
-# draw continents
-m.drawcoastlines()
-m.drawparallels(np.arange(-90.,91.,30.))
-m.drawmeridians(np.arange(-180.,181.,60.))
-m.drawmapboundary(fill_color='white')
-
-new_x1, new_y1 = m(YY, XX)
-
-m.pcolormesh(new_x1, new_y1, ZZ, cmap=my_cmap)
-
-cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
-cb.set_label('Total energy [keV/s]')
-plt.title('RBF multiquadric (eps=10e-1), linear scale', fontsize=13)
-
-plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.05)
-
+d4_doses_subset = np.array(d4_doses_subset)
+d4_doses_subset_log = np.where(d4_doses_subset > 0, np.log(d4_doses_subset), d4_doses_subset)
 #}
 
-plt.show()
+#{ RBF interpolation
+
+d2_doses_subset_log_wrapped, d2_subset_lats_wrapped, d2_subset_lons_wrapped = wrapAround(d2_doses_subset_log, d2_subset_lats, d2_subset_lons)
+d4_doses_subset_log_wrapped, d4_subset_lats_wrapped, d4_subset_lons_wrapped = wrapAround(d4_doses_subset_log, d4_subset_lats, d4_subset_lons)
+
+d2_doses_log_wrapped, d2_lats_wrapped, d2_lons_wrapped = wrapAround(d2_doses_log, d2_lats_original, d2_lons_original)
+d4_doses_log_wrapped, d4_lats_wrapped, d4_lons_wrapped = wrapAround(d4_doses_log, d4_lats_original, d4_lons_original)
+
+# create meshgrid for RBF
+x_meshgrid, y_meshgrid = createMeshGrid(100)
+
+# calculate RBF from lin data
+d2_subset_rbf_log = Rbf(d2_subset_lats_wrapped, d2_subset_lons_wrapped, d2_doses_subset_log_wrapped, function='multiquadric', epsilon=0.1, smooth=1)
+d2_subset_doses_rbf_log = d2_subset_rbf_log(x_meshgrid, y_meshgrid)
+
+d2_rbf_log = Rbf(d2_lats_wrapped, d2_lons_wrapped, d2_doses_log_wrapped, function='multiquadric', epsilon=0.1, smooth=1)
+d2_doses_rbf_log = d2_rbf_log(x_meshgrid, y_meshgrid)
+
+d4_subset_rbf_log = Rbf(d4_subset_lats_wrapped, d4_subset_lons_wrapped, d4_doses_subset_log_wrapped, function='multiquadric', epsilon=0.1, smooth=1)
+d4_subset_doses_rbf_log = d4_subset_rbf_log(x_meshgrid, y_meshgrid)
+
+d4_rbf_log = Rbf(d4_lats_wrapped, d4_lons_wrapped, d4_doses_log_wrapped, function='multiquadric', epsilon=0.1, smooth=1)
+d4_doses_rbf_log = d4_rbf_log(x_meshgrid, y_meshgrid)
+
+d3_rbf_log = Rbf(d3_lats, d3_lons, d3_doses_log, function='multiquadric', epsilon=0.1, smooth=1)
+d3_doses_rbf_log = d3_rbf_log(x_meshgrid, y_meshgrid)
+
+#} end of RBF interpolation
+
+def plot_everything(*args):
+
+    plt.figure(1)
+
+    #{ Figure 1
+
+    #{ d2
+
+    ax1 = plt.subplot2grid((3, 3), (0, 0))
+
+    m = createMap('cyl')
+
+    x_m, y_m = m(d2_subset_lons, d2_subset_lats) # project points
+
+    CS = m.hexbin(x_m, y_m, C=numpy.array(d2_doses_subset), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10)
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title(general_label+', '+date_range, fontsize=13)
+
+    ax1 = plt.subplot2grid((3, 3), (1, 0))
+
+    m = createMap('cyl')
+
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, d2_subset_doses_rbf_log, cmap=my_cm)
+
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+
+    ax1 = plt.subplot2grid((3, 3), (2, 0))
+
+    m = createMap('cyl')
+
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, d2_doses_rbf_log, cmap=my_cm)
+
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+
+    #} end d2
+
+    #{ d3
+
+    ax1 = plt.subplot2grid((3, 3), (0, 1))
+
+    m = createMap('cyl')
+
+    x_m, y_m = m(d3_lons, d3_lats) # project points
+
+    CS = m.hexbin(x_m, y_m, C=numpy.array(d3_doses), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10)
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title(general_label+', '+date_range, fontsize=13)
+
+    ax1 = plt.subplot2grid((3, 3), (1, 1))
+
+    m = createMap('cyl')
+
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, d3_doses_rbf_log, cmap=my_cm)
+
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+
+    #} end d3
+
+    #{ d4
+
+    ax1 = plt.subplot2grid((3, 3), (0, 2))
+
+    m = createMap('cyl')
+
+    x_m, y_m = m(d4_subset_lons, d4_subset_lats) # project points
+
+    CS = m.hexbin(x_m, y_m, C=numpy.array(d4_doses_subset), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10)
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title(general_label+', '+date_range, fontsize=13)
+
+    ax1 = plt.subplot2grid((3, 3), (1, 2))
+
+    m = createMap('cyl')
+
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, d4_subset_doses_rbf_log, cmap=my_cm)
+
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+
+    ax1 = plt.subplot2grid((3, 3), (2, 2))
+
+    m = createMap('cyl')
+
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, d4_doses_rbf_log, cmap=my_cm)
+
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+
+    #} end d4
+
+    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.2)
+
+    #} end of Figure 1
+
+    plt.show()
+
+pid = os.fork()
+if pid == 0:
+    plot_everything()
