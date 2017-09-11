@@ -82,9 +82,9 @@ def exportDescriptionFile(image):
 
         dsc_file.write("A000000001\r\n\
 [F0]\r\n\
-Type=u32 matrix width={} height={}\r\n\
+Type=double matrix width={} height={}\r\n\
 \"Acq mode\" (\"Acquisition mode\"):\r\n\
-double[1]\r\n\
+i32[1]\r\n\
 {}\r\n\
 ".format(width, height, image.mode))
 
@@ -104,7 +104,7 @@ double[1]\r\n\
 
         dsc_file.write("\"dacs\" (\"dacs values of all chips\"):\r\n\
 u16[14]\r\n\
-1 100 255 127 127 0 314 7 130 128 80 85 128 128\r\n")
+1 100 255 127 127 0 {} 7 130 128 80 85 128 128\r\n".format(image.threshold))
 
         dsc_file.write("\r\n")
 
@@ -289,7 +289,7 @@ def exportRaw(image):
             writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
         
             for i in range(0, 256):
-                writer.writerow(["{0:.2f}".format(x) for x in image.data[i, :]])
+                writer.writerow(["{:.2f}".format(x).replace('.', ',') for x in image.data[i, :]])
 
     exportMetadata(image)
 
