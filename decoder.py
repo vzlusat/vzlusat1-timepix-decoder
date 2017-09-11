@@ -145,13 +145,15 @@ def loadFiles():
                     pass
                 elif ((not show_hidden_var.get()) and (image.hidden)):
                     pass
+                elif (just_fullres_var.get() and image.type > 1):
+                    pass
                 else:
                     file_names.append(file)
                     list_files.append(str(image.id)+"_"+str(image.type))
             else:
                 print("could not open file "+file)
 
-    print("File list reloaded")
+    print("File list reloaded, {} images in total".format(len(file_names)))
 
     return list_files
 #}
@@ -874,6 +876,7 @@ autogenerate_png_load = Tk.IntVar()
 show_hidden_var = Tk.IntVar()
 show_globus_var = Tk.IntVar()
 dont_redraw_var = Tk.IntVar()
+just_fullres_var = Tk.IntVar()
 show_favorite_var = Tk.IntVar()
 hide_without_data_var = Tk.IntVar()
 show_only_without_data_var = Tk.IntVar()
@@ -1111,6 +1114,9 @@ if settings.use_globus:
 
 just_metadata = Tk.Checkbutton(master=frame_left, text="Show just metadata", variable=dont_redraw_var, command=reloadCurrentImage, font=customfont)
 just_metadata.pack(side=Tk.BOTTOM)
+
+just_fullres = Tk.Checkbutton(master=frame_left, text="Show just fullres", variable=just_fullres_var, command=reloadList, font=customfont)
+just_fullres.pack(side=Tk.BOTTOM)
 
 show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList, font=customfont)
 show_hidden.pack(side=Tk.BOTTOM)
