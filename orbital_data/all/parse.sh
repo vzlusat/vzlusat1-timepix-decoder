@@ -1,14 +1,11 @@
-outhkc="00_hkc.txt"
 outhk="01_housekeeping.txt"
 outmetadata="02_metadata.txt"
 outdata="03_images.txt"
 
-rm "$outhkc" 2> /dev/null
 rm "$outhk" 2> /dev/null
 rm "$outmetadata" 2> /dev/null
 rm "$outdata" 2> /dev/null
 
-touch "$outhkc"
 touch "$outhk"
 touch "$outmetadata"
 touch "$outdata"
@@ -32,7 +29,7 @@ do
 
   if [ ! -z "$ishkc" ]; then
 
-    cat $filename | grep 13ea5a -B 4 >> "$outhkc"
+    cat $filename | grep 13ea5a -B 4 >> "$outhk"
     echo "Parsing HKC from $filename"
 
   fi 
@@ -66,7 +63,6 @@ do
 
 done
 
-mv "$outhkc" ../
 mv "$outhk" ../
 mv "$outmetadata" ../
 mv "$outdata" ../
