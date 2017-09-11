@@ -11,6 +11,7 @@ from src.parseMethods import parseHouseKeeping
 from src.Image import *
 from src.saveImage import *
 from src.baseMethods import getFileName
+import src.statusLine as statusLine
 import sys
 
 import datetime
@@ -110,6 +111,8 @@ def parseInputFile(file_path, root):
 
             if isinstance(temp_image, Image):
                 files_to_save[getFileName(temp_image.id, temp_image.type)] = temp_image
+
+    statusLine.set("Saving images to binary files")
 
     for filename, image in files_to_save.iteritems():
         saveImage(image)
