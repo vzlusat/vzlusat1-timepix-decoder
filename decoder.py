@@ -222,6 +222,8 @@ def showHouseKeeping(housekeeping):
           redrawMap(latitude, longitude, human_readible_time)
       else:
           clearMap()
+
+    statusLine.set('')
 #}
 
 #{ def showImage(image): resets and shows the image

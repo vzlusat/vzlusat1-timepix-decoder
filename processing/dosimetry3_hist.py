@@ -8,7 +8,7 @@ import matplotlib.ticker as ticker # for colorbar
 from include.baseMethods import *
 
 from_idx = 813
-to_idx = 994
+to_idx = 993
 outliers=[]
 
 date_range = '8-9.9.2017'

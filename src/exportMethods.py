@@ -40,6 +40,8 @@ def exportHouseKeeping(data):
             hk_file.write(data.housekeeping_labels[i]+" "+hk_array[i])
             hk_file.write("\r\n")
 
+        hk_file.write("Human readable time: {}\r\n".format(datetime.datetime.utcfromtimestamp(data.time)))
+
         if settings.use_globus:
             latitude, longitude, tle_date = getLatLong(data.time)
             hk_file.write("lat, long, tle_time: {}, {}, {}\n\r".format(latitude, longitude, tle_date))
@@ -230,14 +232,15 @@ def exportMetadata(image):
 
         metadata_file.write("comment: {}\r\n".format(getComment(image.id)))
 
+        metadata_file.write("Human readable time: {}\r\n".format(datetime.datetime.utcfromtimestamp(image.time)))
 
         if settings.use_globus:
             latitude, longitude, tle_date = getLatLong(image.time)
             metadata_file.write("lat, long, tle_time: {}, {}, {}\r\n".format(latitude, longitude, tle_date))
 
         if image.type == 32:
-            metadata_file.write("Histogram bins [bin1_min, bin1_max=bin2_min, ..., bind16_max], the last bin contains also all higher energies.\r\n")
-            metadata_file.write("[2.9807, 4.2275, 6.4308, 10.3875, 16.6394, 24.7081, 33.7833, 43.3679, 53.2233, 63.2344, 73.3415, 83.5115, 93.7248, 103.9691, 114.2361, 124.5204, 134.8182]\r\n")
+            metadata_file.write("Histogram bins [bin1_min, bin1_max=bin2_min, ..., bin16_max], the last bin contains also all higher energies.\r\n")
+            metadata_file.write("[2.98, 4.22, 6.43, 10.38, 16.63, 24.70, 33.78, 43.36, 53.22, 63.23, 73.34, 83.51, 93.72, 103.96, 114.23, 124.52, 134.81]\r\n")
 
 def exportBinning(image):
 
