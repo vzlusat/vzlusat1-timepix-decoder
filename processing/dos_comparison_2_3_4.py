@@ -22,15 +22,22 @@ outliers=[1148]
 pcolor_min = 0
 pcolor_max = 7
 
+projection = 'cyl'
+# projection = 'gall'
+# projection = 'gall'
+# projection = 'eck4'
+
 date_range = ''
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
+subsampled = 'Subsampled'
+original = 'Original'
 general_label = '510 km LEO, VZLUSAT-1'
 
 # prepare data
-d2_images = loadImageRange(d2_from_idx, d2_to_idx, 32, 0, 1, outliers)
-d3_images = loadImageRange(d3_from_idx, d3_to_idx, 32, 0, 1, outliers)
-d4_images = loadImageRange(d4_from_idx, d4_to_idx, 32, 0, 1, outliers)
+d2_images = loadImageRange(d2_from_idx, d2_to_idx, 32, 1, 1, outliers)
+d3_images = loadImageRange(d3_from_idx, d3_to_idx, 32, 1, 1, outliers)
+d4_images = loadImageRange(d4_from_idx, d4_to_idx, 32, 1, 1, outliers)
 
 d2_doses = calculateEnergyDose(d2_images)
 d3_doses = calculateEnergyDose(d3_images)
@@ -77,7 +84,7 @@ for i in range(len(d3_images)):
     else:
         d2_exposure = 60 + d2_exposure%60000
 
-    # calculate the doses base on counts
+    # calculate the doses base on the integral of energy
     total_dose = np.sum(d2_images[d2_idx].data*kevs)/d2_exposure
 
     d2_doses_subset.append(deepcopy(total_dose))
@@ -85,7 +92,8 @@ for i in range(len(d3_images)):
     d2_subset_lats[i] = deepcopy(d2_lats[d2_idx])
     d2_subset_lons[i] = deepcopy(d2_lons[d2_idx])
 
-    d2_images.remove(d2_images[d2_idx])
+    # d2_images.remove(d2_images[d2_idx])
+    del d2_images[d2_idx]
     d2_lats = np.delete(d2_lats, d2_idx)
     d2_lons = np.delete(d2_lons, d2_idx)
 
@@ -96,7 +104,7 @@ for i in range(len(d3_images)):
     else:
         d4_exposure = 60 + d4_exposure%60000
 
-    # calculate the doses base on counts
+    # calculate the doses base on the integral of energy
     total_dose = np.sum(d4_images[d4_idx].data*kevs)/d4_exposure
 
     d4_doses_subset.append(total_dose)
@@ -104,7 +112,8 @@ for i in range(len(d3_images)):
     d4_subset_lats[i] = d4_lats[d4_idx]
     d4_subset_lons[i] = d4_lons[d4_idx]
 
-    d4_images.remove(d4_images[d4_idx])
+    # d4_images.remove(d4_images[d4_idx])
+    del d4_images[d4_idx]
     d4_lats = np.delete(d4_lats, d4_idx)
     d4_lons = np.delete(d4_lons, d4_idx)
 
@@ -154,7 +163,7 @@ def plot_everything(*args):
 
     ax1 = plt.subplot2grid((3, 3), (0, 0))
 
-    m = createMap('cyl')
+    m = createMap(projection)
 
     x_m, y_m = m(d2_subset_lons, d2_subset_lats) # project points
 
@@ -162,11 +171,11 @@ def plot_everything(*args):
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
     cb.set_label('log10('+x_label+') '+x_units)
-    plt.title(general_label+', '+date_range, fontsize=13)
+    plt.title(general_label+', 30-31.8.2017, '+subsampled, fontsize=13)
 
     ax1 = plt.subplot2grid((3, 3), (1, 0))
 
-    m = createMap('cyl')
+    m = createMap(projection)
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
@@ -174,11 +183,11 @@ def plot_everything(*args):
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+    plt.title('RBF multiquadric (eps=10e-1), log10 scale, from '+subsampled, fontsize=13)
 
     ax1 = plt.subplot2grid((3, 3), (2, 0))
 
-    m = createMap('cyl')
+    m = createMap(projection)
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
@@ -186,7 +195,7 @@ def plot_everything(*args):
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+    plt.title('RBF multiquadric (eps=10e-1), log10 scale, from '+original, fontsize=13)
 
     #} end d2
 
@@ -194,7 +203,7 @@ def plot_everything(*args):
 
     ax1 = plt.subplot2grid((3, 3), (0, 1))
 
-    m = createMap('cyl')
+    m = createMap(projection)
 
     x_m, y_m = m(d3_lons, d3_lats) # project points
 
@@ -202,11 +211,11 @@ def plot_everything(*args):
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
     cb.set_label('log10('+x_label+') '+x_units)
-    plt.title(general_label+', '+date_range, fontsize=13)
+    plt.title(general_label+', 8-9.9.2017, '+original, fontsize=13)
 
     ax1 = plt.subplot2grid((3, 3), (1, 1))
 
-    m = createMap('cyl')
+    m = createMap(projection)
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
@@ -214,7 +223,7 @@ def plot_everything(*args):
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+    plt.title('RBF multiquadric (eps=10e-1), log10 scale, from '+original, fontsize=13)
 
     #} end d3
 
@@ -222,7 +231,7 @@ def plot_everything(*args):
 
     ax1 = plt.subplot2grid((3, 3), (0, 2))
 
-    m = createMap('cyl')
+    m = createMap(projection)
 
     x_m, y_m = m(d4_subset_lons, d4_subset_lats) # project points
 
@@ -230,11 +239,11 @@ def plot_everything(*args):
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
     cb.set_label('log10('+x_label+') '+x_units)
-    plt.title(general_label+', '+date_range, fontsize=13)
+    plt.title(general_label+', 9-10.9.2017, '+subsampled, fontsize=13)
 
     ax1 = plt.subplot2grid((3, 3), (1, 2))
 
-    m = createMap('cyl')
+    m = createMap(projection)
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
@@ -242,11 +251,11 @@ def plot_everything(*args):
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+    plt.title('RBF multiquadric (eps=10e-1), log10 scale, from '+subsampled, fontsize=13)
 
     ax1 = plt.subplot2grid((3, 3), (2, 2))
 
-    m = createMap('cyl')
+    m = createMap(projection)
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
@@ -254,7 +263,7 @@ def plot_everything(*args):
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+    plt.title('RBF multiquadric (eps=10e-1), log10 scale, from '+original, fontsize=13)
 
     #} end d4
 
