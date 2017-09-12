@@ -10,9 +10,12 @@ from src.parseMethods import parseRaw
 from src.parseMethods import parseHouseKeeping
 from src.Image import *
 from src.saveImage import *
+from src.loadImage import *
 from src.baseMethods import getFileName
+from src.baseMethods import getPngFileName
 import src.statusLine as statusLine
 import sys
+import os
 
 import datetime
 
@@ -115,6 +118,23 @@ def parseInputFile(file_path, root):
     statusLine.set("Saving images to binary files")
 
     for filename, image in files_to_save.items():
+
+        old_image = loadImage(image.id, image.type)
+
+        if not image.__eq__(old_image):
+
+            print("Image {}_{} was updated".format(image.id, image.type))
+
+            png_filename = getPngFileName(image.id, image.type)
+
+            # delete the png
+            try:
+                with open(png_filename) as file:
+                    os.remove(png_filename)
+                    print("Deleting outdated png of {}_{}".format(image.id, image.type))
+            except IOError as e:
+                pass
+
         saveImage(image)
 
     return 1

@@ -51,6 +51,7 @@ from src.saveHouseKeeping import saveHouseKeeping
 from src.loadHouseKeeping import loadHouseKeeping
 from src.parseInputFile import parseInputFile
 from src.exportMethods import exportCsv
+from src.baseMethods import getPngFileName
 
 # imports that depend on the python version
 if sys.version_info[0] < 3:
@@ -500,8 +501,7 @@ def showImage(image, manual):
 
         if ((manual == 1 and autogenerate_png_view.get() == 1) or (manual == 0)) and image.got_data == 1:
 
-            image_filename='images_png/{}_{}.png'.format(image.id, image.type)
-            my_figure.savefig(image_filename, dpi=250, bbox_inches='tight')
+            my_figure.savefig(getPngFileName(image.id, image.type), dpi=250, bbox_inches='tight')
 
             if settings.use_globus and show_globus_var.get():
                 image_globus_filename='images_png/{}_map.png'.format(image.id)

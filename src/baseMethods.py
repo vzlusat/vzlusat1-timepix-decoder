@@ -39,3 +39,7 @@ def getExportMetadataName(image_id, image_type):
 def getExportHkName(images_taken, time_since_boot, boot_count):
 
     return "images_csv/housekeeping_"+str(images_taken)+"_"+str(boot_count)+"_{0:05d}.txt".format(time_since_boot) 
+
+def getPngFileName(image_id, image_type):
+
+    return 'images_png/{}_{}.png'.format(image_id, image_type)

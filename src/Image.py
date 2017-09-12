@@ -35,6 +35,19 @@ class Image:
         self.favorite = 0
         self.hidden = 0
 
+    def __eq__(self, other):
+
+        if not isinstance(other, Image):
+            return 0
+
+        if self.got_metadata != other.got_metadata:
+            return 0
+        
+        if not numpy.array_equal(self.data, other.data):
+            return 0
+
+        return 1
+
     metadata_labels=["Image number:",
                      "Image type:",
                      "Measurement mode:",
