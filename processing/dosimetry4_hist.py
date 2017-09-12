@@ -12,7 +12,7 @@ to_idx = 1388
 outliers=[1148]
 
 date_range = '9-10.9.2017'
-x_units = '[keV/s]'
+x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
 general_label = '4th dosimetry 510 km LEO, VZLUSAT-1'
 

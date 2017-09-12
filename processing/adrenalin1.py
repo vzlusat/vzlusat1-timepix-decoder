@@ -50,25 +50,25 @@ fig = plt.figure(1)
 
 ax = fig.add_subplot(1, 2, 1)
 im = ax.imshow(merged, interpolation='none', cmap='nipy_spectral_r')
-ax.set_xlabel("Column [-]", fontsize=25)
-ax.set_ylabel("Row [-]", fontsize=25)
+ax.set_xlabel("Column (-)", fontsize=25)
+ax.set_ylabel("Row (-)", fontsize=25)
 ax.set_title("Stacket images, no filtering", fontsize=25)
 
 divider = make_axes_locatable(fig.gca())
 cax = divider.append_axes("right", size="5%", pad=0.2)
 cbar = fig.colorbar(im, cax)
-cbar.ax.set_ylabel('[keV]', rotation=270, fontsize=12)
+cbar.ax.set_ylabel('keV', rotation=270, fontsize=12)
 
 ax = fig.add_subplot(1, 2, 2)
 im = ax.imshow(merged_filtered, interpolation='none', cmap='nipy_spectral_r')
-ax.set_xlabel("Column [-]", fontsize=25)
-ax.set_ylabel("Row [-]", fontsize=25)
+ax.set_xlabel("Column (-)", fontsize=25)
+ax.set_ylabel("Row (-)", fontsize=25)
 ax.set_title("Stacket images, individually filtered", fontsize=25)
 
 divider = make_axes_locatable(fig.gca())
 cax = divider.append_axes("right", size="5%", pad=0.2)
 cbar = fig.colorbar(im, cax)
-cbar.ax.set_ylabel('[keV]', rotation=270, fontsize=12)
+cbar.ax.set_ylabel('keV', rotation=270, fontsize=12)
 
 plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.05)
 
@@ -95,8 +95,8 @@ ax.plot(x, sums)
 
 ax.axis([1, 256, numpy.min(sums), numpy.max(sums)])
 
-ax.set_xlabel("Column [-]", fontsize=25)
-ax.set_ylabel("Active pixels [-]", fontsize=25)
+ax.set_xlabel("Column (-)", fontsize=25)
+ax.set_ylabel("Active pixels (-)", fontsize=25)
 ax.set_title("Column sum over stacked images", fontsize=25)
 
 plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.05)
