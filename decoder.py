@@ -940,8 +940,8 @@ for item in list_files:
 listbox.after(10, lambda: listbox.selection_set("end"))
 listbox.after(10, lambda: listbox.see(Tk.END))
 # really we want the scrollabar to be down
-listbox.after(500, lambda: listbox.see(Tk.END))
-listbox.after(750, lambda: listbox.focus_force())
+listbox.after(1000, lambda: listbox.see(Tk.END))
+listbox.after(1250, lambda: listbox.focus_force())
 
 # autoselect the last item in the listbox after start
 # and show the metadata and the image
