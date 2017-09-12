@@ -114,7 +114,7 @@ def parseInputFile(file_path, root):
 
     statusLine.set("Saving images to binary files")
 
-    for filename, image in files_to_save.iteritems():
+    for filename, image in files_to_save.items():
         saveImage(image)
 
     return 1
