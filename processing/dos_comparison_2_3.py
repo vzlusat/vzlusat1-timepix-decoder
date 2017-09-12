@@ -20,7 +20,7 @@ d4_to_idx = 1388
 outliers=[1148]
 
 pcolor_min = 0
-pcolor_max = 15
+pcolor_max = 7
 
 date_range = ''
 x_units = '[kev/s]'
@@ -35,9 +35,9 @@ d4_images = loadImageRange(d4_from_idx, d4_to_idx, 32, 0, 1, outliers)
 d2_doses = calculateEnergyDose(d2_images)
 d3_doses = calculateEnergyDose(d3_images)
 d4_doses = calculateEnergyDose(d4_images)
-d2_doses_log = np.where(d2_doses > 0, np.log(d2_doses), d2_doses)
-d3_doses_log = np.where(d3_doses > 0, np.log(d3_doses), d3_doses)
-d4_doses_log = np.where(d4_doses > 0, np.log(d4_doses), d4_doses)
+d2_doses_log = np.where(d2_doses > 0, np.log10(d2_doses), d2_doses)
+d3_doses_log = np.where(d3_doses > 0, np.log10(d3_doses), d3_doses)
+d4_doses_log = np.where(d4_doses > 0, np.log10(d4_doses), d4_doses)
 
 d2_lats, d2_lons = extractPositions(d2_images)
 d3_lats, d3_lons = extractPositions(d3_images)
@@ -109,10 +109,10 @@ for i in range(len(d3_images)):
     d4_lons = np.delete(d4_lons, d4_idx)
 
 d2_doses_subset = np.array(d2_doses_subset)
-d2_doses_subset_log = np.where(d2_doses_subset > 0, np.log(d2_doses_subset), d2_doses_subset)
+d2_doses_subset_log = np.where(d2_doses_subset > 0, np.log10(d2_doses_subset), d2_doses_subset)
 
 d4_doses_subset = np.array(d4_doses_subset)
-d4_doses_subset_log = np.where(d4_doses_subset > 0, np.log(d4_doses_subset), d4_doses_subset)
+d4_doses_subset_log = np.where(d4_doses_subset > 0, np.log10(d4_doses_subset), d4_doses_subset)
 #}
 
 #{ RBF interpolation
@@ -158,7 +158,7 @@ def plot_everything(*args):
 
     x_m, y_m = m(d2_subset_lons, d2_subset_lats) # project points
 
-    CS = m.hexbin(x_m, y_m, C=numpy.array(d2_doses_subset), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10)
+    CS = m.hexbin(x_m, y_m, C=numpy.array(d2_doses_subset), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max)
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
     cb.set_label('log10('+x_label+') '+x_units)
@@ -198,7 +198,7 @@ def plot_everything(*args):
 
     x_m, y_m = m(d3_lons, d3_lats) # project points
 
-    CS = m.hexbin(x_m, y_m, C=numpy.array(d3_doses), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10)
+    CS = m.hexbin(x_m, y_m, C=numpy.array(d3_doses), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max)
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
     cb.set_label('log10('+x_label+') '+x_units)
@@ -226,7 +226,7 @@ def plot_everything(*args):
 
     x_m, y_m = m(d4_subset_lons, d4_subset_lats) # project points
 
-    CS = m.hexbin(x_m, y_m, C=numpy.array(d4_doses_subset), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10)
+    CS = m.hexbin(x_m, y_m, C=numpy.array(d4_doses_subset), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max)
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
     cb.set_label('log10('+x_label+') '+x_units)

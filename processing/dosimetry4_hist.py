@@ -11,6 +11,9 @@ from_idx = 994
 to_idx = 1388
 outliers=[1148]
 
+pcolor_min = 0
+pcolor_max = 7
+
 date_range = '9-10.9.2017'
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
@@ -20,7 +23,7 @@ general_label = '4th dosimetry 510 km LEO, VZLUSAT-1'
 images = loadImageRange(from_idx, to_idx, 32, 1, 1, outliers)
 
 doses = calculateEnergyDose(images)
-doses_log = np.where(doses > 0, np.log(doses), doses)
+doses_log = np.where(doses > 0, np.log10(doses), doses)
 
 lats_orig, lons_orig = extractPositions(images)
 
@@ -56,7 +59,7 @@ def plot_everything(*args):
 
     x_m, y_m = m(lons_orig, lats_orig) # project points
 
-    CS = m.hexbin(x_m, y_m, C=numpy.array(doses), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10)
+    CS = m.hexbin(x_m, y_m, C=numpy.array(doses), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max)
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
     cb.set_label('log10('+x_label+') '+x_units)
@@ -72,7 +75,7 @@ def plot_everything(*args):
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
@@ -104,7 +107,7 @@ def plot_everything(*args):
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label(x_label+' '+x_units)
@@ -120,7 +123,7 @@ def plot_everything(*args):
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label(x_label+' '+x_units)
@@ -136,7 +139,7 @@ def plot_everything(*args):
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label(x_label+' '+x_units)
