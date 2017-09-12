@@ -23,7 +23,7 @@ pcolor_min = 0
 pcolor_max = 7
 
 date_range = ''
-x_units = '[kev/s]'
+x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
 general_label = '510 km LEO, VZLUSAT-1'
 
