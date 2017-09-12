@@ -123,7 +123,7 @@ def parseInputFile(file_path, root):
 
         if not image.__eq__(old_image):
 
-            print("Image {}_{} was updated".format(image.id, image.type))
+            # print("Image {}_{} was updated".format(image.id, image.type))
 
             png_filename = getPngFileName(image.id, image.type)
 
