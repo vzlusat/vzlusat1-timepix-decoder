@@ -3,6 +3,7 @@
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
 sys.path.append('../')
 
@@ -23,10 +24,11 @@ images.append(loadImage(402, 1, path))
 images.append(loadImage(404, 1, path))
 images.append(loadImage(807, 1, path))
 images.append(loadImage(808, 1, path))
-# images.append(loadImage(809, 1, path)) # full of electrons
-images.append(loadImage(810, 1, path))
-images.append(loadImage(811, 1, path))
-images.append(loadImage(812, 1, path))
+
+# images.append(loadImage(809, 1, path)) # full of electrons, some photons?
+# images.append(loadImage(810, 1, path)) # no photons
+# images.append(loadImage(811, 1, path)) # no photons
+# images.append(loadImage(812, 1, path)) # no photons
 
 for i in range(len(images)):
 
@@ -43,6 +45,7 @@ for i in range(len(images)):
     print("merging: {}".format(images[i].id))
     merged = merged + images[i].data
     merged_filtered = merged_filtered + images_filtered[i].data
+    print("images[i].exposure: {}".format(images[i].exposure))
 
 print("printing merged image")
 
@@ -52,7 +55,7 @@ ax = fig.add_subplot(1, 2, 1)
 im = ax.imshow(merged, interpolation='none', cmap='nipy_spectral_r')
 ax.set_xlabel("Column (-)", fontsize=25)
 ax.set_ylabel("Row (-)", fontsize=25)
-ax.set_title("Stacket images, no filtering", fontsize=25)
+ax.set_title("Stacked images, no filtering", fontsize=25)
 
 divider = make_axes_locatable(fig.gca())
 cax = divider.append_axes("right", size="5%", pad=0.2)
@@ -63,7 +66,7 @@ ax = fig.add_subplot(1, 2, 2)
 im = ax.imshow(merged_filtered, interpolation='none', cmap='nipy_spectral_r')
 ax.set_xlabel("Column (-)", fontsize=25)
 ax.set_ylabel("Row (-)", fontsize=25)
-ax.set_title("Stacket images, individually filtered", fontsize=25)
+ax.set_title("Stacked images, individually filtered", fontsize=25)
 
 divider = make_axes_locatable(fig.gca())
 cax = divider.append_axes("right", size="5%", pad=0.2)
@@ -102,3 +105,7 @@ ax.set_title("Column sum over stacked images", fontsize=25)
 plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.05)
 
 plt.show()
+
+pid = os.fork()
+if pid == 0:
+    plot_everything()

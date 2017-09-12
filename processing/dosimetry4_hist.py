@@ -151,6 +151,24 @@ def plot_everything(*args):
 
     #} end of Figure 1
 
+    #plt.figure(2)
+
+    #ax2 = plt.subplot2grid((1, 1), (0, 0))
+
+##{ log-scale rbf
+
+    #m = createMap('cyl')
+
+    #x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+
+    #m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+
+    #cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    #cb.set_label('log10('+x_label+') '+x_units)
+    #plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+
+##} end of log-scale rbf
+
     plt.show()
 
 pid = os.fork()
