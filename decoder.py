@@ -391,8 +391,8 @@ def showImage(image, manual):
             my_figure.clf()
             subplot1 = my_figure.add_subplot(111)
 
-            subplot1.set_xlabel("Column [-]")
-            subplot1.set_ylabel("Row [-]")
+            subplot1.set_xlabel("Column (-)")
+            subplot1.set_ylabel("Row (-)")
 
             human_readable_time = datetime.datetime.utcfromtimestamp(image.time)
 
@@ -412,11 +412,11 @@ def showImage(image, manual):
             cbar.ax.get_yaxis().labelpad = 20
             if image.type == 1:
                 if image.mode == 0:
-                    cbar.ax.set_ylabel('[counts]', rotation=270)
+                    cbar.ax.set_ylabel('counts', rotation=270)
                 else:
-                    cbar.ax.set_ylabel('[keV]', rotation=270)
+                    cbar.ax.set_ylabel('keV', rotation=270)
             else:
-                cbar.ax.set_ylabel('[active pixels in the bin]', rotation=270)
+                cbar.ax.set_ylabel('active pixels in the bin', rotation=270)
 
             my_figure.tight_layout(pad=1)
         #}
@@ -441,15 +441,15 @@ def showImage(image, manual):
                 a1.set_title("Row summs n.{0}, {1} s exposure, {2}".format(image.id, exposure, human_readable_time), fontsize=13, y=1.02)
             else:
                 a1.set_title("Row summs n.{0}, ??? s exposure ".format(image.id), fontsize=13, y=1.02)
-            a1.set_xlabel("Row [-]")
-            a1.set_ylabel("Active pixel count [-]")
+            a1.set_xlabel("Row (-)")
+            a1.set_ylabel("Active pixel count (-)")
 
             if image.got_metadata == 1:
                 a2.set_title("Column summs n.{0}, {1} s exposure, {2}".format(image.id, exposure, human_readable_time), fontsize=13, y=1.02)
             else:
                 a2.set_title("Column summs n.{0}, ??? s exposure ".format(image.id), fontsize=13, y=1.02)
-            a2.set_xlabel("Column [-]")
-            a2.set_ylabel("Active pixel count [-]")
+            a2.set_xlabel("Column (-)")
+            a2.set_ylabel("Active pixel count (-)")
 
             my_figure.tight_layout(pad=2)
         #}
@@ -480,13 +480,13 @@ def showImage(image, manual):
 
             if image.got_metadata == 1:
                 if image.mode == 0:
-                    subplot1.set_xlabel("Particle counts [-]")
+                    subplot1.set_xlabel("Particle counts (-)")
                 else:
-                    subplot1.set_xlabel("Energy [keV]")
+                    subplot1.set_xlabel("Energy (keV)")
             else:
-                subplot1.set_xlabel("Pixel values [-]")
+                subplot1.set_xlabel("Pixel values (-)")
 
-            subplot1.set_ylabel("Counts [-]")
+            subplot1.set_ylabel("Counts (-)")
 
             human_readable_time = datetime.datetime.utcfromtimestamp(image.time)
 
