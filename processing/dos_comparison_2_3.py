@@ -12,26 +12,29 @@ d2_from_idx = 417
 d2_to_idx = 796
 
 d3_from_idx = 813
-d3_to_idx = 994
+d3_to_idx = 993
 
-d4_from_idx = 800
+d4_from_idx = 994
 d4_to_idx = 1388
 
-outliers=[849, 1148]
+outliers=[1148]
+
+pcolor_min = 0
+pcolor_max = 15
 
 date_range = ''
-x_units = '[pix/s]'
-x_label = 'Aprox. relative dose'
-general_label = 'Dosimetry, 510 km LEO, VZLUSAT-1'
+x_units = '[kev/s]'
+x_label = 'Total dose in 14x14x0.3 mm Si'
+general_label = '510 km LEO, VZLUSAT-1'
 
 # prepare data
 d2_images = loadImageRange(d2_from_idx, d2_to_idx, 32, 0, 1, outliers)
 d3_images = loadImageRange(d3_from_idx, d3_to_idx, 32, 0, 1, outliers)
 d4_images = loadImageRange(d4_from_idx, d4_to_idx, 32, 0, 1, outliers)
 
-d2_doses = calculateTotalPixelCount(d2_images)
-d3_doses = calculateTotalPixelCount(d3_images)
-d4_doses = calculateTotalPixelCount(d4_images)
+d2_doses = calculateEnergyDose(d2_images)
+d3_doses = calculateEnergyDose(d3_images)
+d4_doses = calculateEnergyDose(d4_images)
 d2_doses_log = np.where(d2_doses > 0, np.log(d2_doses), d2_doses)
 d3_doses_log = np.where(d3_doses > 0, np.log(d3_doses), d3_doses)
 d4_doses_log = np.where(d4_doses > 0, np.log(d4_doses), d4_doses)
@@ -75,7 +78,7 @@ for i in range(len(d3_images)):
         d2_exposure = 60 + d2_exposure%60000
 
     # calculate the doses base on counts
-    total_dose = d2_images[d2_idx].original_pixels/d2_exposure
+    total_dose = np.sum(d2_images[d2_idx].data*kevs)/d2_exposure
 
     d2_doses_subset.append(deepcopy(total_dose))
     d2_images_subset.append(deepcopy(d2_images[d2_idx]))
@@ -94,7 +97,7 @@ for i in range(len(d3_images)):
         d4_exposure = 60 + d4_exposure%60000
 
     # calculate the doses base on counts
-    total_dose = d4_images[d4_idx].original_pixels/d4_exposure
+    total_dose = np.sum(d4_images[d4_idx].data*kevs)/d4_exposure
 
     d4_doses_subset.append(total_dose)
     d4_images_subset.append(d4_images[d4_idx])
@@ -104,9 +107,6 @@ for i in range(len(d3_images)):
     d4_images.remove(d4_images[d4_idx])
     d4_lats = np.delete(d4_lats, d4_idx)
     d4_lons = np.delete(d4_lons, d4_idx)
-
-    if d3_images[i].original_pixels > 50000:
-        print("d3_images.id: {}".format(d3_images[i].id))
 
 d2_doses_subset = np.array(d2_doses_subset)
 d2_doses_subset_log = np.where(d2_doses_subset > 0, np.log(d2_doses_subset), d2_doses_subset)
@@ -127,19 +127,19 @@ d4_doses_log_wrapped, d4_lats_wrapped, d4_lons_wrapped = wrapAround(d4_doses_log
 x_meshgrid, y_meshgrid = createMeshGrid(100)
 
 # calculate RBF from lin data
-d2_subset_rbf_log = Rbf(d2_subset_lats_wrapped, d2_subset_lons_wrapped, d2_doses_subset_log_wrapped, function='multiquadric', epsilon=0.1, smooth=1)
+d2_subset_rbf_log = Rbf(d2_subset_lats_wrapped, d2_subset_lons_wrapped, d2_doses_subset_log_wrapped, function='multiquadric', epsilon=0.1, smooth=0.1)
 d2_subset_doses_rbf_log = d2_subset_rbf_log(x_meshgrid, y_meshgrid)
 
-d2_rbf_log = Rbf(d2_lats_wrapped, d2_lons_wrapped, d2_doses_log_wrapped, function='multiquadric', epsilon=0.1, smooth=1)
+d2_rbf_log = Rbf(d2_lats_wrapped, d2_lons_wrapped, d2_doses_log_wrapped, function='multiquadric', epsilon=0.1, smooth=0.1)
 d2_doses_rbf_log = d2_rbf_log(x_meshgrid, y_meshgrid)
 
-d4_subset_rbf_log = Rbf(d4_subset_lats_wrapped, d4_subset_lons_wrapped, d4_doses_subset_log_wrapped, function='multiquadric', epsilon=0.1, smooth=1)
+d4_subset_rbf_log = Rbf(d4_subset_lats_wrapped, d4_subset_lons_wrapped, d4_doses_subset_log_wrapped, function='multiquadric', epsilon=0.1, smooth=0.1)
 d4_subset_doses_rbf_log = d4_subset_rbf_log(x_meshgrid, y_meshgrid)
 
-d4_rbf_log = Rbf(d4_lats_wrapped, d4_lons_wrapped, d4_doses_log_wrapped, function='multiquadric', epsilon=0.1, smooth=1)
+d4_rbf_log = Rbf(d4_lats_wrapped, d4_lons_wrapped, d4_doses_log_wrapped, function='multiquadric', epsilon=0.1, smooth=0.1)
 d4_doses_rbf_log = d4_rbf_log(x_meshgrid, y_meshgrid)
 
-d3_rbf_log = Rbf(d3_lats, d3_lons, d3_doses_log, function='multiquadric', epsilon=0.1, smooth=1)
+d3_rbf_log = Rbf(d3_lats, d3_lons, d3_doses_log, function='multiquadric', epsilon=0.1, smooth=0.1)
 d3_doses_rbf_log = d3_rbf_log(x_meshgrid, y_meshgrid)
 
 #} end of RBF interpolation
@@ -170,7 +170,7 @@ def plot_everything(*args):
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, d2_subset_doses_rbf_log, cmap=my_cm)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, d2_subset_doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
@@ -182,7 +182,7 @@ def plot_everything(*args):
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, d2_doses_rbf_log, cmap=my_cm)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, d2_doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
@@ -210,7 +210,7 @@ def plot_everything(*args):
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, d3_doses_rbf_log, cmap=my_cm)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, d3_doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
@@ -238,7 +238,7 @@ def plot_everything(*args):
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, d4_subset_doses_rbf_log, cmap=my_cm)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, d4_subset_doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
@@ -250,7 +250,7 @@ def plot_everything(*args):
 
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, d4_doses_rbf_log, cmap=my_cm)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, d4_doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
@@ -258,7 +258,7 @@ def plot_everything(*args):
 
     #} end d4
 
-    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.2)
+    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.3)
 
     #} end of Figure 1
 
