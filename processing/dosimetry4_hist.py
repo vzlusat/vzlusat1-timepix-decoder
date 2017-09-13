@@ -14,6 +14,8 @@ outliers=[1148]
 pcolor_min = 0
 pcolor_max = 7
 
+small_plot = 1
+
 date_range = '9-10.9.2017'
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
@@ -151,23 +153,25 @@ def plot_everything(*args):
 
     #} end of Figure 1
 
-    #plt.figure(2)
+    if small_plot:
 
-    #ax2 = plt.subplot2grid((1, 1), (0, 0))
+        plt.figure(2)
 
-##{ log-scale rbf
+        ax2 = plt.subplot2grid((1, 1), (0, 0))
 
-    #m = createMap('cyl')
+        #{ log-scale rbf
 
-    #x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+        m = createMap('cyl')
 
-    #m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+        x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    #cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    #cb.set_label('log10('+x_label+') '+x_units)
-    #plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+        m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
-##} end of log-scale rbf
+        cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+        cb.set_label('log10('+x_label+') '+x_units)
+        plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+
+        #} end of log-scale rbf
 
     plt.show()
 

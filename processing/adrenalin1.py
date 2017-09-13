@@ -20,9 +20,9 @@ path = "../images_bin/"
 images = []
 images_filtered = []
 
-# images.append(loadImage(401, 1, path))
-# images.append(loadImage(402, 1, path))
-# images.append(loadImage(404, 1, path))
+images.append(loadImage(401, 1, path))
+images.append(loadImage(402, 1, path))
+images.append(loadImage(404, 1, path))
 images.append(loadImage(807, 1, path))
 images.append(loadImage(808, 1, path))
 
@@ -32,10 +32,10 @@ images.append(loadImage(808, 1, path))
 #         if image.got_data:
 #             images.append(image)
 
-# images.append(loadImage(809, 1, path)) # full of electrons, some photons?
-# images.append(loadImage(810, 1, path)) # no photons
-# images.append(loadImage(811, 1, path)) # no photons
-# images.append(loadImage(812, 1, path)) # no photons
+images.append(loadImage(809, 1, path)) # full of electrons, some photons?
+images.append(loadImage(810, 1, path)) # no photons
+images.append(loadImage(811, 1, path)) # no photons
+images.append(loadImage(812, 1, path)) # no photons
 
 for i in range(len(images)):
 
