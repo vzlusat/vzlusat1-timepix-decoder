@@ -11,6 +11,7 @@ from src.tle import *
 import src.settings as settings
 from src.HouseKeeping import *
 from src.comments import getComment
+import platform
 
 def exportHouseKeeping(data):
 
@@ -290,9 +291,14 @@ def exportRaw(image):
         with open(getExportDataName(image.id, image.type), "w") as data_file:
 
             writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
+
+            if platform.system() == "Windows":
+                float_delim = '.'
+            else:
+                float_delim = ','
         
             for i in range(0, 256):
-                writer.writerow(["{:.2f}".format(x).replace('.', ',') for x in image.data[i, :]])
+                writer.writerow(["{:.2f}".format(x).replace('.', float_delim) for x in image.data[i, :]])
 
     exportMetadata(image)
 
