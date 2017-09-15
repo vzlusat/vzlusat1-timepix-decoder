@@ -159,6 +159,7 @@ def plot_everything(*args):
 
     plt.show()
 
+# run the plotting in the background
 pid = os.fork()
 if pid == 0:
     plot_everything()
