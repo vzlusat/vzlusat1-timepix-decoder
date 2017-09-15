@@ -9,6 +9,8 @@ def getHkFileName(images_taken, time_since_boot, boot_count):
 
 def getHRFileType(imagetype):
 
+    name = ""
+
     if imagetype == 1:
         name = "fullres"
     elif imagetype == 2:

@@ -20,6 +20,8 @@ path = "../images_bin/"
 images = []
 images_filtered = []
 
+# images.append(loadImage(129, 1, path))
+
 images.append(loadImage(401, 1, path))
 images.append(loadImage(402, 1, path))
 images.append(loadImage(404, 1, path))
@@ -36,11 +38,13 @@ images.append(loadImage(809, 1, path)) # full of electrons, some photons?
 images.append(loadImage(810, 1, path)) # no photons
 images.append(loadImage(811, 1, path)) # no photons
 images.append(loadImage(812, 1, path)) # no photons
+images.append(loadImage(1389, 1, path)) # no photons
 
 for i in range(len(images)):
 
     print("filtering: {}".format(images[i].id))
     images_filtered.append(filterImage(images[i]))
+    # images_filtered.append(images[i])
 
 print("Merging images")
 
@@ -94,9 +98,10 @@ def plot_everything(*args):
 
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.05)
 
-# create sum
+# create sums
 
-    sums = numpy.zeros(shape=[256])
+    sums1 = numpy.zeros(shape=[256])
+    sums2 = numpy.zeros(shape=[256])
 
     for j in range(0, 255):
 
@@ -108,17 +113,43 @@ def plot_everything(*args):
 
                 sum += 1
 
-        sums[j] = sum
+        sums1[j] = sum
+
+    for j in range(0, 255):
+
+        sum = 0
+
+        for i in range(0, 255):
+
+            if merged_filtered[j, i] > 0:
+
+                sum += 1
+
+        sums2[j] = sum
 
     fig = plt.figure(2)
-    ax = fig.add_subplot(1, 1, 1)
+    ax = fig.add_subplot(2, 1, 1)
     x = numpy.linspace(1, 256, 256)
-    ax.plot(x, sums)
+    ax.plot(x, sums1)
 
-    print("numpy.mean(merged): {}".format(numpy.mean(sums)))
-    print("numpy.mean(merged): {}".format(numpy.std(sums)))
+    print("numpy.mean(merged): {}".format(numpy.mean(sums1)))
+    print("numpy.mean(merged): {}".format(numpy.std(sums1)))
 
-    ax.axis([1, 256, numpy.min(sums), numpy.max(sums)])
+    ax.axis([1, 256, numpy.min(sums1), numpy.max(sums1)])
+
+    ax.set_xlabel("Column (-)", fontsize=25)
+    ax.set_ylabel("Active pixels (-)", fontsize=25)
+    ax.set_title("Column sum over stacked images", fontsize=25)
+
+
+    ax = fig.add_subplot(2, 1, 2)
+    x = numpy.linspace(1, 256, 256)
+    ax.plot(x, sums2)
+
+    print("numpy.mean(merged): {}".format(numpy.mean(sums2)))
+    print("numpy.mean(merged): {}".format(numpy.std(sums2)))
+
+    ax.axis([1, 256, numpy.min(sums2), numpy.max(sums2)])
 
     ax.set_xlabel("Column (-)", fontsize=25)
     ax.set_ylabel("Active pixels (-)", fontsize=25)
@@ -129,9 +160,7 @@ def plot_everything(*args):
     fig3 = plt.figure(3)
     ax3 = fig3.add_subplot(1, 1, 1)
 
-    yf = scipy.fftpack.fft(sums)/256
-    print("len(yf): {}".format(len(yf)))
-    print("yf: {}".format(yf))
+    yf = scipy.fftpack.fft(sums1)
 
     ax3.plot(np.linspace(0, 128, 128), np.abs(yf[:128]))
 

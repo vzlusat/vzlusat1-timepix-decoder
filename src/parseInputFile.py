@@ -33,6 +33,8 @@ def parseInputFile(file_path, root):
     # for all lines in the file 
     for line in infile:
 
+        last_time = 0
+
         # if the line contains word "time"
         if line.find("time") > -1:
 
