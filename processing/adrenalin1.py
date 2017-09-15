@@ -20,25 +20,19 @@ path = "../images_bin/"
 images = []
 images_filtered = []
 
-# images.append(loadImage(129, 1, path))
-
+# might be usable
 images.append(loadImage(401, 1, path))
 images.append(loadImage(402, 1, path))
 images.append(loadImage(404, 1, path))
 images.append(loadImage(807, 1, path))
 images.append(loadImage(808, 1, path))
 
-# for i in range(385, 1200):
-#     image = loadImage(i, 1, path)
-#     if isinstance(image, Image):
-#         if image.got_data:
-#             images.append(image)
-
-images.append(loadImage(809, 1, path)) # full of electrons, some photons?
-images.append(loadImage(810, 1, path)) # no photons
-images.append(loadImage(811, 1, path)) # no photons
-images.append(loadImage(812, 1, path)) # no photons
-images.append(loadImage(1389, 1, path)) # no photons
+# not usable in my opinion
+# images.append(loadImage(809, 1, path)) # full of electrons, some photons?
+# images.append(loadImage(810, 1, path)) # no photons
+# images.append(loadImage(811, 1, path)) # no photons
+# images.append(loadImage(812, 1, path)) # no photons
+# images.append(loadImage(1389, 1, path)) # no photons
 
 for i in range(len(images)):
 
@@ -98,7 +92,7 @@ def plot_everything(*args):
 
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.05)
 
-# create sums
+    # create sums
 
     sums1 = numpy.zeros(shape=[256])
     sums2 = numpy.zeros(shape=[256])
@@ -139,8 +133,7 @@ def plot_everything(*args):
 
     ax.set_xlabel("Column (-)", fontsize=25)
     ax.set_ylabel("Active pixels (-)", fontsize=25)
-    ax.set_title("Column sum over stacked images", fontsize=25)
-
+    ax.set_title("Column sum of stacked images", fontsize=25)
 
     ax = fig.add_subplot(2, 1, 2)
     x = numpy.linspace(1, 256, 256)
@@ -153,9 +146,9 @@ def plot_everything(*args):
 
     ax.set_xlabel("Column (-)", fontsize=25)
     ax.set_ylabel("Active pixels (-)", fontsize=25)
-    ax.set_title("Column sum over stacked images", fontsize=25)
+    ax.set_title("Ros sum of stacked images", fontsize=25)
 
-    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.05)
+    plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.2)
 
     fig3 = plt.figure(3)
     ax3 = fig3.add_subplot(1, 1, 1)
