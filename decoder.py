@@ -64,10 +64,15 @@ else:
     import tkinter.filedialog
     from tkinter import ttk
     import tkinter.font as tkFont
-#}
 
+# for showing commentary of the images
 from src.comments import parseComments
 from src.comments import getComment
+
+# for marking favorite images
+import src.favorites as favorite
+
+#}
 
 # core methods
 
@@ -122,10 +127,10 @@ def loadFiles():
 
                 if hide_housekeeping_var.get():
                     pass
-                elif (show_favorite_var.get() and not housekeeeping.favorite):
+                elif (show_favorite_var.get() and not favorite.isFavorite(housekeeeping)):
                     pass
-                elif ((not show_hidden_var.get()) and (housekeeeping.hidden)):
-                    pass
+                # elif ((not show_hidden_var.get()) and (housekeeeping.hidden)):
+                #     pass
                 else:
                     file_names.append(file)
                     list_files.append(str(housekeeeping.images_taken)+"_"+str(housekeeeping.boot_count)+"_"+str(housekeeeping.time_since_boot)+"s_hk")
@@ -142,10 +147,10 @@ def loadFiles():
                     pass
                 elif (show_only_without_data_var.get() and image.got_data):
                     pass
-                elif (show_favorite_var.get() and not image.favorite):
+                elif (show_favorite_var.get() and not favorite.isFavorite(image)):
                     pass
-                elif ((not show_hidden_var.get()) and (image.hidden)):
-                    pass
+                # elif ((not show_hidden_var.get()) and (image.hidden)):
+                #     pass
                 elif (just_fullres_var.get() and image.type > 1):
                     pass
                 else:
@@ -215,8 +220,8 @@ def showHouseKeeping(housekeeping):
     human_readable_time = datetime.datetime.utcfromtimestamp(housekeeping.time)
     metadatas_var[16].set(human_readable_time)
 
-    marked_as_hidden_var.set(housekeeping.hidden)
-    marked_as_favorite_var.set(housekeeping.favorite)
+    # marked_as_hidden_var.set(housekeeping.hidden)
+    marked_as_favorite_var.set(favorite.isFavorite(housekeeping))
 
     if settings.use_globus:
       if show_globus_var.get():
@@ -232,8 +237,8 @@ def showHouseKeeping(housekeeping):
 #{ def showImage(image): resets and shows the image
 def showImage(image, manual):
 
-    marked_as_hidden_var.set(image.hidden)
-    marked_as_favorite_var.set(image.favorite)
+    # marked_as_hidden_var.set(image.hidden)
+    marked_as_favorite_var.set(favorite.isFavorite(image))
 
     if manual == 0 and image.got_data == 0:
         return
@@ -528,27 +533,29 @@ def showImage(image, manual):
 
 # callback for marking hidden/favorite checkboxex
 
-def markHiddenCallback():
+# def markHiddenCallback():
 
-    global loaded_image
-    loaded_image.hidden = marked_as_hidden_var.get()
+#     global loaded_image
+#     loaded_image.hidden = marked_as_hidden_var.get()
 
-    if isinstance(loaded_image, Image):
-        saveImage(loaded_image)
-    elif isinstance(loaded_image, HouseKeeping):
-        saveHouseKeeping(loaded_image)
+#     if isinstance(loaded_image, Image):
+#         saveImage(loaded_image)
+#     elif isinstance(loaded_image, HouseKeeping):
+#         saveHouseKeeping(loaded_image)
 
-    reloadList(int(listbox.curselection()[0]))
+#     reloadList(int(listbox.curselection()[0]))
 
 def markFavoriteCallback():
 
     global loaded_image
-    loaded_image.favorite = marked_as_favorite_var.get()
+    # loaded_image.favorite = marked_as_favorite_var.get()
 
-    if isinstance(loaded_image, Image):
-        saveImage(loaded_image)
-    elif isinstance(loaded_image, HouseKeeping):
-        saveHouseKeeping(loaded_image)
+    favorite.setFavorite(loaded_image, marked_as_favorite_var.get())
+
+    # if isinstance(loaded_image, Image):
+    #     saveImage(loaded_image)
+    # elif isinstance(loaded_image, HouseKeeping):
+    #     saveHouseKeeping(loaded_image)
 
     reloadList(int(listbox.curselection()[0]))
 
@@ -647,8 +654,8 @@ my_figure.clf()
 # import image comments
 parseComments()
 
-# create the status line
-# initStatusLine(root)
+# imort labels for favorite images
+favorite.loadFavorites()
 
 statusLine.init(root, customfont)
 
@@ -738,8 +745,8 @@ for i in range(0, len(Image.metadata_labels)): #Rows
         temp_baloon.bind(label, "Chunk ID contains the index (indeces) of S4P3 storage, where the data for this image are contained. If empty, the actual metadata for this image has not been downloaded yet.")
 
 # add two checkboxes for marking images favorite and hidden
-marked_as_hidden_var = Tk.IntVar()
-metadatas.append(Tk.Checkbutton(frame_mid_top, text="", variable=marked_as_hidden_var, command=markHiddenCallback).grid(row=len(Image.metadata_labels)-2, column=1, sticky=Tk.W))
+# marked_as_hidden_var = Tk.IntVar()
+# metadatas.append(Tk.Checkbutton(frame_mid_top, text="", variable=marked_as_hidden_var, command=markHiddenCallback).grid(row=len(Image.metadata_labels)-2, column=1, sticky=Tk.W))
 
 marked_as_favorite_var = Tk.IntVar()
 metadatas.append(Tk.Checkbutton(frame_mid_top, text="", variable=marked_as_favorite_var, command=markFavoriteCallback).grid(row=len(Image.metadata_labels)-1, column=1, sticky=Tk.W))
@@ -873,7 +880,7 @@ autogenerate_png_load = Tk.IntVar()
 # autogenerate_csv_load = Tk.IntVar()
 
 # user can switch on/off showing of hidden and favorite images
-show_hidden_var = Tk.IntVar()
+# show_hidden_var = Tk.IntVar()
 show_globus_var = Tk.IntVar()
 dont_redraw_var = Tk.IntVar()
 just_fullres_var = Tk.IntVar()
@@ -883,7 +890,7 @@ show_only_without_data_var = Tk.IntVar()
 hide_housekeeping_var = Tk.IntVar()
 
 # user can mark image as favorite or hidden
-image_is_hidden = Tk.IntVar()
+# image_is_hidden = Tk.IntVar()
 
 # preload and sort file names from "images_bin" directories
 global file_names
@@ -1118,8 +1125,8 @@ just_metadata.pack(side=Tk.BOTTOM)
 just_fullres = Tk.Checkbutton(master=frame_left, text="Show just fullres", variable=just_fullres_var, command=reloadList, font=customfont)
 just_fullres.pack(side=Tk.BOTTOM)
 
-show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList, font=customfont)
-show_hidden.pack(side=Tk.BOTTOM)
+# show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList, font=customfont)
+# show_hidden.pack(side=Tk.BOTTOM)
 
 show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite", variable=show_favorite_var, command=reloadList, font=customfont)
 show_favorite_only.pack(side=Tk.BOTTOM)
@@ -1190,17 +1197,17 @@ def on_key_event(event):
               show_globus.toggle()
               reloadCurrentImage()
 
-        if event.char == 'h':
-            marked_as_hidden_var.set(not marked_as_hidden_var.get())
-            markHiddenCallback()
+        # if event.char == 'h':
+        #     marked_as_hidden_var.set(not marked_as_hidden_var.get())
+        #     markHiddenCallback()
 
         if event.char == 'f':
             marked_as_favorite_var.set(not marked_as_favorite_var.get())
             markFavoriteCallback()
 
-        if event.char == 'H':
-            show_hidden_var.set(not show_hidden_var.get())
-            reloadList()
+        # if event.char == 'H':
+        #     show_hidden_var.set(not show_hidden_var.get())
+        #     reloadList()
 
         if event.char == 'F':
             show_favorite_var.set(not show_favorite_var.get())

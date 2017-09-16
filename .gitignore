@@ -18,6 +18,7 @@ for_distribution/*
 *.swo
 orbital_data/all/147.228.97.106/download/old*
 *.wav
+favorites.pkl
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

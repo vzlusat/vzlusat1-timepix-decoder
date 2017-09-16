@@ -47,6 +47,6 @@ class HouseKeeping:
                          "",
                          "",
                          "",
-                         "Mark as hidden:",
+                         # "Mark as hidden:",
                          "Mark as favorite:"
                          ]

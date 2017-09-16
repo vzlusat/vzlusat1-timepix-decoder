@@ -47,7 +47,7 @@ def parseImageHeader(bin_data, image_type, image_dict):
     packet_id = bin_data[2]
 
     file_name = getFileName(image_id, image_type)
-    if file_name  in image_dict:
+    if file_name in image_dict:
         image = image_dict[file_name]
     else:
         # try to load already saved image

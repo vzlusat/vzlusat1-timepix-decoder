@@ -13,4 +13,4 @@ def saveImage(image):
         try:
            pickle.dump(image, output, pickle.HIGHEST_PROTOCOL)
         except:
-            print("file \"{}\" not be saved".format(file_name))
+            print("file \"{}\" could not be saved".format(file_name))
