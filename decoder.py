@@ -1179,9 +1179,12 @@ def listbox_move_down():
         return
 #}
 
+global previous_key
+previous_key = []
 def on_key_event(event):
 
     global listbox_focus
+    global previous_key
     if listbox_focus == 1:
 
         if event.char == 'j':
@@ -1194,9 +1197,19 @@ def on_key_event(event):
             loadNewImages()
 
         if settings.use_globus:
-          if event.char == 'g':
+            if event.char == 't' and previous_key == 'g':
               show_globus.toggle()
               reloadCurrentImage()
+
+        if event.char == 'G':
+            listbox.selection_clear(0, "end")
+            listbox.after(10, lambda: listbox.selection_set("end"))
+            listbox.after(500, lambda: listbox.see(Tk.END))
+
+        if event.char == 'g' and previous_key == 'g':
+            listbox.selection_clear(0, "end")
+            listbox.after(10, lambda: listbox.selection_set(0))
+            listbox.after(500, lambda: listbox.see(0))
 
         # if event.char == 'h':
         #     marked_as_hidden_var.set(not marked_as_hidden_var.get())
@@ -1231,6 +1244,16 @@ def on_key_event(event):
 
         if event.char == 'E':
             autogenerate_checkbox2.toggle()
+
+        if event.char == 'w':
+            hide_without_data.toggle()
+            reloadList()
+
+        if event.char == 'W':
+            show_only_without_data.toggle()
+            reloadList()
+
+    previous_key = event.char
 
 listbox.bind_all('<Key>', on_key_event)
 
