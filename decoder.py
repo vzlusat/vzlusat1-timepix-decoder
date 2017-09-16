@@ -1206,6 +1206,14 @@ def on_key_event(event):
             hide_housekeeping.toggle()
             reloadList()
 
+        if event.char == 'a':
+            show_adrenalin.toggle()
+            reloadList()
+
+        if event.char == '1':
+            just_fullres.toggle()
+            reloadList()
+
         if event.char == 'f':
             marked_as_favorite_var.set(not marked_as_favorite_var.get())
             markFavoriteCallback()
@@ -1218,10 +1226,10 @@ def on_key_event(event):
             show_favorite_var.set(not show_favorite_var.get())
             reloadList()
 
-        if event.char == 'a':
+        if event.char == 'e':
             autogenerate_checkbox.toggle()
 
-        if event.char == 'A':
+        if event.char == 'E':
             autogenerate_checkbox2.toggle()
 
 listbox.bind_all('<Key>', on_key_event)
