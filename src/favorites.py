@@ -5,12 +5,14 @@ from src.Image import *
 from src.HouseKeeping import *
 from src.baseMethods import *
 
+global favorites
 favorites = {}
 
 file_name = "favorites.pkl"
 
 def loadFavorites():
 
+    global favorites
     # ask OS to locate the file
     if os.path.isfile(file_name):
 
@@ -20,10 +22,8 @@ def loadFavorites():
             # load the object from the file
             try:
                 favorites = pickle.load(input)
-                print("The list of favorites was loaded.")
             except:
                 print("file \"{}\" is corrupted".format(file_name))
-
                 # create the new file
                 favotires = {}
                 saveFavorites()
@@ -32,8 +32,10 @@ def loadFavorites():
         # create the new file
         favotires = {}
         saveFavorites()
-
+        
 def saveFavorites():
+
+    global favorites
 
     # try to open the file
     with open(file_name, 'wb') as output:
@@ -44,6 +46,8 @@ def saveFavorites():
             print("file \"{}\" could not be saved".format(file_name))
 
 def isFavorite(data):
+
+    global favorites
 
     key = ""
 
@@ -58,6 +62,8 @@ def isFavorite(data):
         return False
 
 def setFavorite(data, value):
+
+    global favorites
 
     key = ""
 

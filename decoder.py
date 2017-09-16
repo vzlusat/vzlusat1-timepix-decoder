@@ -70,7 +70,8 @@ from src.comments import parseComments
 from src.comments import getComment
 
 # for marking favorite images
-import src.favorites as favorite
+import src.favorites as favorites
+favorites.loadFavorites()
 
 #}
 
@@ -127,7 +128,7 @@ def loadFiles():
 
                 if hide_housekeeping_var.get():
                     pass
-                elif (show_favorite_var.get() and not favorite.isFavorite(housekeeeping)):
+                elif (show_favorite_var.get() and not favorites.isFavorite(housekeeeping)):
                     pass
                 # elif ((not show_hidden_var.get()) and (housekeeeping.hidden)):
                 #     pass
@@ -147,7 +148,7 @@ def loadFiles():
                     pass
                 elif (show_only_without_data_var.get() and image.got_data):
                     pass
-                elif (show_favorite_var.get() and not favorite.isFavorite(image)):
+                elif (show_favorite_var.get() and not favorites.isFavorite(image)):
                     pass
                 # elif ((not show_hidden_var.get()) and (image.hidden)):
                 #     pass
@@ -221,7 +222,7 @@ def showHouseKeeping(housekeeping):
     metadatas_var[16].set(human_readable_time)
 
     # marked_as_hidden_var.set(housekeeping.hidden)
-    marked_as_favorite_var.set(favorite.isFavorite(housekeeping))
+    marked_as_favorite_var.set(favorites.isFavorite(housekeeping))
 
     if settings.use_globus:
       if show_globus_var.get():
@@ -238,7 +239,7 @@ def showHouseKeeping(housekeeping):
 def showImage(image, manual):
 
     # marked_as_hidden_var.set(image.hidden)
-    marked_as_favorite_var.set(favorite.isFavorite(image))
+    marked_as_favorite_var.set(favorites.isFavorite(image))
 
     if manual == 0 and image.got_data == 0:
         return
@@ -550,7 +551,7 @@ def markFavoriteCallback():
     global loaded_image
     # loaded_image.favorite = marked_as_favorite_var.get()
 
-    favorite.setFavorite(loaded_image, marked_as_favorite_var.get())
+    favorites.setFavorite(loaded_image, marked_as_favorite_var.get())
 
     # if isinstance(loaded_image, Image):
     #     saveImage(loaded_image)
@@ -653,9 +654,6 @@ my_figure.clf()
 
 # import image comments
 parseComments()
-
-# imort labels for favorite images
-favorite.loadFavorites()
 
 statusLine.init(root, customfont)
 
@@ -1200,6 +1198,10 @@ def on_key_event(event):
         # if event.char == 'h':
         #     marked_as_hidden_var.set(not marked_as_hidden_var.get())
         #     markHiddenCallback()
+
+        if event.char == 'h':
+            hide_housekeeping.toggle()
+            reloadList()
 
         if event.char == 'f':
             marked_as_favorite_var.set(not marked_as_favorite_var.get())
