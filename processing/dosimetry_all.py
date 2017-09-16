@@ -61,7 +61,7 @@ def plot_everything(*args):
 
     x_m, y_m = m(lons_orig, lats_orig) # project points
 
-    CS = m.hexbin(x_m, y_m, C=numpy.array(doses), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max)
+    CS = m.hexbin(x_m, y_m, C=numpy.array(doses), bins='log', gridsize=64, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max)
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
     cb.set_label('log10('+x_label+') '+x_units)
