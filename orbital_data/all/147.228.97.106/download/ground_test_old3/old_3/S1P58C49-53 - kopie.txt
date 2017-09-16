@@ -1,0 +1,30 @@
+-------------------- in adr: 0x0000 --------------------
+chunk: 49
+time:  56358	2000-01-01 15:39:18
+flags: 0x00
+data:  004A610a3a0aa105440ef83f480e440e440e450e450e450e430ea2053a0a3b0aa105f83ff83f4a0ef83f470e440e440e460e440e440ea0053b0a511c47cd
+-------------------- in adr: 0x0042 --------------------
+chunk: 50
+time:  56364	2000-01-01 15:39:24
+flags: 0x00
+data:  00005c0a3b0aa005440ef83f460e440e450e450e460e460e440ea1053a0a3c0aa105f83ff83f490ef83f480e450e440e450e440e440ea2053b0a511c47cd
+-------------------- in adr: 0x0081 --------------------
+chunk: 51
+time:  56369	2000-01-01 15:39:29
+flags: 0x00
+data:  804A5c0a3a0aa205450ef83f480e440e440e450e460e460e430ea1053a0a3a0aa205f83ff83f4a0ef83f490e440e440e460e460e440ea2053a0a511c47cd
+-------------------- in adr: 0x00c0 --------------------
+chunk: 52
+time:  56374	2000-01-01 15:39:34
+flags: 0x00
+data:  30005c0a3c0aa205440ef83f490e430e430e450e460e460e450ea1053c0a3b0aa105f83ff83f480ef83f480e440e440e450e440e430ea2053a0a511c47cd
+-------------------- in adr: 0x00ff --------------------
+chunk: 53
+time:  56379	2000-01-01 15:39:39
+flags: 0x00
+data:  00005f0a3b0aa005450ef83f470e430e430e450e460e450e440ea0053b0a3b0aa105f83ff83f490ef83f470e430e440e440e430e420ea1053c0a511c47cd
+
+ -HKC[1], exec=hm temp, len=2
+ -HKC[1], exec=mes t 0, len=26
+ -HKC[1], exec=mes t 1, len=28
+ -HKC[1], exec=rtc clget, len=4
