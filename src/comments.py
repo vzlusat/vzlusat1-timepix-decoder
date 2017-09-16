@@ -35,3 +35,12 @@ def getComment(idx):
         return comment
     except:
         return ""
+
+def isAdrenalin(idx):
+
+    comment = getComment(idx)
+
+    if comment.find("#adrenalin") > -1:
+        return True
+    else:
+        return False

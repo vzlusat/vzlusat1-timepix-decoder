@@ -66,8 +66,8 @@ else:
     import tkinter.font as tkFont
 
 # for showing commentary of the images
-from src.comments import parseComments
-from src.comments import getComment
+import src.comments as comments
+comments.parseComments()
 
 # for marking favorite images
 import src.favorites as favorites
@@ -149,6 +149,8 @@ def loadFiles():
                 elif (show_only_without_data_var.get() and image.got_data):
                     pass
                 elif (show_favorite_var.get() and not favorites.isFavorite(image)):
+                    pass
+                elif (show_adrenalin_var.get() and not comments.isAdrenalin(image.id)):
                     pass
                 # elif ((not show_hidden_var.get()) and (image.hidden)):
                 #     pass
@@ -528,8 +530,8 @@ def showImage(image, manual):
 
     figure_canvas.show()
 
-    id_baloon.bind(label, getComment(image.id))
-    statusLine.set(getComment(image.id))
+    id_baloon.bind(label, comments.getComment(image.id))
+    statusLine.set(comments.getComment(image.id))
 #}
 
 # callback for marking hidden/favorite checkboxex
@@ -651,9 +653,6 @@ if not settings.gpd_enabled:
 else:
     my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=120)
 my_figure.clf()
-
-# import image comments
-parseComments()
 
 statusLine.init(root, customfont)
 
@@ -886,6 +885,7 @@ show_favorite_var = Tk.IntVar()
 hide_without_data_var = Tk.IntVar()
 show_only_without_data_var = Tk.IntVar()
 hide_housekeeping_var = Tk.IntVar()
+show_adrenalin_var = Tk.IntVar()
 
 # user can mark image as favorite or hidden
 # image_is_hidden = Tk.IntVar()
@@ -1125,6 +1125,9 @@ just_fullres.pack(side=Tk.BOTTOM)
 
 # show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList, font=customfont)
 # show_hidden.pack(side=Tk.BOTTOM)
+
+show_adrenalin = Tk.Checkbutton(master=frame_left, text="show adrenalin", variable=show_adrenalin_var, command=reloadList, font=customfont)
+show_adrenalin.pack(side=Tk.BOTTOM)
 
 show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite", variable=show_favorite_var, command=reloadList, font=customfont)
 show_favorite_only.pack(side=Tk.BOTTOM)
