@@ -1180,80 +1180,85 @@ def listbox_move_down():
 #}
 
 global previous_key
+global current_key
 previous_key = []
+current_key = []
 def on_key_event(event):
 
     global listbox_focus
     global previous_key
+    global current_key
+    global loaded_image_idx
     if listbox_focus == 1:
 
-        if event.char == 'j':
+        previous_key = current_key
+        current_key = event.char
+
+        if current_key == 'j':
             listbox_move_down()
 
-        if event.char == 'k':
+        if current_key == 'k':
             listbox_move_up()
 
-        if event.char == 'o':
+        if current_key == 'o':
             loadNewImages()
 
         if settings.use_globus:
             if event.char == 't' and previous_key == 'g':
-              show_globus.toggle()
-              reloadCurrentImage()
+                current_key = []
+                show_globus.toggle()
+                reloadCurrentImage()
 
-        if event.char == 'G':
+        if current_key == 'G':
             listbox.selection_clear(0, "end")
             listbox.after(10, lambda: listbox.selection_set("end"))
             listbox.after(500, lambda: listbox.see(Tk.END))
+            loaded_image_idx = listbox.size()-1
+            reloadData(listbox.size()-1, 1)
 
-        if event.char == 'g' and previous_key == 'g':
-            listbox.selection_clear(0, "end")
-            listbox.after(10, lambda: listbox.selection_set(0))
-            listbox.after(500, lambda: listbox.see(0))
+        if current_key == 'g':
+            if previous_key == 'g':
+                current_key = []
+                listbox.selection_clear(0, "end")
+                listbox.after(10, lambda: listbox.selection_set(0))
+                listbox.after(500, lambda: listbox.see(0))
+                loaded_image_idx = 0
+                reloadData(0, 1)
 
-        # if event.char == 'h':
-        #     marked_as_hidden_var.set(not marked_as_hidden_var.get())
-        #     markHiddenCallback()
-
-        if event.char == 'h':
+        if current_key == 'h':
             hide_housekeeping.toggle()
             reloadList()
 
-        if event.char == 'a':
+        if current_key == 'a':
             show_adrenalin.toggle()
             reloadList()
 
-        if event.char == '1':
+        if current_key == '1':
             just_fullres.toggle()
             reloadList()
 
-        if event.char == 'f':
-            marked_as_favorite_var.set(not marked_as_favorite_var.get())
-            markFavoriteCallback()
+        if current_key == 'f':
+            if previous_key == 'g':
+                current_key = []
+                marked_as_favorite_var.set(not marked_as_favorite_var.get())
+                markFavoriteCallback()
+            else:
+                show_favorite_var.set(not show_favorite_var.get())
+                reloadList()
 
-        # if event.char == 'H':
-        #     show_hidden_var.set(not show_hidden_var.get())
-        #     reloadList()
-
-        if event.char == 'F':
-            show_favorite_var.set(not show_favorite_var.get())
-            reloadList()
-
-        if event.char == 'e':
+        if current_key == 'e':
             autogenerate_checkbox.toggle()
 
-        if event.char == 'E':
+        if current_key == 'E':
             autogenerate_checkbox2.toggle()
 
-        if event.char == 'w':
+        if current_key == 'w':
             hide_without_data.toggle()
             reloadList()
 
-        if event.char == 'W':
+        if current_key == 'W':
             show_only_without_data.toggle()
             reloadList()
-
-    previous_key = event.char
 
 listbox.bind_all('<Key>', on_key_event)
 
