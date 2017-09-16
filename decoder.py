@@ -1260,6 +1260,20 @@ def on_key_event(event):
             show_only_without_data.toggle()
             reloadList()
 
+        if current_key == 'c':
+            try:
+                colormap_combobox.current(colormap_combobox.current()+1)
+                reloadCurrentImage()
+            except:
+                pass
+
+        if current_key == 'C':
+            try:
+                colormap_combobox.current(colormap_combobox.current()-1)
+                reloadCurrentImage()
+            except:
+                pass
+
 listbox.bind_all('<Key>', on_key_event)
 
 def listboxFocusIn(event):
