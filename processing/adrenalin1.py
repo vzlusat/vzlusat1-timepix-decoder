@@ -20,12 +20,13 @@ path = "../images_bin/"
 images = []
 images_filtered = []
 
-# might be usable
+# # might be usable
 images.append(loadImage(401, 1, path))
 images.append(loadImage(402, 1, path))
 images.append(loadImage(404, 1, path))
 images.append(loadImage(807, 1, path))
 images.append(loadImage(808, 1, path))
+images.append(loadImage(1390, 1, path))
 
 # not usable in my opinion
 # images.append(loadImage(809, 1, path)) # full of electrons, some photons?
