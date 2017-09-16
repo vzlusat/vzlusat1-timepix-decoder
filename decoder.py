@@ -1126,7 +1126,7 @@ just_fullres.pack(side=Tk.BOTTOM)
 # show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList, font=customfont)
 # show_hidden.pack(side=Tk.BOTTOM)
 
-show_adrenalin = Tk.Checkbutton(master=frame_left, text="show adrenalin", variable=show_adrenalin_var, command=reloadList, font=customfont)
+show_adrenalin = Tk.Checkbutton(master=frame_left, text="show only adrenalin", variable=show_adrenalin_var, command=reloadList, font=customfont)
 show_adrenalin.pack(side=Tk.BOTTOM)
 
 show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite", variable=show_favorite_var, command=reloadList, font=customfont)
