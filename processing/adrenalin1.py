@@ -145,7 +145,7 @@ def plot_everything(*args):
 
     ax.axis([1, 256, numpy.min(sums2), numpy.max(sums2)])
 
-    ax.set_xlabel("Ros (-)", fontsize=25)
+    ax.set_xlabel("Row (-)", fontsize=25)
     ax.set_ylabel("Active pixels (-)", fontsize=25)
     ax.set_title("Rows sum of stacked images", fontsize=25)
 
@@ -157,6 +157,9 @@ def plot_everything(*args):
     yf = scipy.fftpack.fft(sums1)
 
     ax3.plot(np.linspace(0, 128, 128), np.abs(yf[:128]))
+
+    ax3.set_xlabel("Frequency (pixel)", fontsize=25)
+    ax3.set_title("FFT on column sum", fontsize=25)
 
     plt.show()
 
