@@ -27,6 +27,8 @@ images.append(loadImage(404, 1, path))
 images.append(loadImage(807, 1, path))
 images.append(loadImage(808, 1, path))
 images.append(loadImage(1390, 1, path))
+images.append(loadImage(1392, 1, path))
+images.append(loadImage(1393, 1, path))
 
 # not usable in my opinion
 # images.append(loadImage(809, 1, path)) # full of electrons, some photons?
@@ -34,6 +36,7 @@ images.append(loadImage(1390, 1, path))
 # images.append(loadImage(811, 1, path)) # no photons
 # images.append(loadImage(812, 1, path)) # no photons
 # images.append(loadImage(1389, 1, path)) # no photons
+# images.append(loadImage(1391, 1, path)) # full of electrons
 
 for i in range(len(images)):
 
