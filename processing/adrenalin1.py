@@ -20,7 +20,7 @@ path = "../images_bin/"
 images = []
 images_filtered = []
 
-# # might be usable
+# might be usable
 images.append(loadImage(401, 1, path))
 images.append(loadImage(402, 1, path))
 images.append(loadImage(404, 1, path))
@@ -32,10 +32,10 @@ images.append(loadImage(1393, 1, path))
 
 # not usable in my opinion
 # images.append(loadImage(809, 1, path)) # full of electrons, some photons?
-# images.append(loadImage(810, 1, path)) # no photons
-# images.append(loadImage(811, 1, path)) # no photons
-# images.append(loadImage(812, 1, path)) # no photons
-# images.append(loadImage(1389, 1, path)) # no photons
+images.append(loadImage(810, 1, path)) # no photons
+images.append(loadImage(811, 1, path)) # no photons
+images.append(loadImage(812, 1, path)) # no photons
+images.append(loadImage(1389, 1, path)) # no photons
 # images.append(loadImage(1391, 1, path)) # full of electrons
 
 for i in range(len(images)):
@@ -54,10 +54,8 @@ total_exposure = 0
 
 for i in range(len(images)):
 
-    print("merging: {}".format(images[i].id))
     merged = merged + images[i].data
     merged_filtered = merged_filtered + images_filtered[i].data
-    print("images[i].exposure: {}".format(images[i].exposure))
 
     num_images += 1
     total_exposure += images[i].exposure*.001
@@ -130,8 +128,10 @@ def plot_everything(*args):
     x = numpy.linspace(1, 256, 256)
     ax.plot(x, sums1)
 
-    print("numpy.mean(merged): {}".format(numpy.mean(sums1)))
-    print("numpy.mean(merged): {}".format(numpy.std(sums1)))
+    print("mean sums 1 {}".format(numpy.mean(sums1)))
+    print("std sums 1 {}".format(numpy.std(sums1)))
+    print("mean sums 2 {}".format(numpy.mean(sums2)))
+    print("std sums 2 {}".format(numpy.std(sums2)))
 
     ax.axis([1, 256, numpy.min(sums1), numpy.max(sums1)])
 
@@ -143,14 +143,11 @@ def plot_everything(*args):
     x = numpy.linspace(1, 256, 256)
     ax.plot(x, sums2)
 
-    print("numpy.mean(merged): {}".format(numpy.mean(sums2)))
-    print("numpy.mean(merged): {}".format(numpy.std(sums2)))
-
     ax.axis([1, 256, numpy.min(sums2), numpy.max(sums2)])
 
-    ax.set_xlabel("Column (-)", fontsize=25)
+    ax.set_xlabel("Ros (-)", fontsize=25)
     ax.set_ylabel("Active pixels (-)", fontsize=25)
-    ax.set_title("Ros sum of stacked images", fontsize=25)
+    ax.set_title("Rows sum of stacked images", fontsize=25)
 
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.95, top=0.95, wspace=0.15, hspace=0.2)
 
