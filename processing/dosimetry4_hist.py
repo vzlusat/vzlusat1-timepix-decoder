@@ -20,6 +20,7 @@ date_range = '9-10.9.2017'
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
 general_label = '4th dosimetry 510 km LEO, VZLUSAT-1'
+epsilon=1.0
 
 # prepare data
 images = loadImageRange(from_idx, to_idx, 32, 1, 1, outliers)
@@ -81,7 +82,7 @@ def plot_everything(*args):
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+    plt.title('RBF multiquadric (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
 
 #} end of log-scale rbf
 
@@ -97,7 +98,7 @@ def plot_everything(*args):
 
     cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
     cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), linear scale, '+date_range, fontsize=13)
+    plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
 
 #} end of linear rbf
 
@@ -113,7 +114,7 @@ def plot_everything(*args):
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), linear scale, '+date_range, fontsize=13)
+    plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
 
 #} end of south-pole, log rbf
 
@@ -129,7 +130,7 @@ def plot_everything(*args):
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), linear scale, '+date_range, fontsize=13)
+    plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
 
 #} end of north-pole, log rbf
 
@@ -145,7 +146,7 @@ def plot_everything(*args):
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps=10e-1), linear scale, '+date_range, fontsize=13)
+    plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
 
 #} end of anomaly, log rbf
 
@@ -169,7 +170,7 @@ def plot_everything(*args):
 
         cb = m.colorbar(location="bottom", label="Z") # draw colorbar
         cb.set_label('log10('+x_label+') '+x_units)
-        plt.title('RBF multiquadric (eps=10e-1), log10 scale, '+date_range, fontsize=13)
+        plt.title('RBF multiquadric (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
 
         #} end of log-scale rbf
 
