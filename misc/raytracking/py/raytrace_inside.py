@@ -26,7 +26,7 @@ foil_thickness = 0.150
 foil_length = 60.0
 optics_x = -foil_length
 timepix_x = -110.0
-# timepix_x = -60.0
+# timepix_x = -65.0
 n_foils = 55
 optics_skew = 0.038
 optics_y_offset = (-n_foils/2.0)*optics_skew
@@ -88,9 +88,9 @@ timepix_segments_list.append(timepix_segment)
 source_x = 3000.0
 
 n_processes = 8
-source_min_y = -40.0
-source_max_y = -39.0
-source_step = 0.1
+source_min_y = -5.0
+source_max_y = 5.0
+source_step = 1.0
 timepix_step = 0.01
 # source_ys = [0]
 timepix_ys = np.arange(-timepix_size/2, +timepix_size/2, timepix_step)
