@@ -1,5 +1,5 @@
 import copy
-from normalizePoint import *
+from src.normalizeCoordinates import *
 
 def plotPoints(ax, point_buffer, H=0):
 
@@ -9,7 +9,7 @@ def plotPoints(ax, point_buffer, H=0):
 
             temp_point = copy.deepcopy(point_buffer[i].point.coordinates)  
 
-            temp_point = normalizePoint(H * temp_point)
+            temp_point = normalizeCoordinates(H * temp_point)
 
             ax.scatter(temp_point[0], temp_point[1], s=point_buffer[i].size, c=point_buffer[i].color)
 
