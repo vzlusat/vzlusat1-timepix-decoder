@@ -87,7 +87,7 @@ timepix_segments_list.append(timepix_segment)
 
 source_x = 3000.0
 
-n_processes = 8
+n_processes = 4
 source_min_y = -5.0
 source_max_y = 5.0
 source_step = 1.0
