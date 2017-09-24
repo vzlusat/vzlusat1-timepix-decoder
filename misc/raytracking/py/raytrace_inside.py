@@ -87,19 +87,26 @@ timepix_segments_list.append(timepix_segment)
 
 # simulate
 
+# Sun distance
 source_x = 1000*1000*149.6e6
+
+# Lab source distance
+# source_x = 3000
 
 def deg2rad(deg):
     
     return (np.pi/180)*deg
 
 n_processes = 8
-# source_min_y = -np.sin(deg2rad(1.5))*source_x
-# source_max_y = np.sin(deg2rad(1.5))*source_x
-# source_step = np.sin(deg2rad(0.02))*source_x
-source_min_y = -np.sin(deg2rad(0.0))*source_x
-source_max_y = np.sin(deg2rad(0.05))*source_x
-source_step = np.sin(deg2rad(0.001))*source_x
+source_min_y = -np.sin(deg2rad(1.5))*source_x
+source_max_y = np.sin(deg2rad(1.5))*source_x
+source_step = np.sin(deg2rad(0.02))*source_x
+
+# static source
+# source_min_y = -np.sin(deg2rad(0.01))*source_x
+# source_max_y = np.sin(deg2rad(0.01))*source_x
+# source_step = (source_max_y - source_min_y)/(n_processes*2)
+
 timepix_step = 0.01
 # source_ys = [0]
 timepix_ys = np.arange(-timepix_size/2, +timepix_size/2, timepix_step)
