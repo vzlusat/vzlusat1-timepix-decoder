@@ -15,7 +15,7 @@ from src.Results import *
 
 print("Loading results")
 
-file_name="results_inside.pkl"
+file_name="results_inside_new.pkl"
 
 # ask OS to locate the file
 if os.path.isfile(file_name):

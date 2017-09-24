@@ -54,9 +54,9 @@ for i in range(n_foils):
     s3 = Segment(p1, p3)
     s4 = Segment(p2, p4)
 
+    foils.append(s3)
     foils.append(s1)
     foils.append(s2)
-    foils.append(s3)
     foils.append(s4)
 
     if i == 0:
@@ -87,12 +87,19 @@ timepix_segments_list.append(timepix_segment)
 
 # simulate
 
-source_x = 3000.0
+source_x = 1000*1000*149.6e6
 
-n_processes = 4
-source_min_y = -5.0
-source_max_y = 5.0
-source_step = 1.0
+def deg2rad(deg):
+    
+    return (np.pi/180)*deg
+
+n_processes = 8
+# source_min_y = -np.sin(deg2rad(1.5))*source_x
+# source_max_y = np.sin(deg2rad(1.5))*source_x
+# source_step = np.sin(deg2rad(0.02))*source_x
+source_min_y = -np.sin(deg2rad(0.0))*source_x
+source_max_y = np.sin(deg2rad(0.05))*source_x
+source_step = np.sin(deg2rad(0.001))*source_x
 timepix_step = 0.01
 # source_ys = [0]
 timepix_ys = np.arange(-timepix_size/2, +timepix_size/2, timepix_step)
@@ -211,7 +218,7 @@ print("elapsed: {}".format(elapsed))
 
 # try to open the file
 print("Saving results")
-file_name="results_inside.pkl"
+file_name="results_inside_new.pkl"
 results = Results(optics_segments_list, timepix_segments_list, optics_point_list, timepix_point_list, source_point_list, rays_segment_list, columns)
 with open(file_name, 'wb') as output:
 
