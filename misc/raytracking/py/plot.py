@@ -29,7 +29,7 @@ from src.Results import *
 # file_name="static_sun2_point_50mm.pkl"
 
 title_text="Raytracing"
-file_name="raytracking_inside_new.pkl"
+file_name="results_inside_new.pkl"
 
 print("Loading results")
 
