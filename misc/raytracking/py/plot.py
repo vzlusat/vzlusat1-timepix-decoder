@@ -13,9 +13,25 @@ from src.plotSegment import *
 from src.plotSegments import *
 from src.Results import *
 
-print("Loading results")
+# title_text="Moving Sun, Timepix dist 50 mm"
+# file_name="moving_sun_50mm.pkl"
 
-file_name="results_inside_new.pkl"
+# title_text="Moving Sun, Timepix dist 5 mm"
+# file_name="moving_sun_5mm.pkl"
+
+# title_text="Static Sun, Timepix dist 50 mm"
+# file_name="static_sun_0.5deg_50mm.pkl"
+
+# title_text="Static point source, Timepix dist 50 mm"
+# file_name="static_sun_point_50mm.pkl"
+
+# title_text="Static point source, Timepix dist 50 mm"
+# file_name="static_sun2_point_50mm.pkl"
+
+title_text="Raytracing"
+file_name="raytracking_inside_new.pkl"
+
+print("Loading results")
 
 # ask OS to locate the file
 if os.path.isfile(file_name):
@@ -57,6 +73,7 @@ for i in results.rays_segment_list:
     plotSegment(rays_segment_buffer, i, 'yellow', 1)
 
 plt.figure(1)
+plt.suptitle(title_text)
 
 ax = plt.subplot2grid((3, 7), (0, 0), rowspan=2)
 ax.axis([np.min(results.columns), np.max(results.columns), 1, 256])
