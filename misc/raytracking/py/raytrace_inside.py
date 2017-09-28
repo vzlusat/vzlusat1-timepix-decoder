@@ -100,19 +100,21 @@ def deg2rad(deg):
 n_processes = 8
 
 # moving source
-source_min_y = -np.sin(deg2rad(1.5))*source_x
-source_max_y = np.sin(deg2rad(1.5))*source_x
-source_step = np.sin(deg2rad(0.02))*source_x
+# source_min_y = -np.sin(deg2rad(1.5))*source_x
+# source_max_y = np.sin(deg2rad(1.5))*source_x
+# source_step = np.sin(deg2rad(0.02))*source_x
 
 # static source
-# source_min_y = np.sin(deg2rad(0.51))*source_x
-# source_max_y = np.sin(deg2rad(0.53))*source_x
-# # source_step = np.sin(deg2rad(0.02))*source_x
-# source_step = (source_max_y - source_min_y)/(n_processes*2)
+source_min_y = np.sin(deg2rad(0.51))*source_x
+source_max_y = np.sin(deg2rad(0.53))*source_x
+# source_step = np.sin(deg2rad(0.02))*source_x
+source_step = (source_max_y - source_min_y)/(n_processes*2)
 
 timepix_step = 0.01
 # source_ys = [0]
 timepix_ys = np.arange(-timepix_size/2, +timepix_size/2, timepix_step)
+
+reflections=True
 
 columns = np.zeros(shape=[256])
 

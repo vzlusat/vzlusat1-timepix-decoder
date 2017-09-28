@@ -89,7 +89,7 @@ ax = plt.subplot2grid((3, 7), (0, 2), colspan=6, rowspan=2)
 ax.axis('equal')
 ax.axis([-115, 5, -30, 30])
 
-# plotPoints(ax, optics_point_buffer)
+plotPoints(ax, optics_point_buffer)
 plotPoints(ax, timepix_point_buffer)
 plotSegments(ax, optics_segments_buffer)
 plotSegments(ax, timepix_segments_buffer)
