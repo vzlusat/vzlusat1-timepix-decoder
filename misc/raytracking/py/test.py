@@ -19,7 +19,8 @@ from src.plotPoint import *
 from src.plotPoints import *
 from src.plotSegment import *
 from src.plotSegments import *
-from src.normalizePoint import *
+from src.normalizeCoordinates import *
+from src.normalizeLine import *
 
 segment_buffer = []
 point_buffer = []
@@ -36,8 +37,8 @@ point4 = Point(10, 1)
 # point6 = Point(5, -6)
 # point5 = Point(-3, 3)
 # point6 = Point(9, -2)
-point5 = Point(7, 5)
-point6 = Point(5, -5)
+point5 = Point(6, 10)
+point6 = Point(5, 0)
 
 left1 = Point(-10, -10)
 left2 = Point(-10, 10)
@@ -92,12 +93,12 @@ for i in range(1):
 
         plotPoint(point_buffer, point_min, 'blue', 100)
 
-        l1 = normalizePoint(ray.line.line)
-        l2 = normalizePoint(incident_segment.line.line)
+        l1 = normalizeLine(ray.line.line)
+        l2 = normalizeLine(incident_segment.line.line)
 
-        huhl = l1[0]*l2[1] + l1[0]+l2[1]
+        huhl = l1[0]*l2[0] + l1[1]+l2[1]
         print("huhl: {}".format(huhl))
-        angle = math.acos(huhl)
+        angle = (math.acos(huhl))
         print("angle: {}".format(angle))
 
         T1 = np.array([[1, 0, point_min.coordinates[0]], [0, 1, point_min.coordinates[1]], [0, 0, 1]])
@@ -111,9 +112,9 @@ for i in range(1):
 
         # newc = normalizePoint(A.dot(np.cross(ray.line.line, incident_segment.line.line)))
 
-        newc = normalizePoint(T2.dot(ray.x.coordinates))
-        newc = normalizePoint(R1.dot(newc))
-        newc = normalizePoint(T1.dot(newc))
+        newc = normalizeCoordinates(T2.dot(ray.x.coordinates))
+        newc = normalizeCoordinates(R1.dot(newc))
+        newc = normalizeCoordinates(T1.dot(newc))
         newp = Point(newc[0], newc[1])
         print("newc: {}".format(newc))
         # ref_ray = Line(newc)
