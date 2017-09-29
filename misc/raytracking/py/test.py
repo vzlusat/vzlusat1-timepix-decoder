@@ -39,19 +39,30 @@ point5 = Point(8, 1)
 # point5 = Point(6, 2)
 point6 = Point(3.0, -1.2)
 
-left1 = Point(-12, -10)
+left1 = Point(-10, -10)
 left2 = Point(-10, 10)
+right1 = Point(10, -10)
+right2 = Point(10, 10)
 left = Segment(left1, left2)
+bottom = Segment(left1, right1)
+right = Segment(right1, right2)
+top = Segment(right2, left2)
 
 segment1 = Segment(point1, point2)
 segment2 = Segment(point3, point4)
 segments.append(segment1)
 segments.append(segment2)
 segments.append(left)
+segments.append(bottom)
+segments.append(top)
+segments.append(right)
 
 plotSegment(segment_buffer, segment1, 'blue', 1)
 plotSegment(segment_buffer, segment2, 'blue', 1)
 plotSegment(segment_buffer, left, 'blue', 1)
+plotSegment(segment_buffer, top, 'blue', 1)
+plotSegment(segment_buffer, bottom, 'blue', 1)
+plotSegment(segment_buffer, right, 'blue', 1)
 
 plotPoint(point_buffer, point1, 'red', 30)
 plotPoint(point_buffer, point2, 'red', 30)
@@ -64,7 +75,7 @@ ray = Segment(point5, point6)
 stop = 0
 prev_segment = 0
 
-max_iter = 5
+max_iter = 10
 
 for i in range(max_iter):
 
@@ -107,11 +118,20 @@ for i in range(max_iter):
         # l1 = normalizeCoordinates(l1)
         # l2 = normalizeCoordinates(l2)
 
-        huhl = float(l1[0])*float(l2[0]) + float(l1[1])+float(l2[1]) 
+        huhl = float(l1[0])*float(l2[0]) + float(l1[1])+float(l2[1])
 
         print("huhl: {}".format(huhl))
+
+        size1 = np.sqrt(np.power(float(l1[0]), 2) + np.power(float(l1[2]), 2))
+        size2 = np.sqrt(np.power(float(l2[0]), 2) + np.power(float(l2[2]), 2))
+        print("size1: {}".format(size1))
+        print("size2: {}".format(size2))
+
         if huhl <= 1 and huhl >= -1:
-          angle = (math.acos(1-huhl))
+          if huhl >= 0:
+              angle = (math.acos(1-huhl))
+          else:
+              angle = (math.acos(huhl))
           print("angle: {}".format(angle))
           angle = (np.pi - 2*angle)
           print("angle: {}".format(angle))
