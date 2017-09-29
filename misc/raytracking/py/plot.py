@@ -7,10 +7,7 @@ import os
 import pickle
 import matplotlib.patches as mpatches
 
-from src.plotPoint import *
-from src.plotPoints import *
-from src.plotSegment import *
-from src.plotSegments import *
+from src.plotting import *
 from src.Results import *
 
 # title_text="Moving Sun, Timepix dist 50 mm"
@@ -27,6 +24,18 @@ from src.Results import *
 
 # title_text="Static point source, Timepix dist 50 mm"
 # file_name="static_sun2_point_50mm.pkl"
+
+# title_text="Static point source, Optics deployed, 0 reflections"
+# file_name="focus_0_reflections.pkl"
+
+# title_text="Static point source, Optics deployed, 1 reflection"
+# file_name="focus_1_reflection.pkl"
+
+# title_text="Static point source, Optics deployed, 2 reflections"
+# file_name="focus_2_reflections.pkl"
+
+# title_text="Static point source, Optics deployed, 3 reflections"
+# file_name="focus_3_reflections.pkl"
 
 title_text="Raytracing"
 file_name="results_inside_new.pkl"
@@ -52,13 +61,14 @@ timepix_segments_buffer = []
 optics_point_buffer = []
 timepix_point_buffer = []
 source_point_buffer = []
-rays_segment_buffer = []
+reflected_rays_segment_buffer = []
+direct_rays_segment_buffer = []
 
 for i in results.optics_segments_list:
     plotSegment(optics_segments_buffer, i, 'blue', 1)
 
 for i in results.timepix_segments_list:
-    plotSegment(timepix_segments_buffer, i, 'red', 1)
+    plotSegment(timepix_segments_buffer, i, 'green', 1)
 
 for i in results.optics_point_list:
     plotSegment(optics_point_buffer, i, 'red', 10)
@@ -69,8 +79,11 @@ for i in results.timepix_point_list:
 for i in results.source_point_list:
     plotPoint(source_point_buffer, i, 'green', 50);
 
-for i in results.rays_segment_list:
-    plotSegment(rays_segment_buffer, i, 'yellow', 1)
+for i in results.direct_rays_segment_list:
+    plotSegment(direct_rays_segment_buffer, i, 'yellow', 1)
+
+for i in results.reflected_rays_segment_list:
+    plotSegment(reflected_rays_segment_buffer, i, 'red', 1)
 
 plt.figure(1)
 plt.suptitle(title_text)
@@ -87,18 +100,20 @@ plotPoints(ax, timepix_point_buffer)
 
 ax = plt.subplot2grid((3, 7), (0, 2), colspan=6, rowspan=2)
 ax.axis('equal')
-ax.axis([-115, 5, -30, 30])
+ax.axis([-210, 150, -30, 30])
 
 plotPoints(ax, optics_point_buffer)
 plotPoints(ax, timepix_point_buffer)
 plotSegments(ax, optics_segments_buffer)
 plotSegments(ax, timepix_segments_buffer)
-plotSegments(ax, rays_segment_buffer)
+plotSegments(ax, reflected_rays_segment_buffer)
+plotSegments(ax, direct_rays_segment_buffer)
 
 optics_legend = mpatches.Patch(color='blue', label='Optics')
-rays_legend = mpatches.Patch(color='yellow', label='Rays')
-timepix_legend = mpatches.Patch(color='red', label='Timepix')
-ax.legend(handles=[optics_legend, rays_legend, timepix_legend])
+direct_rays_legend = mpatches.Patch(color='yellow', label='Direct rays')
+reflected_rays_legend = mpatches.Patch(color='red', label='Reflected rays')
+timepix_legend = mpatches.Patch(color='green', label='Timepix')
+ax.legend(handles=[optics_legend, direct_rays_legend, reflected_rays_legend, timepix_legend])
 
 ax.set_xlabel("Distance [mm]")
 ax.set_ylabel("Distance [mm]")
@@ -110,7 +125,8 @@ plotPoints(ax, timepix_point_buffer)
 plotPoints(ax, source_point_buffer)
 plotSegments(ax, optics_segments_buffer)
 plotSegments(ax, timepix_segments_buffer)
-plotSegments(ax, rays_segment_buffer)
+plotSegments(ax, reflected_rays_segment_buffer)
+plotSegments(ax, direct_rays_segment_buffer)
 
 optics_legend = mpatches.Patch(color='blue', label='Optics')
 rays_legend = mpatches.Patch(color='yellow', label='Rays')
