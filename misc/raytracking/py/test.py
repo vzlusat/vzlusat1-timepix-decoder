@@ -21,6 +21,7 @@ from src.plotSegment import *
 from src.plotSegments import *
 from src.normalizeCoordinates import *
 from src.normalizeLine import *
+from src.angleVectors import *
 
 np.set_printoptions(precision=2)
 
@@ -75,7 +76,7 @@ ray = Segment(point5, point6)
 stop = 0
 prev_segment = 0
 
-max_iter = 10
+max_iter = 5
 
 for i in range(max_iter):
 
@@ -113,28 +114,20 @@ for i in range(max_iter):
 
         plotPoint(point_buffer, point_min, 'blue', 50)
 
-        l1 = normalizeLine(ray.line.line)
-        l2 = normalizeLine(incident_segment.line.line)
+        # l1 = normalizeLine(ray.line.line)
+        # l2 = normalizeLine(incident_segment.line.line)
         # l1 = normalizeCoordinates(l1)
         # l2 = normalizeCoordinates(l2)
-
-        huhl = float(l1[0])*float(l2[0]) + float(l1[1])+float(l2[1])
-
-        print("huhl: {}".format(huhl))
-
-        size1 = np.sqrt(np.power(float(l1[0]), 2) + np.power(float(l1[2]), 2))
-        size2 = np.sqrt(np.power(float(l2[0]), 2) + np.power(float(l2[2]), 2))
-        print("size1: {}".format(size1))
-        print("size2: {}".format(size2))
-
-        if huhl <= 1 and huhl >= -1:
-          if huhl >= 0:
-              angle = (math.acos(1-huhl))
-          else:
-              angle = (math.acos(huhl))
-          print("angle: {}".format(angle))
-          angle = (np.pi - 2*angle)
-          print("angle: {}".format(angle))
+        # huhl = float(l1[0])*float(l2[0]) + float(l1[1])+float(l2[1])
+        # print("huhl: {}".format(huhl))
+        # if huhl <= 1 and huhl >= -1:
+        #   if huhl >= 0:
+        #       angle = (math.acos(1-huhl))
+        #   else:
+        #       angle = (math.acos(huhl))
+        #   print("angle: {}".format(angle))
+        #   angle = (np.pi - 2*angle)
+        #   print("angle: {}".format(angle))
 
         right_angle = np.pi/2
         T1 = np.array([[1, 0, point_min.coordinates[0]], [0, 1, point_min.coordinates[1]], [0, 0, 1]])
@@ -145,13 +138,15 @@ for i in range(max_iter):
         # T2 = np.array([[1, 0, -point_min.coordinates[0]], [0, 1, -point_min.coordinates[1]], [0, 0, 1]])
         # R1 = np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]])
 
-
         # newc = normalizePoint(A.dot(np.cross(ray.line.line, incident_segment.line.line)))
 
         newc = normalizeCoordinates(T2.dot(incident_segment.x.coordinates))
         newc = normalizeCoordinates(R1.dot(newc))
         newc = normalizeCoordinates(T1.dot(newc))
         newp = Point(float(newc[0]), float(newc[1]))
+
+        angle = angleVectors(point_min, ray.x, newp)
+        print("angle: {} {}".format(angle, (180/np.pi)*angle))
 
         # show reflected line
         temp_segment = Segment(newp, point_min)
