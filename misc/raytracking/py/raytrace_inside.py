@@ -24,11 +24,10 @@ direct_rays_segment_list = []
 foil_spacing = 0.300
 foil_thickness = 0.150
 foil_length = 60.0
-optics_x = -foil_length+140 # deployed
-# optics_x = -foil_length # retracted
-# timepix_x = -110.0 # here is the sensos in reality
-timepix_x = -60.0
-n_foils = 89
+# optics_x = 250.0 - 110.0 - foil_length # deployed
+optics_x = -foil_length # retracted
+timepix_x = -110.0 # here is the sensos in reality
+n_foils = 56
 optics_skew = 0.038
 optics_y_offset = (-n_foils/2.0)*optics_skew
 optics_y = -(foil_spacing)*n_foils*0.5
@@ -98,25 +97,35 @@ n_processes = 8
 # moving source
 source_min_y = -np.sin(deg2rad(1.5))*source_x
 source_max_y = np.sin(deg2rad(1.5))*source_x
-source_step = np.sin(deg2rad(0.1))*source_x
+source_step = np.sin(deg2rad(0.05))*source_x # 8 min run
 
-# static source
+# static point source
 # source_min_y = np.sin(deg2rad(0.0))*source_x
 # source_max_y = np.sin(deg2rad(0.0))*source_x
-# source_step = np.sin(deg2rad(0.1))*source_x
+# source_step = 1
+
+# static source, 0.5deg
+# source_min_y = np.sin(deg2rad(-0.25))*source_x
+# source_max_y = np.sin(deg2rad(0.25))*source_x
+# source_step = np.sin(deg2rad(0.05))*source_x
 
 # static source, 0.1deg
-# source_min_y = np.sin(deg2rad(0.0))*source_x
-# source_max_y = np.sin(deg2rad(0.1))*source_x
-# source_step = np.sin(deg2rad(0.02))*source_x
+# source_min_y = np.sin(deg2rad(-0.05))*source_x
+# source_max_y = np.sin(deg2rad(0.05))*source_x
+# source_step = np.sin(deg2rad(0.01))*source_x
 
-target_max_y = 7.0
-target_min_y = -7.0
-target_step = 0.02
-target_x = timepix_x-20
+target_max_y = 10.0
+target_min_y = -10.0
+
+target_step = 0.01 # moving target, 8 min run
+# target_step = 0.0025 # for point sources
+# target_step = 0.05 # for quick testing
+# target_step = 0.05 # for quick testing
+
+target_x = timepix_x-20.0
 
 max_reflections = 3
-critical_angle = deg2rad(0.5)
+critical_angle = deg2rad(0.4)
 
 columns = np.zeros(shape=[256])
 
@@ -205,15 +214,22 @@ def do_raytracing(pidx, source_ys, source_x, target_ys, target_x, foils, timepix
 
                 if isinstance(point_min, Point):
 
+                    # print("point_min.coordinates: {}".format(point_min.coordinates))
+
                     the_ray = Segment(ray.x, point_min)
 
                     if incident_segment.__eq__(timepix_segment):
 
+                        # print("timepix collision")
+
                         timepix_hit = 1
-                        i = max_iter
                         final_ray = the_ray
+                        # i = max_iter+1
+                        break
 
                     else:
+
+                        # print("segment collision")
 
                         # create a normal segment to the incident segment in the incident point
                         normal_segment = perpendicularSegment(incident_segment, point_min, 1.0)
@@ -224,7 +240,9 @@ def do_raytracing(pidx, source_ys, source_x, target_ys, target_x, foils, timepix
 
                         if abs(angle) > critical_angle:
 
-                            i = max_iter
+                            # i = max_iter+1
+                            # print("over critical_angle")
+                            break
 
                         else:
 
@@ -239,11 +257,13 @@ def do_raytracing(pidx, source_ys, source_x, target_ys, target_x, foils, timepix
                             ray_vec = normalizeLine(ray.y.coordinates - ray.x.coordinates)
                             ray.x.coordinates[0] += ray_vec[0]*0.0001
                             ray.x.coordinates[1] += ray_vec[1]*0.0001
+                            # print("reflecting ray")
 
                     prev_segment = incident_segment
 
                 else:
-                    i = max_iter
+                    # i = max_iter+1
+                    break
 
             if timepix_hit == 1:
 
