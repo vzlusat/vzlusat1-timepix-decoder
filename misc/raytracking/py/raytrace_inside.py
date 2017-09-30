@@ -24,10 +24,10 @@ direct_rays_segment_list = []
 foil_spacing = 0.300
 foil_thickness = 0.150
 foil_length = 60.0
-optics_x = -foil_length+140
-# timepix_x = -250.0
-timepix_x = -110.0
-# timepix_x = -65.0
+optics_x = -foil_length+140 # deployed
+# optics_x = -foil_length # retracted
+# timepix_x = -110.0 # here is the sensos in reality
+timepix_x = -60.0
 n_foils = 89
 optics_skew = 0.038
 optics_y_offset = (-n_foils/2.0)*optics_skew
@@ -96,22 +96,29 @@ source_x = 1000*1000*149.6e6
 n_processes = 8
 
 # moving source
-# source_min_y = -np.sin(deg2rad(1.5))*source_x
-# source_max_y = np.sin(deg2rad(1.5))*source_x
-# source_step = np.sin(deg2rad(0.02))*source_x
+source_min_y = -np.sin(deg2rad(1.5))*source_x
+source_max_y = np.sin(deg2rad(1.5))*source_x
+source_step = np.sin(deg2rad(0.1))*source_x
 
 # static source
-source_min_y = np.sin(deg2rad(0.0))*source_x
-source_max_y = np.sin(deg2rad(1.0))*source_x
-source_step = np.sin(deg2rad(0.1))*source_x
+# source_min_y = np.sin(deg2rad(0.0))*source_x
+# source_max_y = np.sin(deg2rad(0.0))*source_x
+# source_step = np.sin(deg2rad(0.1))*source_x
+
+# static source, 0.1deg
+# source_min_y = np.sin(deg2rad(0.0))*source_x
+# source_max_y = np.sin(deg2rad(0.1))*source_x
+# source_step = np.sin(deg2rad(0.02))*source_x
+
+target_max_y = 7.0
+target_min_y = -7.0
+target_step = 0.02
+target_x = timepix_x-20
 
 max_reflections = 3
 critical_angle = deg2rad(0.5)
 
 columns = np.zeros(shape=[256])
-
-# for i in np.arange(source_min_y, source_max_y, source_step):
-#     source_point_list.append(Point(source_x, i))
 
 class Ray:
 
@@ -126,6 +133,8 @@ reflected_ray_queue = mp.Queue()
 stdout_lock = mp.Lock()
 queue_lock = mp.Lock()
 
+#{ Raytracing process
+
 def do_raytracing(pidx, source_ys, source_x, target_ys, target_x, foils, timepix_segment, direct_rays_queue, reflected_ray_queue, stdout_lock, queue_lock, max_reflections, critical_angle):
 
     import sys
@@ -137,22 +146,28 @@ def do_raytracing(pidx, source_ys, source_x, target_ys, target_x, foils, timepix
     max_iter = max_reflections + 1
 
     n_sources = len(source_ys)
+    n_targets = len(target_ys)
     cur_source = 0
+
+    last_print = time.time()
+    time_start = time.time()
 
     for source_y in source_ys:
 
         cur_source += 1
-
-        stdout_lock.acquire()
-        print("{}: source_y: {}".format(pidx, source_y))
-        stdout_lock.release()
+        cur_target = 0
 
         for target_y in target_ys:
 
-            if True or pidx == 1:
+            cur_target += 1
+
+            if time.time() - last_print >= 1.0:
                 stdout_lock.acquire()
-                print("worker {}: source {} out of {}, target_y: {}".format(pidx, cur_source, n_sources, target_y))
+                elapsed = time.time() - time_start
+                left = (elapsed/(float(cur_source-1)+float(cur_target)/float(n_targets)))*n_sources - elapsed
+                print("worker {}: source {}/{}, target {}/{}, time left: {}min {}s".format(pidx, cur_source, n_sources, cur_target, n_targets, math.floor(left/60), math.floor(left%60)))
                 stdout_lock.release()
+                last_print = time.time()
 
             source = Point(source_x, source_y)
             timepix_point = Point(target_x, target_y)
@@ -167,84 +182,72 @@ def do_raytracing(pidx, source_ys, source_x, target_ys, target_x, foils, timepix
 
                 dist_min = sys.float_info.max
                 point_min = 0
-                inters = 0
-                incident_segment = 0
+                incident_segment = []
+
+                #{ find collisions with all foils
 
                 for seg in foils:
 
-                    if seg.__eq__(prev_segment):
-                        continue
+                    if not seg.__eq__(prev_segment):
 
-                    inters = segmentsIntersection(seg, ray)
+                        intersection = segmentsIntersection(seg, ray)
 
-                    if isinstance(inters, Point):
+                        if isinstance(intersection, Point):
 
-                        dist = pointDistance(inters, ray.x)
+                            dist = pointDistance(intersection, ray.x)
 
-                        if dist < dist_min:
-                            dist_min = dist
-                            point_min = inters
-                            incident_segment = seg
+                            if dist < dist_min:
+                                dist_min = dist
+                                point_min = intersection
+                                incident_segment = seg
 
-                # print("dist_min: {}".format(dist_min))
+                #} end of find collisions with all foils
 
                 if isinstance(point_min, Point):
 
                     the_ray = Segment(ray.x, point_min)
 
                     if incident_segment.__eq__(timepix_segment):
-                        
+
                         timepix_hit = 1
                         i = max_iter
                         final_ray = the_ray
 
                     else:
 
-                      prev_segment = incident_segment
-                      
-                      # print("incident point: {}".format(point_min.coordinates))
-                      
-                      # plotPoint(point_buffer, point_min, 'blue', 50)
-                      
-                      # create a normal segment to the incident segment in the incident point
-                      normal_segment = perpendicularSegment(incident_segment, point_min, 1.0)
-                      # plotSegment(segment_buffer, normal_segment, 'red', 1)
-                      
-                      reflected_source = reflectPointOverLine(normal_segment.line, ray.x)
-                      
-                      try:
-                          angle = (math.pi-abs(angleVectors(point_min, ray.x, reflected_source)))/2.0
-                      except:
-                          print("point_min.coordinates: {}".format(point_min.coordinates))
-                          print("ray.x.coordinates: {}".format(ray.x.coordinates))
-                          print("ray.y.coordinates: {}".format(ray.y.coordinates))
-                          print("reflected_source.coordinates: {}".format(reflected_source.coordinates))
-                          print("ray.line.line: {}".format(ray.line.line))
-                          print("incident_segment.line.line: {}".format(incident_segment.line.line))
-                          print("prev_segment.line.line: {}".format(prev_segment.line.line))
-                          print("incident_segment.__: {}".format(incident_segment.__eq__(prev_segment)))
-                      # if pidx == 0:
-                      #     print("angle: {}rad {}deg {}deg".format(angle, rad2deg(angle), critical_angle))
+                        # create a normal segment to the incident segment in the incident point
+                        normal_segment = perpendicularSegment(incident_segment, point_min, 1.0)
 
-                      if abs(angle) > critical_angle:
+                        reflected_source = reflectPointOverLine(normal_segment.line, ray.x)
+
+                        angle = (math.pi-abs(angleVectors(point_min, ray.x, reflected_source)))/2.0
+
+                        if abs(angle) > critical_angle:
 
                             i = max_iter
 
-                      else:
-                      
-                          # stratch the new ray out
-                          segment_vector = reflected_source.coordinates - point_min.coordinates
-                          reflected_source.coordinates += 10*segment_vector
-                          
-                          # plotSegment(segment_buffer, ray_plot, 'green', 1)
-                          reflected_rays.append(the_ray)
-                          
-                          ray = Segment(point_min, reflected_source)
+                        else:
+
+                            # stratch the new ray out
+                            segment_vector = reflected_source.coordinates - point_min.coordinates
+                            reflected_source.coordinates += 10*segment_vector
+
+                            # plotSegment(segment_buffer, ray_plot, 'green', 1)
+                            reflected_rays.append(the_ray)
+
+                            ray = Segment(point_min, reflected_source)
+                            ray_vec = normalizeLine(ray.y.coordinates - ray.x.coordinates)
+                            ray.x.coordinates[0] += ray_vec[0]*0.0001
+                            ray.x.coordinates[1] += ray_vec[1]*0.0001
+
+                    prev_segment = incident_segment
 
                 else:
                     i = max_iter
 
             if timepix_hit == 1:
+
+                #{ Register the hit
 
                 col_point = segmentsIntersection(timepix_segment, ray)
                 ray_segment = Segment(timepix_point, source)
@@ -272,20 +275,13 @@ def do_raytracing(pidx, source_ys, source_x, target_ys, target_x, foils, timepix
                     direct_rays_queue.put(my_output)
                     queue_lock.release()
 
+                #} end of Register the hit
+
     stdout_lock.acquire()
     print("Process {} has finished".format(pidx))
     stdout_lock.release()
 
-# mins = []
-# maxs = []
-# for i in range(n_processes):
-#     mins.append(source_min_y + i*(source_max_y-source_min_y)/n_processes)
-#     maxs.append(source_min_y + (i+1)*(source_max_y-source_min_y)/n_processes - source_step)
-
-target_max_y = 7.0
-target_min_y = -7.0
-target_step = 0.025
-target_x = timepix_x-20
+#} end of Raytracing process
 
 target_ys = []
 for i in range(n_processes):

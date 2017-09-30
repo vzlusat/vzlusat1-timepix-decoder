@@ -10,8 +10,11 @@ import matplotlib.patches as mpatches
 from src.plotting import *
 from src.Results import *
 
-# title_text="Moving Sun, Timepix dist 50 mm"
-# file_name="moving_sun_50mm.pkl"
+title_text="Raytracing"
+file_name="results_inside_new.pkl"
+
+# title_text="Moving Sun, Timepix dist 50 mm, reflections: 0"
+# file_name="moving_sun_50mm_0refl.pkl"
 
 # title_text="Moving Sun, Timepix dist 5 mm"
 # file_name="moving_sun_5mm.pkl"
@@ -36,9 +39,6 @@ from src.Results import *
 
 # title_text="Static point source, Optics deployed, 3 reflections"
 # file_name="focus_3_reflections.pkl"
-
-title_text="Raytracing"
-file_name="results_inside_new.pkl"
 
 print("Loading results")
 

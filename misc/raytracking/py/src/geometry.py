@@ -30,11 +30,8 @@ class Segment:
 
         if not isinstance(other, Segment):
             return 0
-        
-        if not np.array_equal(self.x, other.x):
-            return 0
 
-        if not np.array_equal(self.y, other.y):
+        if not np.array_equal(self.line.line, other.line.line):
             return 0
 
         return 1
