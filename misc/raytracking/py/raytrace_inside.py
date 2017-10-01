@@ -21,17 +21,21 @@ source_point_list = []
 reflected_rays_segment_list = []
 direct_rays_segment_list = []
 
-foil_spacing = 0.300
+optics_deployed = True
+scaling_factor = 1.5
+foil_spacing = 0.300*scaling_factor
 foil_thickness = 0.150
 foil_length = 60.0
-# optics_x = 250.0 - 110.0 - foil_length # deployed
-optics_x = -foil_length # retracted
 timepix_x = -110.0 # here is the sensos in reality
 n_foils = 56
-optics_skew = 0.038
+optics_skew = 0.038*scaling_factor
 optics_y_offset = (-n_foils/2.0)*optics_skew
 optics_y = -(foil_spacing)*n_foils*0.5
 timepix_size = 14.0
+if optics_deployed:
+    optics_x = 250.0 - 110.0 - foil_length # deployed
+else:
+    optics_x = timepix_x + 120 - foil_length # retracted
 
 #{ Create Optics
 
@@ -58,19 +62,19 @@ for i in range(n_foils):
     foils.append(s4)
 
     if i == 0:
-        ptemp = Point(0, -50)
+        ptemp = Point(27, -50)
         stemp = Segment(p2, ptemp)
         foils.append(stemp)
 
     if i == n_foils-1:
-        ptemp = Point(0, 50)
+        ptemp = Point(27, 50)
         stemp = Segment(p4, ptemp)
         foils.append(stemp)
 
     optics_y_offset += optics_skew
 
-foils.append(Segment(Point(0, -50), Point(-200, -50)))
-foils.append(Segment(Point(0, 50), Point(-200, 50)))
+foils.append(Segment(Point(27, -50), Point(-200, -50)))
+foils.append(Segment(Point(27, 50), Point(-200, 50)))
 foils.append(Segment(Point(-200, 50), Point(-200, -50)))
 
 #} end of Create Optics
@@ -97,11 +101,11 @@ n_processes = 8
 # moving source
 source_min_y = -np.sin(deg2rad(1.5))*source_x
 source_max_y = np.sin(deg2rad(1.5))*source_x
-source_step = np.sin(deg2rad(0.05))*source_x # 8 min run
+source_step = np.sin(deg2rad(0.1))*source_x # 8 min run
 
 # static point source
-# source_min_y = np.sin(deg2rad(0.0))*source_x
-# source_max_y = np.sin(deg2rad(0.0))*source_x
+# source_min_y = np.sin(deg2rad(0.5))*source_x
+# source_max_y = np.sin(deg2rad(0.5))*source_x
 # source_step = 1
 
 # static source, 0.5deg
@@ -114,8 +118,8 @@ source_step = np.sin(deg2rad(0.05))*source_x # 8 min run
 # source_max_y = np.sin(deg2rad(0.05))*source_x
 # source_step = np.sin(deg2rad(0.01))*source_x
 
-target_max_y = 10.0
-target_min_y = -10.0
+target_max_y = 8.0
+target_min_y = -8.0
 
 target_step = 0.01 # moving target, 8 min run
 # target_step = 0.0025 # for point sources
@@ -377,7 +381,7 @@ print("elapsed: {}".format(elapsed))
 
 # try to open the file
 print("Saving results")
-file_name="results_inside_new.pkl"
+file_name="raytracing_{}_{}.pkl".format("deployed" if optics_deployed else "retracted", scaling_factor)
 results = Results(optics_segments_list, timepix_segments_list, optics_point_list, timepix_point_list, source_point_list, reflected_rays_segment_list, direct_rays_segment_list, columns)
 with open(file_name, 'wb') as direct_rays_queue:
 

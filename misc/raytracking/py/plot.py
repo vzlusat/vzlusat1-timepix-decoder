@@ -19,6 +19,36 @@ file_name="results_inside_new.pkl"
 # title_text="Moving Sun, optics deployed, 3rd order reflections"
 # file_name="moving_sun_deployed_3rd_refl.pkl"
 
+# title_text="Moving Sun, optics deployed, 3rd order reflections, optics 1.0 scale"
+# file_name="raytrace_80.0_1.0.pkl"
+
+# title_text="Moving Sun, optics deployed, 3rd order reflections, optics 1.5 scale"
+# file_name="raytrace_80.0_1.5.pkl"
+
+# title_text="Moving Sun, optics retracted, 3rd order reflections, optics 1.0 scale"
+# file_name="raytrace_-50.0_1.0.pkl"
+
+# title_text="Moving Sun, optics retracted, 3rd order reflections, optics 1.5 scale"
+# file_name="raytrace_-50.0_1.5.pkl"
+
+# title_text="Moving Sun, optics deployed, 3rd order reflections, optics 1.0 scale"
+# file_name="raytrace_deployed_1.0.pkl"
+
+title_text="Moving Sun, optics deployed, 3rd order reflections, optics 1.5 scale"
+file_name="raytrace_deployed_1.5.pkl"
+
+# title_text="Moving Sun, optics retracted, 3rd order reflections, optics 1.0 scale"
+# file_name="raytrace_retracted_1.0.pkl"
+
+# title_text="Moving Sun, optics retracted, 3rd order reflections, optics 1.5 scale"
+# file_name="raytrace_retracted_1.5.pkl"
+
+# title_text="Static point source, optics deployed, 3rd order reflections, optics 1.0 scale"
+# file_name="point_source_deployed_1.0.pkl"
+
+# title_text="Static point source, optics deployed, 3rd order reflections, optics 1.5 scale"
+# file_name="point_source_deployed_1.5.pkl"
+
 print("Loading results")
 
 # ask OS to locate the file
@@ -59,10 +89,10 @@ for i in results.source_point_list:
     plotPoint(source_point_buffer, i, 'green', 50);
 
 for i in results.direct_rays_segment_list:
-    plotSegment(direct_rays_segment_buffer, i, 'yellow', 1)
+    plotSegment(direct_rays_segment_buffer, i, 'yellow', 0.1)
 
 for i in results.reflected_rays_segment_list:
-    plotSegment(reflected_rays_segment_buffer, i, 'red', 1)
+    plotSegment(reflected_rays_segment_buffer, i, 'red', 0.1)
 
 def plot_everything(*args):
 
@@ -80,15 +110,21 @@ def plot_everything(*args):
     plotPoints(ax, timepix_point_buffer)
 
     ax = plt.subplot2grid((3, 7), (0, 2), colspan=6, rowspan=2)
-    ax.axis('equal')
-    ax.axis([-210, 150, -30, 30])
+
+    from scipy.misc import imread
+    import matplotlib.cbook as cbook
+    # datafile = cbook.get_sample_data('./satellite.jpg')
+    img = imread('satellite.jpg')
+    x_offs = -11.0
+    y_offs = -2.0
+    ax.imshow(img, zorder=0, extent=[-210.0+x_offs, 162.0+x_offs, -110.0+y_offs, 83.0+y_offs])
 
     plotPoints(ax, optics_point_buffer)
     plotPoints(ax, timepix_point_buffer)
     plotSegments(ax, timepix_segments_buffer)
-    plotSegments(ax, optics_segments_buffer)
     plotSegments(ax, reflected_rays_segment_buffer)
     plotSegments(ax, direct_rays_segment_buffer)
+    plotSegments(ax, optics_segments_buffer)
 
     optics_legend = mpatches.Patch(color='blue', label='Optics')
     direct_rays_legend = mpatches.Patch(color='yellow', label='Direct rays')
@@ -99,15 +135,18 @@ def plot_everything(*args):
     ax.set_xlabel("Distance [mm]")
     ax.set_ylabel("Distance [mm]")
 
+    ax.axis('equal')
+    ax.axis([-240, 210, -120, 100])
+
     ax = plt.subplot2grid((3, 7), (2, 0), colspan=7)
     ax.axis('equal')
 
     plotPoints(ax, timepix_point_buffer)
     plotPoints(ax, source_point_buffer)
     plotSegments(ax, timepix_segments_buffer)
-    plotSegments(ax, optics_segments_buffer)
     plotSegments(ax, reflected_rays_segment_buffer)
     plotSegments(ax, direct_rays_segment_buffer)
+    plotSegments(ax, optics_segments_buffer)
 
     optics_legend = mpatches.Patch(color='blue', label='Optics')
     rays_legend = mpatches.Patch(color='yellow', label='Rays')
