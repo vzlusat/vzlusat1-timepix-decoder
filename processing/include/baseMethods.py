@@ -12,6 +12,7 @@ from src.loadImage import *
 from src.Image import *
 
 import numpy as np
+import math
 
 image_bin_path = "../images_bin/"
 
@@ -32,6 +33,10 @@ def colormapToTransparent(original):
     my_cmap = ListedColormap(my_cmap)
 
     return my_cmap
+
+def dist(x1, y1, x2, y2):
+
+    return math.sqrt(math.pow(x2-x1, 2)+math.pow(y2-y1, 2))
 
 # prepare a transparent colormap
 my_cm = colormapToTransparent(pl.cm.jet)
