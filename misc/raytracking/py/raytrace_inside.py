@@ -21,7 +21,7 @@ source_point_list = []
 reflected_rays_segment_list = []
 direct_rays_segment_list = []
 
-optics_deployed = True
+optics_deployed = False
 scaling_factor = 1.5
 foil_spacing = 0.300*scaling_factor
 foil_thickness = 0.150
@@ -35,7 +35,7 @@ timepix_size = 14.0
 if optics_deployed:
     optics_x = 250.0 - 110.0 - foil_length # deployed
 else:
-    optics_x = timepix_x + 120 - foil_length # retracted
+    optics_x = timepix_x + 120 - foil_length + 00 # retracted
 
 #{ Create Optics
 
@@ -99,14 +99,14 @@ source_x = 1000*1000*149.6e6
 n_processes = 8
 
 # moving source
-source_min_y = -np.sin(deg2rad(1.5))*source_x
-source_max_y = np.sin(deg2rad(1.5))*source_x
-source_step = np.sin(deg2rad(0.1))*source_x # 8 min run
+# source_min_y = -np.sin(deg2rad(1.5))*source_x
+# source_max_y = np.sin(deg2rad(1.5))*source_x
+# source_step = np.sin(deg2rad(0.05))*source_x # 8 min run
 
 # static point source
-# source_min_y = np.sin(deg2rad(0.5))*source_x
-# source_max_y = np.sin(deg2rad(0.5))*source_x
-# source_step = 1
+source_min_y = np.sin(deg2rad(0.5))*source_x
+source_max_y = np.sin(deg2rad(0.5))*source_x
+source_step = 1
 
 # static source, 0.5deg
 # source_min_y = np.sin(deg2rad(-0.25))*source_x
@@ -121,7 +121,7 @@ source_step = np.sin(deg2rad(0.1))*source_x # 8 min run
 target_max_y = 8.0
 target_min_y = -8.0
 
-target_step = 0.01 # moving target, 8 min run
+target_step = 0.005 # moving target, 8 min run
 # target_step = 0.0025 # for point sources
 # target_step = 0.05 # for quick testing
 # target_step = 0.05 # for quick testing
@@ -381,7 +381,8 @@ print("elapsed: {}".format(elapsed))
 
 # try to open the file
 print("Saving results")
-file_name="raytracing_{}_{}.pkl".format("deployed" if optics_deployed else "retracted", scaling_factor)
+# file_name="raytracing_{}_{}.pkl".format("deployed" if optics_deployed else "retracted", scaling_factor)
+file_name="result_new.pkl"
 results = Results(optics_segments_list, timepix_segments_list, optics_point_list, timepix_point_list, source_point_list, reflected_rays_segment_list, direct_rays_segment_list, columns)
 with open(file_name, 'wb') as direct_rays_queue:
 

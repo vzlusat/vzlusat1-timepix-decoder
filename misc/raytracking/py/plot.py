@@ -11,7 +11,7 @@ from src.plotting import *
 from src.Results import *
 
 title_text="Raytracing"
-file_name="results_inside_new.pkl"
+file_name="result_new.pkl"
 
 # title_text="Moving Sun, optics retracted, 3rd order reflections"
 # file_name="moving_sun_retracted_3rd_refl.pkl"
@@ -34,8 +34,8 @@ file_name="results_inside_new.pkl"
 # title_text="Moving Sun, optics deployed, 3rd order reflections, optics 1.0 scale"
 # file_name="raytrace_deployed_1.0.pkl"
 
-title_text="Moving Sun, optics deployed, 3rd order reflections, optics 1.5 scale"
-file_name="raytrace_deployed_1.5.pkl"
+# title_text="Moving Sun, optics deployed, 3rd order reflections, optics 1.5 scale"
+# file_name="raytrace_deployed_1.5.pkl"
 
 # title_text="Moving Sun, optics retracted, 3rd order reflections, optics 1.0 scale"
 # file_name="raytrace_retracted_1.0.pkl"
