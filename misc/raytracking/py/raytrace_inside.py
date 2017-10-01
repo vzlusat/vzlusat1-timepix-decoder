@@ -99,14 +99,14 @@ source_x = 1000*1000*149.6e6
 n_processes = 8
 
 # moving source
-# source_min_y = -np.sin(deg2rad(1.5))*source_x
-# source_max_y = np.sin(deg2rad(1.5))*source_x
-# source_step = np.sin(deg2rad(0.05))*source_x # 8 min run
+source_min_y = -np.sin(deg2rad(1.5))*source_x
+source_max_y = np.sin(deg2rad(1.5))*source_x
+source_step = np.sin(deg2rad(0.05))*source_x # 8 min run
 
 # static point source
-source_min_y = np.sin(deg2rad(0.5))*source_x
-source_max_y = np.sin(deg2rad(0.5))*source_x
-source_step = 1
+# source_min_y = np.sin(deg2rad(0.5))*source_x
+# source_max_y = np.sin(deg2rad(0.5))*source_x
+# source_step = 1
 
 # static source, 0.5deg
 # source_min_y = np.sin(deg2rad(-0.25))*source_x
