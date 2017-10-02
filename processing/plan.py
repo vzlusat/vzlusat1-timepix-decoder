@@ -8,19 +8,20 @@ import time
 
 from include.baseMethods import *
 
-from_time = "01.10.2017 20:00:00"
+from_time = "03.10.2017 08:00:00"
+to_time = "04.10.2017 08:00:00"
 
 anomaly_lat = -31.0
 anomaly_long = -43.0
 anomaly_size = 40.0
-desired_fill = 600
+desired_fill = 100
 
 dt = 240
 n = 1
 
-from_idx = 1449
-to_idx = 1772
-outliers=[]
+from_idx = 994
+to_idx = 2477
+outliers=[1148]
 
 pcolor_min = 0
 pcolor_max = 7
@@ -55,11 +56,17 @@ doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=epsilon, smooth=0.1)
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
+# plt.figure(2)
+# ax1 = plt.subplot2grid((1, 1), (0, 0))
+# plt.imshow(doses_rbf_lin)
+# plt.show()
+
 #} end of RBF interpolation
 
 t = int(time.mktime(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
+t_end = int(time.mktime(time.strptime(to_time, "%d.%m.%Y %H:%M:%S")))
 
-file_name = "anomaly_planner.pln"
+file_name = "{}_anomaly.pln".format(from_time).replace(' ', '_')
 
 with open(file_name, "w") as file:
 
@@ -74,7 +81,7 @@ with open(file_name, "w") as file:
     anomaly_close=0
     min_dist = 180.0
     best_time = 0
-    while i <= t+86400:
+    while i <= t_end:
 
         latitude, longitude, tle_date = getLatLong(int(i))
 
@@ -129,7 +136,7 @@ with open(file_name, "w") as file:
             out_lats.append(latitude)
             out_lons.append(longitude)
             out_times.append(j)
-            pxl_count = doses_rbf_lin[math.floor(100*(latitude+90)/180), math.floor(100*(longitude+180)/360)]
+            pxl_count = doses_rbf_lin[int(math.floor(100*(latitude+90)/180)), int(math.floor(100*(longitude+180)/360))]
             if pxl_count < 0:
                 pxl_count = 0
             out_pxl_counts.append(pxl_count)
@@ -145,20 +152,16 @@ with open(file_name, "w") as file:
             total_chunks += 1+4+16+1+(round(((desired_exposure/1000.0)*pxl_count)/20))+1
 
             time = datetime.datetime.utcfromtimestamp(j-20).strftime('%Y-%m-%d %H:%M:%S')
-            file.write(time+"\t\t\tx se {}\r\n".format(desired_exposure))
+            file.write(time+"\t\tx se {}\r\n".format(desired_exposure))
             time = datetime.datetime.utcfromtimestamp(j-15).strftime('%Y-%m-%d %H:%M:%S')
-            file.write(time+"\t\t\tx m\r\n")
+            file.write(time+"\t\tx m\r\n")
 
             print("latitude: {}, longitude: {}, intensity: {}".format(latitude, longitude, pxl_count))
 
     time = datetime.datetime.utcfromtimestamp(out_times[-1]+300).strftime('%Y-%m-%d %H:%M:%S')
-    file.write(time+"\t\t\tx pwr 0\r\n")
+    file.write(time+"\tP\tx pwr 0\r\n")
 
     def plot_everything(*args):
-
-        # plt.figure(2)
-        # ax1 = plt.subplot2grid((1, 1), (0, 0))
-        # plt.imshow(doses_rbf_log)
 
         plt.figure(1)
 

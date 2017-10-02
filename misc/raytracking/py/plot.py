@@ -10,7 +10,7 @@ import matplotlib.patches as mpatches
 from src.plotting import *
 from src.Results import *
 
-title_text="Raytracing"
+title_text="Raytracing, 150um foils, 150 um spacing, 38 um skew"
 file_name="result_new.pkl"
 
 # title_text="Moving Sun, optics retracted, 3rd order reflections"
