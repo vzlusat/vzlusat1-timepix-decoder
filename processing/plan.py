@@ -8,13 +8,18 @@ import time
 
 from include.baseMethods import *
 
+from_time = "01.10.2017 20:00:00"
+
 anomaly_lat = -31.0
 anomaly_long = -43.0
 anomaly_size = 40.0
 desired_fill = 600
 
-from_idx = 417
-to_idx = 796
+dt = 240
+n = 1
+
+from_idx = 1449
+to_idx = 1772
 outliers=[]
 
 pcolor_min = 0
@@ -23,6 +28,8 @@ pcolor_max = 7
 epsilon=1.0
 x_label = 'Pixel count'
 x_units = '(counts)'
+
+total_chunks = 0
 
 # prepare data
 images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
@@ -49,8 +56,6 @@ rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquad
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 #} end of RBF interpolation
-
-from_time = "01.10.2017 21:00:00"
 
 t = int(time.mktime(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
 
@@ -102,8 +107,6 @@ with open(file_name, "w") as file:
             i += 60
 
 # scan the surroundigs of the locations
-    dt = 240
-    n = 1
     out_lats = []
     out_lons = []
     out_times = []
@@ -139,6 +142,8 @@ with open(file_name, "w") as file:
                 if desired_exposure == 0:
                     desired_exposure = 1
 
+            total_chunks += 1+4+16+1+(round(((desired_exposure/1000.0)*pxl_count)/20))+1
+
             time = datetime.datetime.utcfromtimestamp(j-20).strftime('%Y-%m-%d %H:%M:%S')
             file.write(time+"\t\t\tx se {}\r\n".format(desired_exposure))
             time = datetime.datetime.utcfromtimestamp(j-15).strftime('%Y-%m-%d %H:%M:%S')
@@ -172,11 +177,13 @@ with open(file_name, "w") as file:
             m.scatter(x, y, 80, marker='o', color='k', zorder=10)
 
         # cb.set_label('log10('+x_label+') '+x_units)
-        # plt.title('RBF multiquadric (eps={}), log scale, '.format(epsilon)+date_range, fontsize=13)
+        plt.title('Anomaly scanning, startin at {}'.format(from_time))
 
         plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
 
         plt.show()
+
+print("total_chunks: {}".format(total_chunks))
 
 pid = os.fork()
 if pid == 0:
