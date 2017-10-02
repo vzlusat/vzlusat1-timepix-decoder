@@ -16,7 +16,7 @@ pcolor_max = 7
 
 small_plot = 1
 
-date_range = '02-03.10.2017'
+date_range = '01-02.10.2017'
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
 general_label = '7th dosimetry 510 km LEO, VZLUSAT-1'

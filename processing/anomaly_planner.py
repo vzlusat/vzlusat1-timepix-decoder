@@ -15,11 +15,12 @@ anomaly_lat = -31.0
 anomaly_long = -43.0
 anomaly_size = 40.0
 desired_fill = 100
+max_exposure = 500
 
 dt = 240
 n = 1
 
-from_idx = 994
+from_idx = 1879
 to_idx = 2477
 outliers=[1148]
 
@@ -31,6 +32,8 @@ x_label = 'Pixel count'
 x_units = '(counts)'
 
 total_chunks = 0
+
+directory="scripts_anomaly"
 
 # prepare data
 images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
@@ -66,7 +69,7 @@ doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 t = int(time.mktime(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
 t_end = int(time.mktime(time.strptime(to_time, "%d.%m.%Y %H:%M:%S")))
 
-file_name = "{}_anomaly.pln".format(from_time).replace(' ', '_')
+file_name = directory+"/{}_anomaly.pln".format(from_time).replace(' ', '_')
 
 with open(file_name, "w") as file:
 
@@ -142,7 +145,7 @@ with open(file_name, "w") as file:
             out_pxl_counts.append(pxl_count)
 
             if pxl_count < desired_fill:
-                desired_exposure = 1000
+                desired_exposure = max_exposure
             else:
                 desired_exposure = int(round(1000.0/(pxl_count/desired_fill)))
 
@@ -160,33 +163,52 @@ with open(file_name, "w") as file:
 
     time = datetime.datetime.utcfromtimestamp(out_times[-1]+300).strftime('%Y-%m-%d %H:%M:%S')
     file.write(time+"\tP\tx pwr 0\r\n")
+    
+fig1 = []
 
-    def plot_everything(*args):
+def plot_everything(*args):
 
-        plt.figure(1)
+    fig1 = plt.figure(1)
 
-        ax1 = plt.subplot2grid((1, 1), (0, 0))
+    ax1 = plt.subplot2grid((1, 1), (0, 0))
 
-        m = createMap('ortho', anomaly_lat, anomaly_long)
+    m = createMap('ortho', anomaly_lat, anomaly_long)
 
-        x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-        m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
-        cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
-        for i in range(len(out_lats)):
-            x, y = m(out_lons[i], out_lats[i])
-            m.scatter(x, y, 80, marker='o', color='k', zorder=10)
+    for i in range(len(out_lats)):
+        x, y = m(out_lons[i], out_lats[i])
+        m.scatter(x, y, 80, marker='o', color='k', zorder=10)
 
-        # cb.set_label('log10('+x_label+') '+x_units)
-        plt.title('Anomaly scanning, startin at {}'.format(from_time))
+    # cb.set_label('log10('+x_label+') '+x_units)
+    plt.title('Anomaly scanning, starting at {}'.format(from_time))
 
-        plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
+    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
 
-        plt.show()
+    plt.savefig(directory+"/{}_anomaly.jpg".format(from_time).replace(' ', '_'), dpi=60, bbox_inches='tight')
+
+    # plt.show()
 
 print("total_chunks: {}".format(total_chunks))
+
+file_name = directory+"/{}_anomaly.meta.txt".format(from_time).replace(' ', '_')
+
+with open(file_name, "w") as file:
+
+    file.write("from: "+from_time+"\r\n")
+    file.write("to: "+to_time+"\r\n")
+    file.write("desired fill: {} px per image\r\n".format(desired_fill))
+    file.write("estimated number of chunks: {}\r\n".format(int(total_chunks)))
+    file.write("based on data range: {} to {}\r\n".format(from_idx, to_idx))
+    file.write("anomaly lat, long: {}, {}\r\n".format(anomaly_lat, anomaly_long))
+    file.write("anomaly radius: {} deg\r\n".format(anomaly_size))
+    file.write("measurement spacing: {} seconds\r\n".format(dt))
+    file.write("no. of measurements per orbit: {}\r\n".format(2*n+1))
+    file.write("max exposure time: {} ms".format(max_exposure))
 
 pid = os.fork()
 if pid == 0:
