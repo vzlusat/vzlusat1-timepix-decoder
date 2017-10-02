@@ -158,6 +158,8 @@ def plot_everything(*args):
 
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.975, top=0.95, wspace=0.3, hspace=0.2)
 
+    plt.savefig("{}.jpg".format(file_name), dpi=300, bbox_inches='tight')
+
     plt.show()
 
 # run the plotting in the background
