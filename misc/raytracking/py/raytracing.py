@@ -21,7 +21,7 @@ source_point_list = []
 reflected_rays_segment_list = []
 direct_rays_segment_list = []
 
-optics_deployed = False
+optics_deployed = True
 scaling_factor = 1.5
 foil_spacing = 0.300*scaling_factor
 foil_thickness = 0.150
@@ -35,7 +35,7 @@ timepix_size = 14.0
 if optics_deployed:
     optics_x = 250.0 - 110.0 - foil_length # deployed
 else:
-    optics_x = timepix_x + 120 - foil_length + 00 # retracted
+    optics_x = timepix_x + 130 - foil_length + 00 # retracted
 
 #{ Create Optics
 
@@ -96,7 +96,7 @@ source_x = 1000*1000*149.6e6
 # Lab source distance
 # source_x = 3000
 
-n_processes = 8
+n_processes = 4
 
 # moving source
 # source_min_y = -np.sin(deg2rad(1.5))*source_x
@@ -104,8 +104,8 @@ n_processes = 8
 # source_step = np.sin(deg2rad(0.05))*source_x # 8 min run
 
 # static point source
-source_min_y = np.sin(deg2rad(0.0))*source_x
-source_max_y = np.sin(deg2rad(0.0))*source_x
+source_min_y = np.sin(deg2rad(0.5))*source_x
+source_max_y = np.sin(deg2rad(0.5))*source_x
 source_step = 1
 
 # static source, 0.5deg
@@ -121,14 +121,14 @@ source_step = 1
 target_max_y = 8.0
 target_min_y = -8.0
 
-target_step = 0.005 # moving target, 8 min run
+target_step = 0.02 # moving target, 8 min run
 # target_step = 0.0025 # for point sources
 # target_step = 0.05 # for quick testing
 # target_step = 0.05 # for quick testing
 
 target_x = timepix_x-20.0
 
-max_reflections = 3
+max_reflections = 0
 critical_angle = deg2rad(0.4)
 
 columns = np.zeros(shape=[256])

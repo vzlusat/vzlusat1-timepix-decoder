@@ -96,7 +96,7 @@ for i in results.reflected_rays_segment_list:
 
 def plot_everything(*args):
 
-    plt.figure(1)
+    plt.figure(1, figsize=(18, 8))
     plt.suptitle(title_text)
 
     ax = plt.subplot2grid((3, 7), (0, 0), rowspan=2)
@@ -159,6 +159,8 @@ def plot_everything(*args):
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.975, top=0.95, wspace=0.3, hspace=0.2)
 
     plt.savefig("{}.jpg".format(file_name), dpi=300, bbox_inches='tight')
+
+    print("Plotting finished")
 
     plt.show()
 
