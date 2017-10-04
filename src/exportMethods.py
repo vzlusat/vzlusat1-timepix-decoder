@@ -84,12 +84,12 @@ def exportDescriptionFile(image):
             mode=image.mode
 
         dsc_file.write("A000000001\r\n\
-[F0]\r\n\
+[F{}]\r\n\
 Type=double matrix width={} height={}\r\n\
 \"Acq mode\" (\"Acquisition mode\"):\r\n\
 i32[1]\r\n\
 {}\r\n\
-".format(width, height, image.mode))
+".format(image.id, width, height, image.mode))
 
         dsc_file.write("\r\n")
 
@@ -139,7 +139,18 @@ char[64]\r\n\
 
         dsc_file.write("\"ChipboardID\" (\"Medipix or chipboard ID\"):\r\n\
 uchar[10]\r\n\
-I07-W0167")
+I07-W0167\r\n")
+
+        dsc_file.write("\r\n")
+
+        if settings.use_globus == 1:
+            try:
+                latitude, longitude, tle_date = getLatLong(image.time)
+                dsc_file.write("\"Navigation\" (\"Latitude, Longitute in deg\"):\r\n\
+double[2]\r\n\
+{} {}\r\n".format(latitude, longitude))
+            except:
+                pass
 
 def exportMetadata(image):
 
