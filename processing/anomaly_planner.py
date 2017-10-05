@@ -21,7 +21,7 @@ dt = 180
 n = 1
 
 from_idx = 2478
-to_idx = 3500
+to_idx = 3332
 outliers=[]
 
 pcolor_min = 0
