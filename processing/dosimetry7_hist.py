@@ -8,7 +8,7 @@ import matplotlib.ticker as ticker # for colorbar
 from include.baseMethods import *
 
 from_idx = 2478
-to_idx = 3500
+to_idx = 3256
 outliers=[]
 
 pcolor_min = 0
@@ -23,9 +23,9 @@ general_label = '7th dosimetry 510 km LEO, VZLUSAT-1'
 epsilon=0.1
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
+images = loadImageRange(from_idx, to_idx, 32, 1, 1, outliers)
 
-doses = calculateTotalPixelCount(images)
+doses = calculateEnergyDose(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
 
 lats_orig, lons_orig = extractPositions(images)

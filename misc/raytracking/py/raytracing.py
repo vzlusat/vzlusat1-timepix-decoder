@@ -128,7 +128,7 @@ target_step = 0.02 # moving target, 8 min run
 
 target_x = timepix_x-20.0
 
-max_reflections = 0
+max_reflections = 5
 critical_angle = deg2rad(0.4)
 
 columns = np.zeros(shape=[256])

@@ -396,6 +396,8 @@ def showImage(image, manual):
 
         if image.type >= 1 and image.type <= 8:
 
+            # print("numpy.count_nonzero(image.data): {}".format(numpy.count_nonzero(image.data)))
+
             # plot the image
             my_figure.clf()
             subplot1 = my_figure.add_subplot(111)

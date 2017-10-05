@@ -8,21 +8,21 @@ import time
 
 from include.baseMethods import *
 
-from_time = "03.10.2017 08:00:00"
-to_time = "04.10.2017 08:00:00"
+from_time = "05.10.2017 20:00:00"
+to_time = "06.10.2017 20:00:00"
 
-anomaly_lat = -31.0
+anomaly_lat = -33.0
 anomaly_long = -43.0
 anomaly_size = 40.0
 desired_fill = 100
-max_exposure = 500
+max_exposure = 1000
 
-dt = 240
+dt = 180
 n = 1
 
-from_idx = 1879
-to_idx = 2477
-outliers=[1148]
+from_idx = 2478
+to_idx = 3500
+outliers=[]
 
 pcolor_min = 0
 pcolor_max = 7
