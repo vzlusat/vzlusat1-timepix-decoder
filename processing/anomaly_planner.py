@@ -8,8 +8,8 @@ import time
 
 from include.baseMethods import *
 
-from_time = "05.10.2017 20:00:00"
-to_time = "06.10.2017 20:00:00"
+from_time = "06.10.2017 08:00:00"
+to_time = "07.10.2017 08:00:00"
 
 anomaly_lat = -33.0
 anomaly_long = -43.0
@@ -191,7 +191,7 @@ def plot_everything(*args):
 
     plt.savefig(directory+"/{}_anomaly.jpg".format(from_time).replace(' ', '_'), dpi=60, bbox_inches='tight')
 
-    # plt.show()
+    plt.show()
 
 print("total_chunks: {}".format(total_chunks))
 
