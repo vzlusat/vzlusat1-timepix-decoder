@@ -22,18 +22,18 @@ reflected_rays_segment_list = []
 direct_rays_segment_list = []
 
 optics_deployed = True
-scaling_factor = 1.5
-foil_spacing = 0.300*scaling_factor
-foil_thickness = 0.150
+scaling_factor = 1.0
+foil_spacing = 0.450*scaling_factor
+foil_thickness = 0.145
 foil_length = 60.0
 timepix_x = -110.0 # here is the sensos in reality
 n_foils = 56
-optics_skew = 0.038*scaling_factor
+optics_skew = 0.057
 optics_y_offset = (-n_foils/2.0)*optics_skew
 optics_y = -(foil_spacing)*n_foils*0.5
 timepix_size = 14.0
 if optics_deployed:
-    optics_x = 250.0 - 110.0 - foil_length # deployed
+    optics_x = 250.0 - 110.0 - foil_length - 55 # deployed
 else:
     optics_x = timepix_x + 130 - foil_length + 00 # retracted
 
@@ -44,12 +44,12 @@ foils = []
 for i in range(n_foils):
 
     # bottom points
-    p1 = Point(optics_x, optics_y + i*foil_spacing - foil_thickness/2.0)
-    p2 = Point(optics_x + foil_length, optics_y + i*foil_spacing+optics_y_offset - foil_thickness/2.0)
+    p1 = Point(optics_x, 15 + optics_y + i*foil_spacing - foil_thickness/2.0)
+    p2 = Point(optics_x + foil_length, -5 + optics_y + i*foil_spacing+optics_y_offset - foil_thickness/2.0)
 
     # top points
-    p3 = Point(optics_x, optics_y + i*foil_spacing + foil_thickness/2.0)
-    p4 = Point(optics_x + foil_length, optics_y + i*foil_spacing+optics_y_offset + foil_thickness/2.0)
+    p3 = Point(optics_x, 15 + optics_y + i*foil_spacing + foil_thickness/2.0)
+    p4 = Point(optics_x + foil_length, -5 + optics_y + i*foil_spacing+optics_y_offset + foil_thickness/2.0)
 
     s1 = Segment(p1, p2) 
     s2 = Segment(p3, p4)
@@ -61,21 +61,24 @@ for i in range(n_foils):
     foils.append(s2)
     foils.append(s4)
 
-    if i == 0:
-        ptemp = Point(27, -50)
-        stemp = Segment(p2, ptemp)
-        foils.append(stemp)
+    # if i == 0:
+    #     ptemp = Point(27, -50)
+    #     stemp = Segment(p2, ptemp)
+    #     foils.append(stemp)
 
-    if i == n_foils-1:
-        ptemp = Point(27, 50)
-        stemp = Segment(p4, ptemp)
-        foils.append(stemp)
+    # if i == n_foils-1:
+    #     ptemp = Point(27, 50)
+    #     stemp = Segment(p4, ptemp)
+    #     foils.append(stemp)
 
     optics_y_offset += optics_skew
 
 foils.append(Segment(Point(27, -50), Point(-200, -50)))
 foils.append(Segment(Point(27, 50), Point(-200, 50)))
 foils.append(Segment(Point(-200, 50), Point(-200, -50)))
+foils.append(Segment(Point(27, 50), Point(27, 25)))
+foils.append(Segment(Point(27, -50), Point(27, -25)))
+# foils.append(Segment(Point(-30, -50), Point(-30, -15)))
 
 #} end of Create Optics
 
@@ -96,17 +99,17 @@ source_x = 1000*1000*149.6e6
 # Lab source distance
 # source_x = 3000
 
-n_processes = 4
+n_processes = 8
 
 # moving source
-# source_min_y = -np.sin(deg2rad(1.5))*source_x
-# source_max_y = np.sin(deg2rad(1.5))*source_x
-# source_step = np.sin(deg2rad(0.05))*source_x # 8 min run
+source_min_y = -np.sin(deg2rad(10.0))*source_x
+source_max_y = np.sin(deg2rad(10.0))*source_x
+source_step = np.sin(deg2rad(1.0))*source_x # 8 min run
 
 # static point source
-source_min_y = np.sin(deg2rad(0.5))*source_x
-source_max_y = np.sin(deg2rad(0.5))*source_x
-source_step = 1
+# source_min_y = np.sin(deg2rad(0.5))*source_x
+# source_max_y = np.sin(deg2rad(0.5))*source_x
+# source_step = 1
 
 # static source, 0.5deg
 # source_min_y = np.sin(deg2rad(-0.25))*source_x
@@ -121,7 +124,7 @@ source_step = 1
 target_max_y = 8.0
 target_min_y = -8.0
 
-target_step = 0.02 # moving target, 8 min run
+target_step = 0.05 # moving target, 8 min run
 # target_step = 0.0025 # for point sources
 # target_step = 0.05 # for quick testing
 # target_step = 0.05 # for quick testing
