@@ -8,20 +8,21 @@ import time
 
 from include.baseMethods import *
 
-from_time = "06.10.2017 08:00:00"
-to_time = "07.10.2017 08:00:00"
+from_time = "10.10.2017 20:00:00"
+to_time = "11.10.2017 20:00:00"
 
 anomaly_lat = -33.0
 anomaly_long = -43.0
 anomaly_size = 40.0
 desired_fill = 100
-max_exposure = 1000
+max_exposure = 1
+hkc_buffer_time = 300
 
 dt = 180
 n = 1
 
-from_idx = 2478
-to_idx = 3332
+from_idx = 3349
+to_idx = 3600
 outliers=[]
 
 pcolor_min = 0
@@ -123,17 +124,27 @@ with open(file_name, "w") as file:
     out_pxl_counts = []
     first = 1
     for i in range(len(lats)):
+
+        temp_counter = 0
         
         for j in range(times[i]-n*dt, times[i]+(n+1)*dt, dt):
 
+            temp_counter += 1
+
             if first == 1:
                 first = 0
-                time = datetime.datetime.utcfromtimestamp(j-60).strftime('%Y-%m-%d %H:%M:%S')
+                time = datetime.datetime.utcfromtimestamp(j-60-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
                 file.write(time+"\tP\tx pwr 1\r\n")
-                time = datetime.datetime.utcfromtimestamp(j-59).strftime('%Y-%m-%d %H:%M:%S')
+                time = datetime.datetime.utcfromtimestamp(j-59-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
                 file.write(time+"\tP\tsleep 4000\r\n")
-                time = datetime.datetime.utcfromtimestamp(j-55).strftime('%Y-%m-%d %H:%M:%S')
+                time = datetime.datetime.utcfromtimestamp(j-55-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
                 file.write(time+"\tP\tx sp 405 1 70 0 1 {} 80 0 0 1\r\n".format(1+2+4+8+32))
+                time = datetime.datetime.utcfromtimestamp(j-50-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
+                file.write(time+"\tP\th conf 1 3 0 01400000000000000000\r\n")
+                
+            if temp_counter == 1:
+                time = datetime.datetime.utcfromtimestamp(j-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
+                file.write(time+"\t\th go 1 1\r\n")
             
             latitude, longitude, tle_date = getLatLong(int(j))
             out_lats.append(latitude)
@@ -161,8 +172,14 @@ with open(file_name, "w") as file:
 
             print("latitude: {}, longitude: {}, intensity: {}".format(latitude, longitude, pxl_count))
 
+            if temp_counter == 1+2*n:
+                time = datetime.datetime.utcfromtimestamp(j+hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
+                file.write(time+"\t\th stop 1 1\r\n")
+
     time = datetime.datetime.utcfromtimestamp(out_times[-1]+300).strftime('%Y-%m-%d %H:%M:%S')
     file.write(time+"\tP\tx pwr 0\r\n")
+    time = datetime.datetime.utcfromtimestamp(out_times[-1]+300+hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
+    file.write(time+"\tP\tg stop 1 1\r\n")
     
 fig1 = []
 
@@ -208,7 +225,7 @@ with open(file_name, "w") as file:
     file.write("anomaly radius: {} deg\r\n".format(anomaly_size))
     file.write("measurement spacing: {} seconds\r\n".format(dt))
     file.write("no. of measurements per orbit: {}\r\n".format(2*n+1))
-    file.write("max exposure time: {} ms".format(max_exposure))
+    file.write("max blunt exposure time: {} ms".format(max_exposure))
 
 pid = os.fork()
 if pid == 0:
