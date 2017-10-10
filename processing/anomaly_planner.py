@@ -179,7 +179,6 @@ with open(file_name, "w") as file:
     time = datetime.datetime.utcfromtimestamp(out_times[-1]+300).strftime('%Y-%m-%d %H:%M:%S')
     file.write(time+"\tP\tx pwr 0\r\n")
     time = datetime.datetime.utcfromtimestamp(out_times[-1]+300+hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
-    file.write(time+"\tP\tg stop 3 1\r\n")
     
 fig1 = []
 
