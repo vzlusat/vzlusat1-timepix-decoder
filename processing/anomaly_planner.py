@@ -140,11 +140,11 @@ with open(file_name, "w") as file:
                 time = datetime.datetime.utcfromtimestamp(j-55-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
                 file.write(time+"\tP\tx sp 405 1 70 0 1 {} 80 0 0 1\r\n".format(1+2+4+8+32))
                 time = datetime.datetime.utcfromtimestamp(j-50-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
-                file.write(time+"\tP\th conf 1 3 0 01400000000000000000\r\n")
+                file.write(time+"\tP\th conf 3 3 0 01400000000000000000\r\n")
                 
             if temp_counter == 1:
                 time = datetime.datetime.utcfromtimestamp(j-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
-                file.write(time+"\t\th go 1 1\r\n")
+                file.write(time+"\tP\th go 3 1\r\n")
             
             latitude, longitude, tle_date = getLatLong(int(j))
             out_lats.append(latitude)
@@ -174,12 +174,12 @@ with open(file_name, "w") as file:
 
             if temp_counter == 1+2*n:
                 time = datetime.datetime.utcfromtimestamp(j+hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
-                file.write(time+"\t\th stop 1 1\r\n")
+                file.write(time+"\tP\th stop 3 1\r\n")
 
     time = datetime.datetime.utcfromtimestamp(out_times[-1]+300).strftime('%Y-%m-%d %H:%M:%S')
     file.write(time+"\tP\tx pwr 0\r\n")
     time = datetime.datetime.utcfromtimestamp(out_times[-1]+300+hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
-    file.write(time+"\tP\tg stop 1 1\r\n")
+    file.write(time+"\tP\tg stop 3 1\r\n")
     
 fig1 = []
 
