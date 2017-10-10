@@ -413,7 +413,12 @@ def showImage(image, manual):
                 subplot1.set_title(img_type+" n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
             # show the image
-            im = subplot1.imshow(image.data, interpolation='none', cmap=colormap_variable.get())
+            im = []
+            try:
+                im = subplot1.imshow(image.data, interpolation='none', cmap=colormap_variable.get())
+            except:
+                print("Desired colormap '{}' does not exist, using 'nipy_spectral_r' instead!".format(colormap_variable.get()))
+                im = subplot1.imshow(image.data, interpolation='none', cmap="nipy_spectral_r")
 
             # create the colormap bar and place it in the correct place
             divider = make_axes_locatable(my_figure.gca())
@@ -1069,7 +1074,7 @@ def exportCsvData():
 load_button = Tk.Button(master=frame_list, text='Load new images', command=loadNewImages, font=customfont)
 load_button.pack(side=Tk.TOP)
 
-autogenerate_checkbox2 = Tk.Checkbutton(master=frame_list, text="export pngs while loading", variable=autogenerate_png_load, font=customfont)
+autogenerate_checkbox2 = Tk.Checkbutton(master=frame_list, text="export pngs while loading (E)", variable=autogenerate_png_load, font=customfont)
 autogenerate_checkbox2.pack(side=Tk.TOP)
 # autogenerate_checkbox2.toggle()
 
@@ -1104,7 +1109,7 @@ def autogenerateCheckboxCallback():
 export_csv_button = Tk.Button(master=frame_list, text='Export CSV', command=exportCsvData, font=customfont)
 export_csv_button.pack(side=Tk.BOTTOM)
 
-autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing", variable=autogenerate_png_view, command=autogenerateCheckboxCallback, font=customfont)
+autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing (e)", variable=autogenerate_png_view, command=autogenerateCheckboxCallback, font=customfont)
 autogenerate_checkbox.pack(side=Tk.BOTTOM)
 
 balloon = Pmw.Balloon(master=root);
@@ -1115,32 +1120,34 @@ balloon.bind(autogenerate_checkbox, "When checked, png images will be re-exporte
 #{ CHECKBOXES for showing and hiding images
 
 if settings.use_globus:
-  show_globus = Tk.Checkbutton(master=frame_left, text="show globus", variable=show_globus_var, command=reloadCurrentImage, font=customfont)
+  show_globus = Tk.Checkbutton(master=frame_left, text="show globus (gt)", variable=show_globus_var, command=reloadCurrentImage, font=customfont)
   show_globus.pack(side=Tk.BOTTOM)
 # show_globus.toggle()
 
-just_metadata = Tk.Checkbutton(master=frame_left, text="Show just metadata", variable=dont_redraw_var, command=reloadCurrentImage, font=customfont)
+just_metadata = Tk.Checkbutton(master=frame_left, text="Show just metadata (m)", variable=dont_redraw_var, command=reloadCurrentImage, font=customfont)
 just_metadata.pack(side=Tk.BOTTOM)
 
-just_fullres = Tk.Checkbutton(master=frame_left, text="Show just fullres", variable=just_fullres_var, command=reloadList, font=customfont)
+just_fullres = Tk.Checkbutton(master=frame_left, text="Show just fullres (1)", variable=just_fullres_var, command=reloadList, font=customfont)
 just_fullres.pack(side=Tk.BOTTOM)
+# temp_baloon = Pmw.Balloon(master=root);
+# temp_baloon.bind(just_fullres, "hotkey: 1")
 
 # show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList, font=customfont)
 # show_hidden.pack(side=Tk.BOTTOM)
 
-show_adrenalin = Tk.Checkbutton(master=frame_left, text="show only adrenalin", variable=show_adrenalin_var, command=reloadList, font=customfont)
+show_adrenalin = Tk.Checkbutton(master=frame_left, text="show only adrenalin (a)", variable=show_adrenalin_var, command=reloadList, font=customfont)
 show_adrenalin.pack(side=Tk.BOTTOM)
 
-show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite", variable=show_favorite_var, command=reloadList, font=customfont)
+show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite (f)", variable=show_favorite_var, command=reloadList, font=customfont)
 show_favorite_only.pack(side=Tk.BOTTOM)
 
-show_only_without_data = Tk.Checkbutton(master=frame_left, text="show only without data", variable=show_only_without_data_var, command=reloadList, font=customfont)
+show_only_without_data = Tk.Checkbutton(master=frame_left, text="show only without data (W)", variable=show_only_without_data_var, command=reloadList, font=customfont)
 show_only_without_data.pack(side=Tk.BOTTOM)
 
-hide_without_data = Tk.Checkbutton(master=frame_left, text="hide images without data", variable=hide_without_data_var, command=reloadList, font=customfont)
+hide_without_data = Tk.Checkbutton(master=frame_left, text="hide images without data (w)", variable=hide_without_data_var, command=reloadList, font=customfont)
 hide_without_data.pack(side=Tk.BOTTOM)
 
-hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping", variable=hide_housekeeping_var, command=reloadList, font=customfont)
+hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping (h)", variable=hide_housekeeping_var, command=reloadList, font=customfont)
 hide_housekeeping.pack(side=Tk.BOTTOM)
 
 #}
@@ -1257,6 +1264,10 @@ def on_key_event(event):
         if current_key == 'w':
             hide_without_data.toggle()
             reloadList()
+
+        if current_key == 'm':
+            just_metadata.toggle()
+            reloadCurrentImage()
 
         if current_key == 'W':
             show_only_without_data.toggle()

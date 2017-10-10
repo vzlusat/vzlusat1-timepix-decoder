@@ -71,5 +71,5 @@ class Image:
                      "Chunk ID:",
                      "",
                      # "Mark as hidden:",
-                     "Mark as favorite:"
+                     "Mark as favorite (gf):"
                      ]
