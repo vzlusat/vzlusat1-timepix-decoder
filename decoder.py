@@ -430,7 +430,7 @@ def showImage(image, manual):
                 if image.mode == 0:
                     cbar.ax.set_ylabel('counts', rotation=270)
                 else:
-                    cbar.ax.set_ylabel('keV', rotation=270)
+                    cbar.ax.set_ylabel('keV/pixel', rotation=270)
             else:
                 cbar.ax.set_ylabel('active pixels in the bin', rotation=270)
 
