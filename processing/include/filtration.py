@@ -54,3 +54,18 @@ def filterImage(image):
                     filtered_image.data[i, j] = image.data[i, j]
 
     return filtered_image
+
+def filterImage1px(image):
+
+    filtered_image = copy.copy(image)
+    filtered_image.data = numpy.zeros(shape=[256, 256])
+
+    for i in range(255):
+
+        for j in range(255):
+
+            if (pixelActive(image, i, j) and not pixelActive(image, i, j-1) and not pixelActive(image, i, j+1) and not pixelActive(image, i-1, j-1) and not pixelActive(image, i-1, j) and not pixelActive(image, i-1, j+1) and not pixelActive(image, i+1, j-1) and not pixelActive(image, i+1, j) and not pixelActive(image, i+1, j+1)):
+
+                filtered_image.data[i, j] = image.data[i, j]
+
+    return filtered_image

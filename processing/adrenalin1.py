@@ -20,28 +20,33 @@ path = "../images_bin/"
 images = []
 images_filtered = []
 
+
 # might be usable
-images.append(loadImage(401, 1, path))
-images.append(loadImage(402, 1, path))
-images.append(loadImage(404, 1, path))
-images.append(loadImage(807, 1, path))
-images.append(loadImage(808, 1, path))
-images.append(loadImage(1390, 1, path))
-images.append(loadImage(1392, 1, path))
-images.append(loadImage(1393, 1, path))
+# images.append(loadImage(401, 1, path))
+# images.append(loadImage(402, 1, path))
+# images.append(loadImage(404, 1, path))
+# images.append(loadImage(807, 1, path))
+# images.append(loadImage(808, 1, path))
+# images.append(loadImage(1390, 1, path))
+# images.append(loadImage(1392, 1, path))
+# images.append(loadImage(1393, 1, path))
 
 # not usable in my opinion
 # images.append(loadImage(809, 1, path)) # full of electrons, some photons?
-images.append(loadImage(810, 1, path)) # no photons
-images.append(loadImage(811, 1, path)) # no photons
-images.append(loadImage(812, 1, path)) # no photons
-images.append(loadImage(1389, 1, path)) # no photons
+# images.append(loadImage(810, 1, path)) # no photons
+# images.append(loadImage(811, 1, path)) # no photons
+# images.append(loadImage(812, 1, path)) # no photons
+# images.append(loadImage(1389, 1, path)) # no photons
 # images.append(loadImage(1391, 1, path)) # full of electrons
+
+# From here, photos after optics deployment
+
+images.append(loadImage(3347, 1, path)) # no photons
 
 for i in range(len(images)):
 
     print("filtering: {}".format(images[i].id))
-    images_filtered.append(filterImage(images[i]))
+    images_filtered.append(filterImage1px(images[i]))
     # images_filtered.append(images[i])
 
 print("Merging images")
