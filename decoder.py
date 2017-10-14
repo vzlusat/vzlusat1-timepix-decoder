@@ -428,7 +428,10 @@ def showImage(image, manual):
             cbar.ax.get_yaxis().labelpad = 20
             if image.type == 1:
                 if image.mode == 0:
-                    cbar.ax.set_ylabel('counts', rotation=270)
+                    if image.got_metadata == 0:
+                        cbar.ax.set_ylabel('?counts?', rotation=270)
+                    else:
+                        cbar.ax.set_ylabel('counts', rotation=270)
                 else:
                     cbar.ax.set_ylabel('keV/pixel', rotation=270)
             else:
