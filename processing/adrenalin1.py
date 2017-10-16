@@ -41,7 +41,9 @@ images_filtered = []
 
 # From here, photos after optics deployment
 
-images.append(loadImage(3347, 1, path)) # no photons
+# images.append(loadImage(3753, 1, path)) # no photons
+# images.append(loadImage(3754, 1, path)) # no photons
+images.append(loadImage(3755, 1, path)) # no photons
 
 for i in range(len(images)):
 
