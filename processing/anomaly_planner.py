@@ -8,21 +8,21 @@ import time
 
 from include.baseMethods import *
 
-from_time = "10.10.2017 20:00:00"
-to_time = "11.10.2017 20:00:00"
+from_time = "17.10.2017 20:00:00"
+to_time = "18.10.2017 20:00:00"
 
-anomaly_lat = -33.0
-anomaly_long = -43.0
-anomaly_size = 40.0
+anomaly_lat = -35.0
+anomaly_long = -45.0
+anomaly_size = 45.0
 desired_fill = 100
 max_exposure = 1
 hkc_buffer_time = 300
 
-dt = 180
+dt = 240
 n = 1
 
-from_idx = 3349
-to_idx = 3600
+from_idx = 3735
+to_idx = 3757
 outliers=[]
 
 pcolor_min = 0
@@ -123,6 +123,7 @@ with open(file_name, "w") as file:
     out_times = []
     out_pxl_counts = []
     first = 1
+    last_exposure = 0
     for i in range(len(lats)):
 
         temp_counter = 0
@@ -165,8 +166,10 @@ with open(file_name, "w") as file:
 
             total_chunks += 1+4+16+1+(round(((desired_exposure/1000.0)*pxl_count)/20))+1
 
-            time = datetime.datetime.utcfromtimestamp(j-20).strftime('%Y-%m-%d %H:%M:%S')
-            file.write(time+"\t\tx se {}\r\n".format(desired_exposure))
+            if desired_exposure != last_exposure:
+              time = datetime.datetime.utcfromtimestamp(j-20).strftime('%Y-%m-%d %H:%M:%S')
+              file.write(time+"\t\tx se {}\r\n".format(desired_exposure))
+              last_exposure = desired_exposure
             time = datetime.datetime.utcfromtimestamp(j-15).strftime('%Y-%m-%d %H:%M:%S')
             file.write(time+"\t\tx m\r\n")
 
