@@ -48,8 +48,8 @@ images.append(loadImage(3755, 1, path)) # no photons
 for i in range(len(images)):
 
     print("filtering: {}".format(images[i].id))
-    # images_filtered.append(filterImage1px(images[i]))
-    images_filtered.append(filterImage(images[i]))
+    images_filtered.append(filterImage1px(images[i]))
+    # images_filtered.append(filterImage(images[i]))
 
 print("Merging images")
 
