@@ -12,7 +12,7 @@ to_idx = 1388
 outliers=[1148]
 
 pcolor_min = 0
-pcolor_max = 7
+pcolor_max = 8
 
 small_plot = 1
 

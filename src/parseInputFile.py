@@ -117,6 +117,11 @@ def parseInputFile(file_path, root):
             if isinstance(temp_image, Image):
                 files_to_save[getFileName(temp_image.id, temp_image.type)] = temp_image
 
+            if temp_image.got_metadata == 0:
+                temp_image.got_metadata = 1
+                temp_image.time = last_time
+                temp_image.exposure = 1000
+
     statusLine.set("Saving images to binary files")
 
     for filename, image in files_to_save.items():
