@@ -21,21 +21,18 @@ source_point_list = []
 reflected_rays_segment_list = []
 direct_rays_segment_list = []
 
-optics_deployed = True
-scaling_factor = 1.0
-foil_spacing = 0.450
-foil_thickness = 0.145
-foil_length = 60.0
-timepix_x = -110.0 # here is the sensos in reality
-n_foils = 56
-optics_skew = 0.057
+foil_spacing = 1.105
+foil_thickness = 0.300
+foil_length = 150.0
+timepix_x = 0.0 # here is the sensos in reality
+n_foils = 46
+optics_skew = 0.052
+# optics_skew = 0.0
 optics_y_offset = (-n_foils/2.0)*optics_skew
 optics_y = -(foil_spacing)*n_foils*0.5
 timepix_size = 14.0
-if optics_deployed:
-    optics_x = 250.0 - 110.0 - foil_length - 00 # deployed
-else:
-    optics_x = timepix_x + 130 - foil_length + 00 # retracted
+# optics_x = 1425.0 - foil_length# deployed
+optics_x = 1681.0 - foil_length# deployed
 
 #{ Create Optics
 
@@ -44,7 +41,7 @@ foils = []
 for i in range(n_foils):
 
     # bottom points
-    p1 = Point(optics_x, optics_y + i*foil_spacing - foil_thickness/2.0)
+    p1 = Point(optics_x,  optics_y + i*foil_spacing - foil_thickness/2.0)
     p2 = Point(optics_x + foil_length, optics_y + i*foil_spacing+optics_y_offset - foil_thickness/2.0)
 
     # top points
@@ -61,23 +58,38 @@ for i in range(n_foils):
     foils.append(s2)
     foils.append(s4)
 
-    # if i == 0:
-    #     ptemp = Point(27, -50)
-    #     stemp = Segment(p2, ptemp)
-    #     foils.append(stemp)
+    if i == 0:
+        ptemp = Point(p2.coordinates[0], -50)
+        stemp = Segment(p2, ptemp)
+        foils.append(stemp)
 
-    # if i == n_foils-1:
-    #     ptemp = Point(27, 50)
-    #     stemp = Segment(p4, ptemp)
-    #     foils.append(stemp)
+        ptemp2 = Point(0, -50)
+        stemp = Segment(ptemp, ptemp2)
+        foils.append(stemp)
 
-    optics_y_offset += optics_skew
+    if i == n_foils-1:
+        ptemp = Point(p4.coordinates[0], 50)
+        stemp = Segment(p4, ptemp)
+        foils.append(stemp)
 
-foils.append(Segment(Point(27, -50), Point(-200, -50)))
-foils.append(Segment(Point(27, 50), Point(-200, 50)))
-foils.append(Segment(Point(-200, 50), Point(-200, -50)))
-foils.append(Segment(Point(27, 50), Point(27, 25)))
-foils.append(Segment(Point(27, -50), Point(27, -25)))
+        ptemp2 = Point(0, 50)
+        stemp = Segment(ptemp, ptemp2)
+        foils.append(stemp)
+
+    noise = np.random.normal(0, 0.009)
+    if noise >  0.003:
+        noise = 0.003
+    elif noise < -0.003:
+        noise = -0.003
+    noise = 0
+    print("noise: {}".format(noise))
+    optics_y_offset += optics_skew + noise
+
+# foils.append(Segment(Point(27, -50), Point(-200, -50)))
+# foils.append(Segment(Point(27, 50), Point(-200, 50)))
+# foils.append(Segment(Point(-200, 50), Point(-200, -50)))
+# foils.append(Segment(Point(27, 50), Point(27, 25)))
+# foils.append(Segment(Point(27, -50), Point(27, -25)))
 # foils.append(Segment(Point(-30, -50), Point(-30, -15)))
 
 #} end of Create Optics
@@ -93,13 +105,13 @@ timepix_segments_list.append(timepix_segment)
 
 # simulate
 
-# Sun distance
+# Sun 3362
 source_x = 1000*1000*149.6e6
 
 # Lab source distance
-# source_x = 3000
+# source_x = 3362
 
-n_processes = 8
+n_processes = 4
 
 # moving source
 # source_min_y = -np.sin(deg2rad(10.0))*source_x
@@ -107,8 +119,8 @@ n_processes = 8
 # source_step = np.sin(deg2rad(1.0))*source_x # 8 min run
 
 # static point source
-source_min_y = np.sin(deg2rad(0.0))*source_x
-source_max_y = np.sin(deg2rad(0.0))*source_x
+source_min_y = np.sin(deg2rad(0.25))*source_x
+source_max_y = np.sin(deg2rad(0.25))*source_x
 source_step = 1
 
 # static source, 0.5deg
@@ -131,8 +143,8 @@ target_step = 0.01 # moving target, 8 min run
 
 target_x = timepix_x-20.0
 
-max_reflections = 5
-critical_angle = deg2rad(0.4)
+max_reflections = 3
+critical_angle = deg2rad(1.0)
 
 columns = np.zeros(shape=[256])
 
@@ -394,4 +406,4 @@ with open(file_name, 'wb') as direct_rays_queue:
     except:
         print("file \"{}\" could not be saved".format(file_name))
 
-import plot
+import plot_rex
