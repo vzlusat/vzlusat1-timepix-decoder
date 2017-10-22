@@ -10,7 +10,7 @@ import matplotlib.patches as mpatches
 from src.plotting import *
 from src.Results import *
 
-title_text="Rex raytracing"
+title_text="Rex raytracing, point source 0.25 deg of axes"
 file_name="result_new.pkl"
 
 # title_text="Moving Sun, optics retracted, 3rd order reflections"
@@ -158,7 +158,7 @@ def plot_everything(*args):
 
     plt.subplots_adjust(left=0.05, bottom=0.05, right=0.975, top=0.95, wspace=0.3, hspace=0.2)
 
-    plt.savefig("{}.jpg".format(file_name), dpi=300, bbox_inches='tight')
+    # plt.savefig("{}.jpg".format(file_name), dpi=300, bbox_inches='tight')
 
     print("Plotting finished")
 
