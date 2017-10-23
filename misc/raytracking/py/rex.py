@@ -119,22 +119,22 @@ n_processes = 4
 # source_step = np.sin(deg2rad(1.0))*source_x # 8 min run
 
 # static point source
-source_min_y = np.sin(deg2rad(0.25))*source_x
-source_max_y = np.sin(deg2rad(0.25))*source_x
-source_step = 1
+# source_min_y = np.sin(deg2rad(0.25))*source_x
+# source_max_y = np.sin(deg2rad(0.25))*source_x
+# source_step = 1
 
 # static source, 0.5deg
-# source_min_y = np.sin(deg2rad(-0.25))*source_x
-# source_max_y = np.sin(deg2rad(0.25))*source_x
-# source_step = np.sin(deg2rad(0.05))*source_x
+source_min_y = np.sin(deg2rad(-0.2))*source_x
+source_max_y = np.sin(deg2rad(0.2))*source_x
+source_step = np.sin(deg2rad(0.04))*source_x
 
 # static source, 0.1deg
 # source_min_y = np.sin(deg2rad(-0.05))*source_x
 # source_max_y = np.sin(deg2rad(0.05))*source_x
 # source_step = np.sin(deg2rad(0.01))*source_x
 
-target_max_y = 8.0
-target_min_y = -8.0
+target_max_y = 16.0
+target_min_y = -16.0
 
 target_step = 0.01 # moving target, 8 min run
 # target_step = 0.0025 # for point sources
@@ -143,8 +143,8 @@ target_step = 0.01 # moving target, 8 min run
 
 target_x = timepix_x-20.0
 
-max_reflections = 3
-critical_angle = deg2rad(1.0)
+max_reflections = 4
+critical_angle = deg2rad(90.0)
 
 columns = np.zeros(shape=[256])
 
