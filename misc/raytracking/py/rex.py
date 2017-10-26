@@ -26,13 +26,13 @@ foil_thickness = 0.300
 foil_length = 150.0
 timepix_x = 0.0 # here is the sensos in reality
 n_foils = 46
-optics_skew = 0.052
+optics_skew = 0.063
 # optics_skew = 0.0
 optics_y_offset = (-n_foils/2.0)*optics_skew
 optics_y = -(foil_spacing)*n_foils*0.5
 timepix_size = 14.0
-# optics_x = 1425.0 - foil_length# deployed
-optics_x = 1681.0 - foil_length# deployed
+optics_x = 1425.0 - foil_length# deployed
+# optics_x = 1681.0 - foil_length# deployed
 
 #{ Create Optics
 
@@ -106,27 +106,30 @@ timepix_segments_list.append(timepix_segment)
 # simulate
 
 # Sun 3362
-source_x = 1000*1000*149.6e6
+# source_x = 1000*1000*149.6e6
 
 # Lab source distance
 # source_x = 3362
 
+# aparent point size
+source_x = 1425.0 + 50000.0
+
 n_processes = 4
 
 # moving source
-# source_min_y = -np.sin(deg2rad(10.0))*source_x
-# source_max_y = np.sin(deg2rad(10.0))*source_x
-# source_step = np.sin(deg2rad(1.0))*source_x # 8 min run
+source_min_y = -0.5
+source_max_y = 0.5
+source_step = 0.2
 
 # static point source
-# source_min_y = np.sin(deg2rad(0.25))*source_x
-# source_max_y = np.sin(deg2rad(0.25))*source_x
+# source_min_y = 0.0
+# source_max_y = 0.0
 # source_step = 1
 
 # static source, 0.5deg
-source_min_y = np.sin(deg2rad(-0.2))*source_x
-source_max_y = np.sin(deg2rad(0.2))*source_x
-source_step = np.sin(deg2rad(0.04))*source_x
+# source_min_y = np.sin(deg2rad(-0.2))*source_x
+# source_max_y = np.sin(deg2rad(0.2))*source_x
+# source_step = np.sin(deg2rad(0.04))*source_x
 
 # static source, 0.1deg
 # source_min_y = np.sin(deg2rad(-0.05))*source_x
@@ -136,6 +139,9 @@ source_step = np.sin(deg2rad(0.04))*source_x
 target_max_y = 16.0
 target_min_y = -16.0
 
+# target_max_y = 8.0
+# target_min_y = -8.0
+
 target_step = 0.01 # moving target, 8 min run
 # target_step = 0.0025 # for point sources
 # target_step = 0.05 # for quick testing
@@ -143,8 +149,8 @@ target_step = 0.01 # moving target, 8 min run
 
 target_x = timepix_x-20.0
 
-max_reflections = 4
-critical_angle = deg2rad(90.0)
+max_reflections = 3
+critical_angle = deg2rad(0.5)
 
 columns = np.zeros(shape=[256])
 
