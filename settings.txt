@@ -1,6 +1,6 @@
 [General]
 calculate_tle: true
-show_globe: false
+show_globe: true
 
 [gpd]
 enabled: false
