@@ -37,11 +37,23 @@
     * Linux time range: 1506891603 to 1506973241
     * Human readible time range: 2017-10-01 21:00:03 to 2017-10-02 19:40:41
     * Exposure 1 s every 1 minutes, Binning16+histograms
+  * Anomaly 1
+    * Image range: 3319 to 3332
+    * Linux time range: 1507031024 to 1507083894
+    * Human readible time range: 2017-10-03 11:43:44 to 2017-10-04 02:24:54
+  * Anomaly 2
+    * Image range: 3333 to 3346
+    * Linux time range: 1507286624 to 1507345186
+    * Human readible time range: 2017-10-06 10:43:44 to 2017-10-07 02:59:46
   * Dosimetry 8
     * Image range: 3349 to 3734
     * Linux time range: 1507579978 to 1507664275
     * Human readible time range: 2017-10-09 20:12:58 to 2017-10-10 19:37:55
     * Exposure 1 s every 3 minutes, Binning16+histograms
+  * Anomaly 3
+    * Image range: 3735 to 3749
+    * Linux time range: 1507674729 to 1507729925
+    * Human readible time range: 2017-10-10 22:32:09 to 2017-10-11 13:52:05
   * Dosimetry 9
     * Image range: 3758 to 4240
     * Linux time range: 1508187623 to 1508267232

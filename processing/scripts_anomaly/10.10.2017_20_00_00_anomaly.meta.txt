@@ -1,0 +1,10 @@
+from: 10.10.2017 20:00:00
+to: 11.10.2017 20:00:00
+desired fill: 100 px per image
+estimated number of chunks: 575
+based on data range: 3349 to 3600
+anomaly lat, long: -33.0, -43.0
+anomaly radius: 40.0 deg
+measurement spacing: 180 seconds
+no. of measurements per orbit: 3
+max blunt exposure time: 1 ms

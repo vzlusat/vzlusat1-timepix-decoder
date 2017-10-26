@@ -8,8 +8,8 @@ import time
 
 from include.baseMethods import *
 
-from_time = "18.10.2017 08:00:00"
-to_time = "19.10.2017 08:00:00"
+from_time = "27.10.2017 08:00:00"
+to_time = "28.10.2017 08:00:00"
 
 anomaly_lat = -35.0
 anomaly_long = -45.0
@@ -22,7 +22,7 @@ dt = 240
 n = 1
 
 from_idx = 3735
-to_idx = 3757
+to_idx = 3749
 outliers=[]
 
 pcolor_min = 0
@@ -70,7 +70,7 @@ doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 t = int(time.mktime(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
 t_end = int(time.mktime(time.strptime(to_time, "%d.%m.%Y %H:%M:%S")))
 
-file_name = directory+"/{}_anomaly.pln".format(from_time).replace(' ', '_')
+file_name = directory+"/{}_anomaly.pln".format(from_time).replace(' ', '_').replace(':', '_')
 
 with open(file_name, "w") as file:
 
@@ -91,7 +91,7 @@ with open(file_name, "w") as file:
 
         # if the anomaly is close
         anomaly_dist = dist(latitude, longitude, anomaly_lat, anomaly_long)
-        if anomaly_dist < anomaly_size:
+        if (anomaly_dist < anomaly_size) and (latitude > -70):
 
             anomaly_close = 1
 
@@ -208,13 +208,13 @@ def plot_everything(*args):
 
     plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
 
-    plt.savefig(directory+"/{}_anomaly.jpg".format(from_time).replace(' ', '_'), dpi=60, bbox_inches='tight')
+    plt.savefig(directory+"/{}_anomaly.jpg".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
 
     plt.show()
 
 print("total_chunks: {}".format(total_chunks))
 
-file_name = directory+"/{}_anomaly.meta.txt".format(from_time).replace(' ', '_')
+file_name = directory+"/{}_anomaly.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
 
 with open(file_name, "w") as file:
 
