@@ -27,6 +27,7 @@ def initSettings():
 
     # prepare global settings variable
     global use_globus
+    global calculate_tle
     global gpd_enabled
     global scale
     global window_width
@@ -34,6 +35,7 @@ def initSettings():
 
     # load the variables from the settings file
     use_globus = Config.getboolean("General", "show_globe")
+    calculate_tle = Config.getboolean("General", "calculate_tle")
     gpd_enabled = Config.getboolean("gpd", "enabled")
     scale = Config.getfloat("gpd", "font_scale")
     window_width = Config.getint("gpd", "window_width")

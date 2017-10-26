@@ -43,7 +43,7 @@ def exportHouseKeeping(data):
 
         hk_file.write("Human readable time: {}\r\n".format(datetime.datetime.utcfromtimestamp(data.time)))
 
-        if settings.use_globus:
+        if settings.calculate_tle:
             latitude, longitude, tle_date = getLatLong(data.time)
             hk_file.write("lat, long, tle_time: {}, {}, {}\n\r".format(latitude, longitude, tle_date))
 
@@ -143,7 +143,7 @@ I07-W0167\r\n")
 
         dsc_file.write("\r\n")
 
-        if settings.use_globus == 1:
+        if settings.calculate_tle == 1:
             try:
                 latitude, longitude, tle_date = getLatLong(image.time)
                 dsc_file.write("\"Navigation\" (\"Latitude, Longitute in deg\"):\r\n\
@@ -246,7 +246,7 @@ def exportMetadata(image):
 
         metadata_file.write("Human readable time: {}\r\n".format(datetime.datetime.utcfromtimestamp(image.time)))
 
-        if settings.use_globus:
+        if settings.calculate_tle:
             latitude, longitude, tle_date = getLatLong(image.time)
             metadata_file.write("lat, long, tle_time: {}, {}, {}\r\n".format(latitude, longitude, tle_date))
 

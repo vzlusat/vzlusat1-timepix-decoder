@@ -40,6 +40,8 @@ settings.initSettings()
 # for plotting the globe
 if settings.use_globus:
   from mpl_toolkits.basemap import Basemap
+
+if settings.calculate_tle:
   installAndImport('ephem')
 
 # my custom functions
@@ -226,10 +228,12 @@ def showHouseKeeping(housekeeping):
     # marked_as_hidden_var.set(housekeeping.hidden)
     marked_as_favorite_var.set(favorites.isFavorite(housekeeping))
 
+    if settings.calculate_tle:
+      latitude, longitude, tle_date = getLatLong(housekeeping.time)
+      globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
+
     if settings.use_globus:
       if show_globus_var.get():
-          latitude, longitude, tle_date = getLatLong(housekeeping.time)
-          globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
           redrawMap(latitude, longitude, human_readable_time)
       else:
           clearMap()
@@ -360,10 +364,11 @@ def showImage(image, manual):
         human_readable_time = datetime.datetime.utcfromtimestamp(image.time)
         metadatas_var[19].set(human_readable_time)
 
+        if settings.calculate_tle:
+          latitude, longitude, tle_date = getLatLong(image.time)
+          globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
         if settings.use_globus:
           if show_globus_var.get():
-              latitude, longitude, tle_date = getLatLong(image.time)
-              globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
               redrawMap(latitude, longitude, human_readable_time)
           else:
               clearMap()
@@ -625,7 +630,7 @@ if not os.path.exists("images_png"):
 #}
 
 # Load TLE
-if settings.use_globus:
+if settings.calculate_tle:
   from src.tle import *
   parseTLE()
 
@@ -782,11 +787,12 @@ figure_canvas._tkcanvas.pack(side=Tk.TOP)
 # map.drawmeridians(numpy.arange(0,360,30))
 # map.drawparallels(numpy.arange(-90,90,30))
 
-if settings.use_globus:
+if settings.calculate_tle:
   globus_label_var = Tk.StringVar()
   globus_label = Tk.Label(frame_mid_bottom, anchor=Tk.S, justify=Tk.CENTER,  textvariable=globus_label_var, font=customfont)
   globus_label.pack(side=Tk.BOTTOM)
-  
+
+if settings.use_globus:
   my_figure2 = Figure(facecolor='none', figsize=(2.0, 2.0), dpi=90)
   
   # create the canvas for the globus
