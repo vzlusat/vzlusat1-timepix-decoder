@@ -164,7 +164,7 @@ def loadFiles():
             else:
                 print("could not open file "+file)
 
-    print("File list reloaded, {} images in total".format(len(file_names)))
+    print("File list reloaded, {} files in total".format(len(file_names)))
 
     return list_files
 #}
