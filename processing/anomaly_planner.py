@@ -8,8 +8,8 @@ import time
 
 from include.baseMethods import *
 
-from_time = "27.10.2017 08:00:00"
-to_time = "28.10.2017 08:00:00"
+from_time = "30.10.2017 08:00:00"
+to_time = "31.10.2017 08:00:00"
 
 anomaly_lat = -35.0
 anomaly_long = -45.0
@@ -21,8 +21,8 @@ hkc_buffer_time = 300
 dt = 240
 n = 1
 
-from_idx = 3735
-to_idx = 3749
+from_idx = 4245
+to_idx = 4800
 outliers=[]
 
 pcolor_min = 0
@@ -37,7 +37,7 @@ total_chunks = 0
 directory="scripts_anomaly"
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
+images = loadImageRange(from_idx, to_idx, 32, 1, 1, outliers)
 
 doses = calculateTotalPixelCount(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
@@ -53,11 +53,11 @@ doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig,
 x_meshgrid, y_meshgrid = createMeshGrid(100)
 
 # calculate RBF from log data
-rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=epsilon, smooth=0.1)
+rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=epsilon, smooth=0)
 doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 
 # calculate RBF from lin data
-rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=epsilon, smooth=0.1)
+rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=epsilon, smooth=0)
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 # plt.figure(2)
