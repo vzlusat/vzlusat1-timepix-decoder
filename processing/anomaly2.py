@@ -14,7 +14,7 @@ outliers=[]
 pcolor_min = 0
 pcolor_max = 7
 
-small_plot = 1
+small_plot = 0
 
 date_range = '07-08.10.2017'
 x_units = '(keV/s)'
@@ -23,7 +23,7 @@ general_label = '#2 anomaly scanning'
 epsilon=0.1
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
+images = loadImageRange(from_idx, to_idx, 32, 1, 1, outliers)
 
 doses = calculateTotalPixelCount(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
@@ -39,11 +39,11 @@ doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig,
 x_meshgrid, y_meshgrid = createMeshGrid(100)
 
 # calculate RBF from log data
-rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=0.1, smooth=0)
+rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='gaussian', epsilon=15, smooth=0)
 doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 
 # calculate RBF from lin data
-rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=0.1, smooth=0)
+rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='gaussian', epsilon=15, smooth=0)
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 #} end of RBF interpolation
@@ -54,11 +54,19 @@ def plot_everything(*args):
 
     #{ Figure 1
 
-    ax1 = plt.subplot2grid((1, 3), (0, 0))
+    ax3 = plt.subplot2grid((1, 1), (0, 0))
 
-#{ log-scale scatter
+#{ linear rbf
 
     m = createMap('cyl')
+
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+
+    cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
+    cb.set_label(x_label+' '+x_units)
+    plt.title('RBF gaussian (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
 
     x_m, y_m = m(lons_orig, lats_orig) # project points
 
@@ -72,41 +80,7 @@ def plot_everything(*args):
         x, y = m(longitude, latitude)
         m.scatter(x, y, 80, marker='o', color='k', zorder=10)
 
-    plt.title(general_label+', '+date_range, fontsize=13)
-
-#} end of log-scale scatter
-
-    ax3 = plt.subplot2grid((1, 3), (0, 1))
-
-#{ linear rbf
-
-    m = createMap('cyl')
-
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
-
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_lin, cmap=my_cm)
-
-    cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
-    cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
-
 #} end of linear rbf
-
-    ax3 = plt.subplot2grid((1, 3), (0, 2))
-
-#{ anomaly, log rbf
-
-    m = createMap('ortho', -30, -50)
-
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
-
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_lin, cmap=my_cm)
-
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
-
-#} end of anomaly, log rbf
 
     plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
 
@@ -128,7 +102,7 @@ def plot_everything(*args):
 
         cb = m.colorbar(location="bottom", label="Z") # draw colorbar
         cb.set_label('log10('+x_label+') '+x_units)
-        plt.title('RBF multiquadric (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
+        plt.title('RBF gaussian (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
 
         #} end of log-scale rbf
 

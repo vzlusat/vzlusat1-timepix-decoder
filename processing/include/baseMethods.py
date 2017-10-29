@@ -40,6 +40,7 @@ def dist(x1, y1, x2, y2):
 
 # prepare a transparent colormap
 my_cm = colormapToTransparent(pl.cm.jet)
+my_hot = colormapToTransparent(pl.cm.hot)
 
 # formatting log scale lables
 def fmt(x, pos):
