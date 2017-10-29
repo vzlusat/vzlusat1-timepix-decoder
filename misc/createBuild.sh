@@ -1,12 +1,14 @@
 #!/bin/bash
 
-version="1.0.19"
+version="1.0.20"
 
 files=(
 "colormaps.txt"
 "comments.txt"
 "decoder.py"
+"favorites.py"
 "orbital_data"
+"processing"
 "README.md"
 "run_as_admin.bat"
 "settings.txt"
