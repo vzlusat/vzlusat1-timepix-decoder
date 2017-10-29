@@ -84,16 +84,19 @@ def reloadData(index, manual):
 
     # list_files = loadFiles()
     global file_names
-    file_name = file_names[index]
+    try:
+        file_name = file_names[index]
+    except:
+        file_name = file_names[-1]
 
     global loaded_image
 
     if file_name[-5] == 'h':
-        housekeeping = loadHouseKeeping(file_names[index])
+        housekeeping = loadHouseKeeping(file_name)
         loaded_image = housekeeping
         showHouseKeeping(housekeeping)
     else:
-        image = loadImage(file_names[index])
+        image = loadImage(file_name)
 
         # if the file could not been opened, return
         if image == 0:
@@ -119,6 +122,9 @@ def loadFiles():
 
     list_files = []
 
+    previous_image = []
+    image = []
+
     # create the list of files for the listbox
     for file in file_names2:
 
@@ -142,6 +148,7 @@ def loadFiles():
 
         else:
 
+            previous_image = image
             image = loadImage(file)
 
             if image != 0:
@@ -159,6 +166,13 @@ def loadFiles():
                 elif (just_fullres_var.get() and image.type > 1):
                     pass
                 else:
+                    if (first_image_type_var.get()):
+                        if (image.type >= 2 and image.type <= 8) and not (isinstance(previous_image, Image) and previous_image.type >= 2 and previous_image.type <= 8):
+                            pass
+                        elif image.type == 1:
+                            pass
+                        else:
+                            continue
                     file_names.append(file)
                     list_files.append(str(image.id)+"_"+str(image.type))
             else:
@@ -896,6 +910,7 @@ autogenerate_png_load = Tk.IntVar()
 show_globus_var = Tk.IntVar()
 dont_redraw_var = Tk.IntVar()
 just_fullres_var = Tk.IntVar()
+first_image_type_var = Tk.IntVar()
 show_favorite_var = Tk.IntVar()
 hide_without_data_var = Tk.IntVar()
 show_only_without_data_var = Tk.IntVar()
@@ -1137,6 +1152,10 @@ just_metadata.pack(side=Tk.BOTTOM)
 
 just_fullres = Tk.Checkbutton(master=frame_left, text="Show just fullres (1)", variable=just_fullres_var, command=reloadList, font=customfont)
 just_fullres.pack(side=Tk.BOTTOM)
+
+first_image_type = Tk.Checkbutton(master=frame_left, text="Show first image type (i)", variable=first_image_type_var, command=reloadList, font=customfont)
+first_image_type.pack(side=Tk.BOTTOM)
+
 # temp_baloon = Pmw.Balloon(master=root);
 # temp_baloon.bind(just_fullres, "hotkey: 1")
 
@@ -1252,6 +1271,10 @@ def on_key_event(event):
 
         if current_key == '1':
             just_fullres.toggle()
+            reloadList()
+
+        if current_key == 'i':
+            first_image_type.toggle()
             reloadList()
 
         if current_key == 'f':
