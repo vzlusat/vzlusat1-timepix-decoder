@@ -8,7 +8,7 @@ import matplotlib.ticker as ticker # for colorbar
 from include.baseMethods import *
 
 from_idx = 4245
-to_idx = 4846
+to_idx = 4786
 outliers=[]
 
 pcolor_min = 0
