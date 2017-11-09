@@ -14,7 +14,7 @@ outliers=[]
 pcolor_min = 0
 pcolor_max = 8
 
-small_plot = 1
+small_plot = 0
 
 date_range = '7.11-8.11.2017'
 x_units = '(keV/s)'
@@ -25,10 +25,8 @@ epsilon=0.1
 # prepare data
 images = loadImageRange(from_idx, to_idx, 32, 1, 1, outliers)
 
-print("images: {}".format(images))
-
-# doses = calculateEnergyDose(images)
-doses = calculateTotalPixelCount(images)
+doses = calculateEnergyDose(images)
+# doses = calculateTotalPixelCount(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
 
 lats_orig, lons_orig = extractPositions(images)
@@ -42,11 +40,11 @@ doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig,
 x_meshgrid, y_meshgrid = createMeshGrid(100)
 
 # calculate RBF from log data
-rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=0.1, smooth=0)
+rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=1.0, smooth=1)
 doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 
 # calculate RBF from lin data
-rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=0.1, smooth=0)
+rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=1.0, smooth=1)
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 #} end of RBF interpolation
