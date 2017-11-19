@@ -8,8 +8,8 @@ import time
 
 from include.baseMethods import *
 
-from_time = "4.11.2017 20:00:00"
-to_time = "5.11.2017 20:00:00"
+from_time = "18.11.2017 08:00:00"
+to_time = "19.11.2017 20:00:00"
 
 anomaly_lat = -35.0
 anomaly_long = -45.0
@@ -21,8 +21,8 @@ hkc_buffer_time = 300
 dt = 240
 n = 1
 
-from_idx = 4802
-to_idx = 5787
+from_idx = 5804
+to_idx = 6815
 outliers=[]
 
 pcolor_min = 0
@@ -53,11 +53,11 @@ doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig,
 x_meshgrid, y_meshgrid = createMeshGrid(100)
 
 # calculate RBF from log data
-rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=epsilon, smooth=0)
+rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=epsilon, smooth=1)
 doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 
 # calculate RBF from lin data
-rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=epsilon, smooth=0)
+rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=epsilon, smooth=1)
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 # plt.figure(2)
