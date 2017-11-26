@@ -106,25 +106,25 @@ timepix_segments_list.append(timepix_segment)
 # simulate
 
 # Sun 3362
-# source_x = 1000*1000*149.6e6
+source_x = 1000*1000*149.6e6
 
 # Lab source distance
 # source_x = 3362
 
 # aparent point size
-source_x = 1425.0 + 50000.0
+# source_x = 1425.0 + 50000.0
 
-n_processes = 4
+n_processes = 11
 
 # moving source
-source_min_y = -0.5
-source_max_y = 0.5
-source_step = 0.2
+# source_min_y = -0.5
+# source_max_y = 0.5
+# source_step = 0.2
 
 # static point source
-# source_min_y = 0.0
-# source_max_y = 0.0
-# source_step = 1
+source_min_y = 0.0
+source_max_y = 0.0
+source_step = 1
 
 # static source, 0.5deg
 # source_min_y = np.sin(deg2rad(-0.2))*source_x

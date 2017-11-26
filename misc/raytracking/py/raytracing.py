@@ -99,7 +99,7 @@ source_x = 1000*1000*149.6e6
 # Lab source distance
 # source_x = 3000
 
-n_processes = 8
+n_processes = 11
 
 # moving source
 # source_min_y = -np.sin(deg2rad(10.0))*source_x
