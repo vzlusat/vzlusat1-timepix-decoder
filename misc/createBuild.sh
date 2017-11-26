@@ -30,7 +30,7 @@ mkdir $DIR_NAME
 # copy files
 for ((i=0; i < ${#files[*]}; i++));
 do
-  cp -r ${files[$i]} $DIR_NAME/.
+  cp -r -L ${files[$i]} $DIR_NAME/.
 done
 
 # clean all .pyc files
