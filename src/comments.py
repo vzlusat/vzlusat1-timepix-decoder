@@ -34,6 +34,7 @@ def getComment(idx):
         comment = comments[comment_idx]
         return comment
     except:
+        print("Did not find comment for idx: {}".format(idx))
         return ""
 
 def isAdrenalin(idx):
