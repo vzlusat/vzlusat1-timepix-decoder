@@ -82,6 +82,24 @@
     * Image range: 6816 to 6834
     * Linux time range: 1510266075 to 1510321435
     * Human readible time range: 2017-11-09 22:21:15 to 2017-11-10 13:43:55
+  * Dosimetry 13
+    * Image range: 6848 to 7735
+    * Linux time range: 1510685265 to 1510771571
+    * Human readible time range: 2017-11-14 18:47:45 to 2017-11-15 18:46:11
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * Anomaly 6
+    * Image range: 7736 to 7777
+    * Linux time range: 1510912188 to 1511093843
+    * Human readible time range: 2017-11-17 09:49:48 to 2017-11-19 12:17:23
+  * Dosimetry 14
+    * Image range: 7778 to 8838
+    * Linux time range: 1511210257 to 1511296582
+    * Human readible time range: 2017-11-20 20:37:37 to 2017-11-21 20:36:22
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * Anomaly 7
+    * Image range: 
+    * Linux time range: 
+    * Human readible time range: 
 
 # Installation
 
