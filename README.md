@@ -97,9 +97,14 @@
     * Human readible time range: 2017-11-20 20:37:37 to 2017-11-21 20:36:22
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * Anomaly 7
-    * Image range: 
-    * Linux time range: 
-    * Human readible time range: 
+    * Image range: 8839 to 8893
+    * Linux time range: 1511347828 to 1511754196 
+    * Human readible time range: 2017-11-22 10:50:28 to 2017-11-27 03:43:16 
+  * Dosimetry 15
+    * Image range: 8894 to 9445(?)
+    * Linux time range: 1511754437 to ?
+    * Human readible time range: 1511754437 to ?
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
 
 # Installation
 
