@@ -43,7 +43,7 @@ images_filtered = []
 
 # images.append(loadImage(3753, 1, path)) # no photons
 # images.append(loadImage(3754, 1, path)) # no photons
-images.append(loadImage(3755, 1, path)) # no photons
+images.append(loadImage(9762, 1, path)) # no photons
 
 for i in range(len(images)):
 
