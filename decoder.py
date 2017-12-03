@@ -537,11 +537,11 @@ def showImage(image, manual):
 
         if ((manual == 1 and autogenerate_png_view.get() == 1) or (manual == 0)) and image.got_data == 1:
 
-            my_figure.savefig(getPngFileName(image.id, image.type), dpi=250, bbox_inches='tight')
+            my_figure.savefig(getPngFileName(image.id, image.type), dpi=250, bbox_inches='tight', transparent=True)
 
             if settings.use_globus and show_globus_var.get():
                 image_globus_filename='images_png/{}_map.png'.format(image.id)
-                my_figure2.savefig(image_globus_filename, dpi=150, bbox_inches='tight')
+                my_figure2.savefig(image_globus_filename, dpi=150, bbox_inches='tight', transparent=True)
 
     else: # we have not data to show
 
