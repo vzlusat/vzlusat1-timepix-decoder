@@ -14,7 +14,7 @@ outliers=[]
 pcolor_min = 0
 pcolor_max = 8
 
-small_plot = 0
+small_plot = 1
 
 date_range = '20.11-21.11.2017'
 x_units = '(keV/s)'
