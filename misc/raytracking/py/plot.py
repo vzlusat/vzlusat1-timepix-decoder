@@ -115,6 +115,7 @@ def plot_everything(*args):
     import matplotlib.cbook as cbook
     # datafile = cbook.get_sample_data('./satellite.jpg')
     img = imread('satellite.jpg')
+    # img = imread('satellite_inside.jpg')
     x_offs = -11.0
     y_offs = -2.0
     ax.imshow(img, zorder=0, extent=[-210.0+x_offs, 162.0+x_offs, -110.0+y_offs, 83.0+y_offs])
