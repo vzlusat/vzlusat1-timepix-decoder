@@ -19,7 +19,7 @@ max_exposure = 1
 hkc_buffer_time = 300
 
 dt = 240
-n = 2
+n = 1
 
 from_idx = 5804
 to_idx = 6815
