@@ -7,8 +7,8 @@ import matplotlib.ticker as ticker # for colorbar
 
 from include.baseMethods import *
 
-from_idx = 6848
-to_idx = 7735
+from_idx = 8894
+to_idx = 9760
 outliers=[]
 
 pcolor_min = 0
@@ -16,10 +16,10 @@ pcolor_max = 8
 
 small_plot = 1
 
-date_range = '14.11-15.11.2017'
+date_range = '28.11-29.11.2017'
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
-general_label = '13th dosimetry 510 km LEO, VZLUSAT-1'
+general_label = '15th dosimetry 510 km LEO, VZLUSAT-1'
 epsilon=0.1
 
 # prepare data

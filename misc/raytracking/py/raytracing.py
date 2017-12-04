@@ -76,8 +76,8 @@ for i in range(n_foils):
 foils.append(Segment(Point(27, -50), Point(-200, -50)))
 foils.append(Segment(Point(27, 50), Point(-200, 50)))
 foils.append(Segment(Point(-200, 50), Point(-200, -50)))
-foils.append(Segment(Point(27, 50), Point(27, 25)))
-foils.append(Segment(Point(27, -50), Point(27, -25)))
+foils.append(Segment(Point(27, 50), Point(27, 15)))
+foils.append(Segment(Point(27, -50), Point(27, -15)))
 # foils.append(Segment(Point(-30, -50), Point(-30, -15)))
 
 #} end of Create Optics
@@ -102,19 +102,19 @@ source_x = 1000*1000*149.6e6
 n_processes = 11
 
 # moving source
-# source_min_y = -np.sin(deg2rad(10.0))*source_x
-# source_max_y = np.sin(deg2rad(10.0))*source_x
-# source_step = np.sin(deg2rad(1.0))*source_x # 8 min run
+# source_min_y = -np.sin(deg2rad(4.0))*source_x
+# source_max_y = np.sin(deg2rad(4.0))*source_x
+# source_step = np.sin(deg2rad(0.2))*source_x # 8 min run
 
 # static point source
-source_min_y = np.sin(deg2rad(0.0))*source_x
-source_max_y = np.sin(deg2rad(0.0))*source_x
-source_step = 1
+# source_min_y = np.sin(deg2rad(0.0))*source_x
+# source_max_y = np.sin(deg2rad(0.0))*source_x
+# source_step = 1
 
 # static source, 0.5deg
-# source_min_y = np.sin(deg2rad(-0.25))*source_x
-# source_max_y = np.sin(deg2rad(0.25))*source_x
-# source_step = np.sin(deg2rad(0.05))*source_x
+source_min_y = np.sin(deg2rad(-0.25))*source_x
+source_max_y = np.sin(deg2rad(0.25))*source_x
+source_step = np.sin(deg2rad(0.05))*source_x
 
 # static source, 0.1deg
 # source_min_y = np.sin(deg2rad(-0.05))*source_x
