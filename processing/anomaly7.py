@@ -7,7 +7,7 @@ import matplotlib.ticker as ticker # for colorbar
 
 from include.baseMethods import *
 
-from_idx = 8839
+from_idx = 8841
 to_idx = 8893
 outliers=[]
 
@@ -39,11 +39,11 @@ doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig,
 x_meshgrid, y_meshgrid = createMeshGrid(100)
 
 # calculate RBF from log data
-rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=0.1, smooth=0)
+rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='gaussian', epsilon=10, smooth=0)
 doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 
 # calculate RBF from lin data
-rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=0.1, smooth=0)
+rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='gaussian', epsilon=10, smooth=0)
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 #} end of RBF interpolation
@@ -78,7 +78,7 @@ def plot_everything(*args):
     for image in images:
         latitude, longitude, tle_date = getLatLong(image.time)
         x, y = m(longitude, latitude)
-        m.scatter(x, y, 80, marker='o', color='k', zorder=10)
+        m.scatter(x, y, 20, marker='o', color='k', zorder=10)
 
 #} end of linear rbf
 
