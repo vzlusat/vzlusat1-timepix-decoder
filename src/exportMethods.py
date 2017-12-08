@@ -89,7 +89,7 @@ Type=double matrix width={1} height={2}\r\n\
 \"Acq mode\" (\"Acquisition mode\"):\r\n\
 i32[1]\r\n\
 {3}\r\n\
-".format(image.id, width, height, image.mode))
+".format(1, width, height, image.mode))
 
         dsc_file.write("\r\n")
 
