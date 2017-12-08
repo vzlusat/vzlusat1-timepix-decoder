@@ -83,12 +83,12 @@ def exportDescriptionFile(image):
             height=1
             mode=image.mode
 
-        dsc_file.write("A000000001\r\n\
-[F{}]\r\n\
-Type=double matrix width={} height={}\r\n\
+        dsc_file.write("A{0:09d}\r\n\
+[F0]\r\n\
+Type=double matrix width={1} height={2}\r\n\
 \"Acq mode\" (\"Acquisition mode\"):\r\n\
 i32[1]\r\n\
-{}\r\n\
+{3}\r\n\
 ".format(image.id, width, height, image.mode))
 
         dsc_file.write("\r\n")
