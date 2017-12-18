@@ -3,7 +3,7 @@ calculate_tle: true
 show_globe: true
 
 [gpd]
-enabled: true
+enabled: false
 font_scale: 0.1
 window_width: 1920
 window_height: 1140
