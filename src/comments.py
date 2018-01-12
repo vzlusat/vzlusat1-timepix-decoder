@@ -45,3 +45,12 @@ def isAdrenalin(idx):
         return True
     else:
         return False
+
+def isForLearning(idx):
+
+    comment = getComment(idx)
+
+    if comment.find("#nolearn") > -1:
+        return False
+    else:
+        return True
