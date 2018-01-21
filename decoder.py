@@ -1089,7 +1089,7 @@ def exportCsvData():
             statusLine.set("Exporting HK")
         else:
             image = loadImage(file_name)
-            exportCsv(image, image_iter)
+            exportCsv(image)
             statusLine.set("Exporting image {}".format(image.id))
 
     statusLine.set("Images exported")

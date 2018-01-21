@@ -8,8 +8,8 @@ import time
 
 from include.baseMethods import *
 
-from_time = "14.01.2017 20:00:00"
-to_time = "15.01.2017 20:00:00"
+from_time = "21.01.2018 20:00:00"
+to_time = "22.01.2018 20:00:00"
 
 anomaly_lat = -30.0
 anomaly_long = -40.0

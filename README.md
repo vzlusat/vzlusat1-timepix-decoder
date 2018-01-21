@@ -110,10 +110,53 @@
     * Linux time range: 1512592017 to 1512680016
     * Human readible time range: 2017-12-06 20:26:57 to 2017-12-07 20:53:36
     * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * Unintended dosimetry 1 - bad timing caused this to be dosimetry, should be Adrenaline
+    * Image range: 10766 to 10799
+    * Linux time range: 1512742672 to 1512747255
+    * Human readible time range: 2017-12-08 14:17:52 to 2017-12-08 15:34:15
+    * Exposure 0.05 s, uneven sampling rate, aprox period 1.5 minute
   * Dosimetry 17
-    * Image range: 10766-11361?
-    * Linux time range: 1512742672 to 
-    * Human readible time range: 2017-12-08 14:17:52 to 
+    * Image range: 10835 to 11755
+    * Linux time range: 1513123281 to 1513209531
+    * Human readible time range: 2017-12-13 00:01:21 to 2017-12-13 23:58:51
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * Unintended dosimetry 2 - bad timing caused this to be dosimetry, should be Adrenaline
+    * Image range: 11763 to 12239
+    * Linux time range: 1513419442 to 1513561844
+    * Human readible time range: 2017-12-16 10:17:22 to 2017-12-18 01:50:44
+    * Exposure 0.05 s, uneven sampling rate, aprox period 1.5 minute
+  * Dosimetry 18
+    * *Missing image data*
+    * Image range: 12342 to 13165
+    * Linux time range: 1513858959 to 1513936765
+    * Human readible time range: 2017-12-21 12:22:39 to 2017-12-22 09:59:25
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * Dosimetry 19
+    * *Buggy, uneven sampling*
+    * Image range: 13166 to 13484
+    * Linux time range: 1514021243 to 1514098513
+    * Human readible time range: 2017-12-23 09:27:23 to 2017-12-24 06:55:13
+    * Exposure 0.05 s, uneven sampling, Binning16+histograms
+  * Dosimetry 20
+    * Image range: 13485 to 14423
+    * Linux time range: 1514627473 to 1514713794
+    * Human readible time range: 2017-12-30 09:51:13 to 2017-12-31 09:49:54
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * Dosimetry 21
+    * *Buggy, uneven sampling*
+    * Image range: 14425 to 15115
+    * Linux time range: 1514969911 to 1515095928
+    * Human readible time range: 2018-01-03 08:58:31 to 2018-01-04 19:58:48
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * Non-Anomaly 8
+    * *Script was created with wrong TLE, thus this is not anomaly*
+    * Image range: 15116 to 15131
+    * Linux time range: 1515968786 to 1516023566
+    * Human readible time range: 2018-01-14 22:26:26 to 2018-01-15 13:39:26
+  * Dosimetry 22 [please complete]
+    * Image range: 15132 to 16006
+    * Linux time range: 1516096331 to 
+    * Human readible time range: 2018-01-16 09:52:11 to 
     * Exposure 0.05 s every 1 minute, Binning16+histograms
 
 # Installation
