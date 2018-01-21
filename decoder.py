@@ -53,6 +53,7 @@ from src.saveHouseKeeping import saveHouseKeeping
 from src.loadHouseKeeping import loadHouseKeeping
 from src.parseInputFile import parseInputFile
 from src.exportMethods import exportCsv
+from src.exportMethods import exportForPixet
 from src.baseMethods import getPngFileName
 
 # imports that depend on the python version
@@ -1078,6 +1079,8 @@ def exportCsvData():
 
     statusLine.set("Exporting images to csv")
 
+    image_iter = 1
+
     for file_name in file_names:
 
         if file_name[-5] == 'h':
@@ -1086,10 +1089,38 @@ def exportCsvData():
             statusLine.set("Exporting HK")
         else:
             image = loadImage(file_name)
-            exportCsv(image)
+            exportCsv(image, image_iter)
             statusLine.set("Exporting image {}".format(image.id))
 
     statusLine.set("Images exported")
+
+#}
+
+#{ exportRaw() callback
+def exportRawData():
+
+    statusLine.set("Exporting raw images for analysis")
+
+    image_iter = 1
+
+    with open("images_csv/mapping.txt", "w") as mapping_file:
+
+        for file_name in file_names:
+
+            image = loadImage(file_name)
+
+            if isinstance(image, Image):
+
+                if image.type == 1 and image.got_data and image.got_metadata and comments.isForLearning(image.id):
+
+                    exportForPixet(image, image_iter)
+
+                    mapping_file.write("{} {}\r\n".format(image_iter, image.id))
+
+                    image_iter += 1
+                    statusLine.set("Exporting image {}".format(image.id))
+
+        statusLine.set("Images exported")
 
 #}
 
@@ -1131,6 +1162,10 @@ def autogenerateCheckboxCallback():
 # spawn button for exporting csv
 export_csv_button = Tk.Button(master=frame_list, text='Export CSV', command=exportCsvData, font=customfont)
 export_csv_button.pack(side=Tk.BOTTOM)
+
+# spawn button for exporting for carlos
+export_raw_button = Tk.Button(master=frame_list, text='Export RAW', command=exportRawData, font=customfont)
+export_raw_button.pack(side=Tk.BOTTOM)
 
 autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing (e)", variable=autogenerate_png_view, command=autogenerateCheckboxCallback, font=customfont)
 autogenerate_checkbox.pack(side=Tk.BOTTOM)

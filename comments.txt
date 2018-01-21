@@ -15,19 +15,19 @@ Manually triggered exposure, somewhere above Europe.
 392
 Manually triggered exposure, somewhere above Europe.
 393
-Corrupted image, looks like the sensor power fluctuated which reseted its settings. Thus every pixel outputs > 255 value.
+Corrupted image, looks like the sensor power fluctuated which reseted its settings. Thus every pixel outputs > 255 value. #nolearn
 394
-Attempts to measure the threshold limit. Series 394-396 was measured with thr=415 and was identified as noisy. Data were not downloaded.
+Attempts to measure the threshold limit. Series 394-396 was measured with thr=415 and was identified as noisy. Data were not downloaded. #nolearn
 395
-Attempts to measure the threshold limit. Series 394-396 was measured with thr=415 and was identified as noisy. Data were not downloaded.
+Attempts to measure the threshold limit. Series 394-396 was measured with thr=415 and was identified as noisy. Data were not downloaded. #nolearn
 396
 Attempts to measure the threshold limit. Series 394-396 was measured with thr=415 and was identified as noisy. Data were not downloaded.
 397
 Second attempt to measure the threshold limit. Series 397-399 contains changes of the 408, 410, 412, all identified as noisy.
 398
-Second attempt to measure the threshold limit. Series 397-399 contains changes of the 408, 410, 412, all identified as noisy.
+Second attempt to measure the threshold limit. Series 397-399 contains changes of the 408, 410, 412, all identified as noisy. #nolearn
 399
-Second attempt to measure the threshold limit. Series 397-399 contains changes of the 408, 410, 412, all identified as noisy.
+Second attempt to measure the threshold limit. Series 397-399 contains changes of the 408, 410, 412, all identified as noisy. #nolearn
 400
 The first UV triggered image (Adrenalin). However, no photons, possibly some reflection...? #adrenalin
 401
@@ -43,7 +43,7 @@ The first dosymetry run (cca 18.00 to 22.00), only data with 50+ pixels were sav
 406
 The first dosymetry run (cca 18.00 to 22.00), only data with 50+ pixels were saved.
 407
-The first dosymetry run (cca 18.00 to 22.00), only data with 50+ pixels were saved. RAW data from this image have been downloaded only partially.
+The first dosymetry run (cca 18.00 to 22.00), only data with 50+ pixels were saved. RAW data from this image have been downloaded only partially. #nolearn
 408
 The first dosymetry run (cca 18.00 to 22.00), only data with 50+ pixels were saved.
 409
@@ -847,7 +847,7 @@ Adrenalin by HKC, UV trigger active, optics still inside. #adrenalin
 808
 Adrenalin by HKC, UV trigger active, optics still inside. #adrenalin
 809
-Adrenalin by HKC, UV trigger active, optics still inside. #adrenalin
+Adrenalin by HKC, UV trigger active, optics still inside. #adrenalin #nolearn
 810
 Adrenalin by HKC, UV trigger active, optics still inside. Near equator, no photons. #adrenalin
 811
@@ -859,7 +859,7 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 814
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 815
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 816
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 817
@@ -869,11 +869,11 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 819
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 820
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 821
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 822
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 823
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 824
@@ -883,7 +883,7 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 826
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 827
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 828
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 829
@@ -897,9 +897,9 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 833
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 834
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 835
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 836
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 837
@@ -917,7 +917,7 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 843
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 844
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 845
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 846
@@ -927,7 +927,7 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 848
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 849
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 850
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 851
@@ -935,7 +935,7 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 852
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 853
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 854
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 855
@@ -957,7 +957,7 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 863
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 864
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 865
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 866
@@ -1003,7 +1003,7 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 886
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 887
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 888
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 889
@@ -1045,9 +1045,9 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 907
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 908
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 909
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 910
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 911
@@ -1077,7 +1077,7 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 923
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 924
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 925
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 926
@@ -1087,13 +1087,13 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 928
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 929
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 930
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 931
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 932
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 933
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 934
@@ -1111,7 +1111,7 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 940
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 941
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 942
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 943
@@ -1127,25 +1127,25 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 948
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 949
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 950
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 951
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 952
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 953
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 954
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 955
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 956
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 957
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 958
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 959
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 960
@@ -1159,9 +1159,9 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 964
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 965
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 966
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 967
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 968
@@ -1171,7 +1171,7 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 970
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 971
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 972
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 973
@@ -1179,17 +1179,17 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 974
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 975
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 976
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 977
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 978
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 979
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 980
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 981
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 982
@@ -1205,13 +1205,13 @@ The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day afte
 987
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 988
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 989
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 990
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 991
-The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
+The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare. #nolearn
 992
 The 3rd dosimetry run (813-993), 1 s exposure every 6 minutes, aprox. 1 day after Solar flare.
 993
@@ -2011,7 +2011,7 @@ Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin
 1390
 Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin
 1391
-Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin
+Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin #nolearn
 1392
 Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin
 1393
@@ -2019,13 +2019,13 @@ Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin
 1394
 Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin
 1395
-Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin
+Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin #nolearn
 1396
-Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin
+Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin #nolearn
 1397
-Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin
+Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin #nolearn
 1398
-Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin
+Adrenalin mode, UV triggered, optics inside of the satellite. #adrenalin #nolearn
 1399
 Short dosimetry run (1399-1448) to test if xray can run in parallel with volatiles.
 1400
@@ -5867,21 +5867,21 @@ Failed attempt of 6th dosimetry (1773-1878), incomplete, Binning16+Histogram, ra
 3318
 7th dosimetry (2478-3318), Binning16+Histogram, rate 1 min.
 3319
-Anomaly scanning #1, 100 px desired fill #anomaly
+Anomaly scanning #1, 100 px desired fill #anomaly #nolearn
 3320
-Anomaly scanning #1, 100 px desired fill #anomaly
+Anomaly scanning #1, 100 px desired fill #anomaly #nolearn
 3321
-Anomaly scanning #1, 100 px desired fill #anomaly
+Anomaly scanning #1, 100 px desired fill #anomaly #nolearn
 3322
-Anomaly scanning #1, 100 px desired fill #anomaly
+Anomaly scanning #1, 100 px desired fill #anomaly #nolearn
 3323
-Anomaly scanning #1, 100 px desired fill #anomaly
+Anomaly scanning #1, 100 px desired fill #anomaly #nolearn
 3324
-Anomaly scanning #1, 100 px desired fill #anomaly
+Anomaly scanning #1, 100 px desired fill #anomaly #nolearn
 3325
-Anomaly scanning #1, 100 px desired fill #anomaly
+Anomaly scanning #1, 100 px desired fill #anomaly #nolearn
 3326
-Anomaly scanning #1, 100 px desired fill #anomaly
+Anomaly scanning #1, 100 px desired fill #anomaly #nolearn
 3327
 Anomaly scanning #1, 100 px desired fill #anomaly
 3328
@@ -5895,31 +5895,31 @@ Anomaly scanning #1, 100 px desired fill #anomaly
 3332
 Anomaly scanning #1, 100 px desired fill #anomaly
 3333
-Anomaly scanning #2, 100 px desired fill #anomaly
+Anomaly scanning #2, 100 px desired fill #anomaly #nolearn
 3334
 Anomaly scanning #2, 100 px desired fill #anomaly
 3335
 Anomaly scanning #2, 100 px desired fill #anomaly
 3336
-Anomaly scanning #2, 100 px desired fill #anomaly
+Anomaly scanning #2, 100 px desired fill #anomaly #nolearn
 3337
-Anomaly scanning #2, 100 px desired fill #anomaly
+Anomaly scanning #2, 100 px desired fill #anomaly #nolearn
 3338
 Anomaly scanning #2, 100 px desired fill #anomaly
 3339
-Anomaly scanning #2, 100 px desired fill #anomaly
+Anomaly scanning #2, 100 px desired fill #anomaly #nolearn
 3340
 Anomaly scanning #2, 100 px desired fill #anomaly
 3341
-Anomaly scanning #2, 100 px desired fill #anomaly
+Anomaly scanning #2, 100 px desired fill #anomaly #nolearn
 3342
 Anomaly scanning #2, 100 px desired fill #anomaly
 3343
 Anomaly scanning #2, 100 px desired fill #anomaly
 3344
-Anomaly scanning #2, 100 px desired fill #anomaly
+Anomaly scanning #2, 100 px desired fill #anomaly #nolearn
 3345
-Anomaly scanning #2, 100 px desired fill #anomaly
+Anomaly scanning #2, 100 px desired fill #anomaly #nolearn
 3346
 Anomaly scanning #2, 100 px desired fill #anomaly
 3347
@@ -6703,9 +6703,9 @@ Anomaly scanning #3, 100 px desired fill #anomaly
 3736
 Anomaly scanning #3, 100 px desired fill #anomaly
 3737
-Anomaly scanning #3, 100 px desired fill #anomaly
+Anomaly scanning #3, 100 px desired fill #anomaly #nolearn
 3738
-Anomaly scanning #3, 100 px desired fill #anomaly
+Anomaly scanning #3, 100 px desired fill #anomaly #nolearn
 3739
 Anomaly scanning #3, 100 px desired fill #anomaly
 3740
@@ -6723,25 +6723,25 @@ Anomaly scanning #3, 100 px desired fill #anomaly
 3746
 Anomaly scanning #3, 100 px desired fill #anomaly
 3747
-Anomaly scanning #3, 100 px desired fill #anomaly
+Anomaly scanning #3, 100 px desired fill #anomaly #nolearn
 3748
 Anomaly scanning #3, 100 px desired fill #anomaly
 3749
 Anomaly scanning #3, 100 px desired fill #anomaly
 3750
-Adrenalin 100 ms exposure, optics reployed, weird signal, #adrenalin
+Adrenalin 100 ms exposure, optics reployed, weird signal, #adrenalin #nolearn
 3751
-Adrenalin 100 ms exposure, optics reployed, weird signal, #adrenalin
+Adrenalin 100 ms exposure, optics reployed, weird signal, #adrenalin #nolearn
 3752
-Adrenalin 100 ms exposure, optics reployed, weird signal, #adrenalin
+Adrenalin 100 ms exposure, optics reployed, weird signal, #adrenalin #nolearn
 3753
 Adrenalin 200 ms exposure, optics reployed #adrenalin
 3754
 Adrenalin 200 ms exposure, optics reployed #adrenalin
 3755
-Adrenalin 200 ms exposure, optics reployed #adrenalin
+Adrenalin 200 ms exposure, optics reployed #adrenalin #nolearn
 3756
-Adrenalin 200 ms exposure, optics reployed #adrenalin
+Adrenalin 200 ms exposure, optics reployed #adrenalin #nolearn
 3757
 Adrenalin 200 ms exposure, optics reployed #adrenalin
 3758
@@ -7711,13 +7711,13 @@ Adrenalin 200 ms exposure, optics reployed #adrenalin
 4240
 9th dosimetry (3758-4240), Binning16+Histogram, rate 2 min
 4241
-Adrenalin 100 ms exposure, optics reployed #adrenalin
+Adrenalin 100 ms exposure, optics reployed #adrenalin #nolearn
 4242
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 4243
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 4244
-Adrenalin 100 ms exposure, optics reployed #adrenalin
+Adrenalin 100 ms exposure, optics reployed #adrenalin #nolearn
 4245
 10th dosimetry (4245-4786) Binning16+Histogram, rate 2 min
 4246
@@ -8805,7 +8805,7 @@ Adrenalin 100 ms exposure, optics reployed #adrenalin
 4787
 Anomaly scanning #4, 100 px desired fill #anomaly
 4788
-Anomaly scanning #4, 100 px desired fill #anomaly
+Anomaly scanning #4, 100 px desired fill #anomaly #nolearn
 4789
 Anomaly scanning #4, 100 px desired fill #anomaly
 4790
@@ -8819,7 +8819,7 @@ Anomaly scanning #4, 100 px desired fill #anomaly
 4794
 Anomaly scanning #4, 100 px desired fill #anomaly
 4795
-Anomaly scanning #4, 100 px desired fill #anomaly
+Anomaly scanning #4, 100 px desired fill #anomaly #nolearn
 4796
 Anomaly scanning #4, 100 px desired fill #anomaly
 4797
@@ -8831,7 +8831,7 @@ Anomaly scanning #4, 100 px desired fill #anomaly
 4800
 Anomaly scanning #4, 100 px desired fill #anomaly
 4801
-Anomaly scanning #4, 100 px desired fill #anomaly
+Anomaly scanning #4, 100 px desired fill #anomaly #nolearn
 4802
 11th dosimetry (4802-5787) Binning16+Histogram, rate 1 min
 4803
@@ -10827,7 +10827,7 @@ Adrenalin 100 ms exposure, optics reployed #adrenalin
 5798
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 5799
-Adrenalin 100 ms exposure, optics reployed #adrenalin
+Adrenalin 100 ms exposure, optics reployed #adrenalin #nolearn
 5800
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 5801
@@ -12865,7 +12865,7 @@ Anomaly scanning #5, 300 px desired fill #anomaly
 6817
 Anomaly scanning #5, 300 px desired fill #anomaly
 6818
-Anomaly scanning #5, 300 px desired fill #anomaly
+Anomaly scanning #5, 300 px desired fill #anomaly #nolearn
 6819
 Anomaly scanning #5, 300 px desired fill #anomaly
 6820
@@ -12893,11 +12893,11 @@ Anomaly scanning #5, 300 px desired fill #anomaly
 6831
 Anomaly scanning #5, 300 px desired fill #anomaly
 6832
-Anomaly scanning #5, 300 px desired fill #anomaly
+Anomaly scanning #5, 300 px desired fill #anomaly #nolearn
 6833
 Anomaly scanning #5, 300 px desired fill #anomaly
 6834
-Anomaly scanning #5, 300 px desired fill #anomaly
+Anomaly scanning #5, 300 px desired fill #anomaly #nolearn
 6835
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 6836
@@ -12905,7 +12905,7 @@ Adrenalin 100 ms exposure, optics reployed #adrenalin
 6837
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 6838
-Adrenalin 100 ms exposure, optics reployed #adrenalin
+Adrenalin 100 ms exposure, optics reployed #adrenalin #nolearn
 6839
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 6840
@@ -12915,13 +12915,13 @@ Adrenalin 100 ms exposure, optics reployed #adrenalin
 6842
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 6843
-Adrenalin 100 ms exposure, optics reployed #adrenalin
+Adrenalin 100 ms exposure, optics reployed #adrenalin #nolearn
 6844
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 6845
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 6846
-Adrenalin 100 ms exposure, optics reployed #adrenalin
+Adrenalin 100 ms exposure, optics reployed #adrenalin #nolearn
 6847
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 6848
@@ -14715,9 +14715,9 @@ Anomaly scanning #6, 300 px desired fill #anomaly
 7742
 Anomaly scanning #6, 300 px desired fill #anomaly
 7743
-Anomaly scanning #6, 300 px desired fill #anomaly
+Anomaly scanning #6, 300 px desired fill #anomaly #nolearn
 7744
-Anomaly scanning #6, 300 px desired fill #anomaly
+Anomaly scanning #6, 300 px desired fill #anomaly #nolearn
 7745
 Anomaly scanning #6, 300 px desired fill #anomaly
 7746
@@ -14725,7 +14725,7 @@ Anomaly scanning #6, 300 px desired fill #anomaly
 7747
 Anomaly scanning #6, 300 px desired fill #anomaly
 7748
-Anomaly scanning #6, 300 px desired fill #anomaly
+Anomaly scanning #6, 300 px desired fill #anomaly #nolearn
 7749
 Anomaly scanning #6, 300 px desired fill #anomaly
 7750
@@ -14733,7 +14733,7 @@ Anomaly scanning #6, 300 px desired fill #anomaly
 7751
 Anomaly scanning #6, 300 px desired fill #anomaly
 7752
-Anomaly scanning #6, 300 px desired fill #anomaly
+Anomaly scanning #6, 300 px desired fill #anomaly #nolearn
 7753
 Anomaly scanning #6, 300 px desired fill #anomaly
 7754
@@ -14757,9 +14757,9 @@ Anomaly scanning #6, 300 px desired fill #anomaly
 7763
 Anomaly scanning #6, 300 px desired fill #anomaly
 7764
-Anomaly scanning #6, 300 px desired fill #anomaly
+Anomaly scanning #6, 300 px desired fill #anomaly #nolearn
 7765
-Anomaly scanning #6, 300 px desired fill #anomaly
+Anomaly scanning #6, 300 px desired fill #anomaly #nolearn
 7766
 Anomaly scanning #6, 300 px desired fill #anomaly
 7767
@@ -14769,7 +14769,7 @@ Anomaly scanning #6, 300 px desired fill #anomaly
 7769
 Anomaly scanning #6, 300 px desired fill #anomaly
 7770
-Anomaly scanning #6, 300 px desired fill #anomaly
+Anomaly scanning #6, 300 px desired fill #anomaly #nolearn
 7771
 Anomaly scanning #6, 300 px desired fill #anomaly
 7772
@@ -16907,13 +16907,13 @@ Anomaly scanning #6, 300 px desired fill #anomaly
 8838
 14th dosimetry (7778-8838) Binning16+Histogram, rate 1 min
 8839
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8840
 Anomaly scanning #7, 500 px desired fill #anomaly
 8841
 Anomaly scanning #7, 500 px desired fill #anomaly
 8842
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8843
 Anomaly scanning #7, 500 px desired fill #anomaly
 8844
@@ -16951,19 +16951,19 @@ Anomaly scanning #7, 500 px desired fill #anomaly
 8860
 Anomaly scanning #7, 500 px desired fill #anomaly
 8861
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8862
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8863
 Anomaly scanning #7, 500 px desired fill #anomaly
 8864
 Anomaly scanning #7, 500 px desired fill #anomaly
 8865
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8866
 Anomaly scanning #7, 500 px desired fill #anomaly
 8867
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8868
 Anomaly scanning #7, 500 px desired fill #anomaly
 8869
@@ -16973,9 +16973,9 @@ Anomaly scanning #7, 500 px desired fill #anomaly
 8871
 Anomaly scanning #7, 500 px desired fill #anomaly
 8872
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8873
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8874
 Anomaly scanning #7, 500 px desired fill #anomaly
 8875
@@ -16987,7 +16987,7 @@ Anomaly scanning #7, 500 px desired fill #anomaly
 8878
 Anomaly scanning #7, 500 px desired fill #anomaly
 8879
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8880
 Anomaly scanning #7, 500 px desired fill #anomaly
 8881
@@ -16999,15 +16999,15 @@ Anomaly scanning #7, 500 px desired fill #anomaly
 8884
 Anomaly scanning #7, 500 px desired fill #anomaly
 8885
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8886
 Anomaly scanning #7, 500 px desired fill #anomaly
 8887
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8888
 Anomaly scanning #7, 500 px desired fill #anomaly
 8889
-Anomaly scanning #7, 500 px desired fill #anomaly
+Anomaly scanning #7, 500 px desired fill #anomaly #nolearn
 8890
 Anomaly scanning #7, 500 px desired fill #anomaly
 8891
@@ -18757,11 +18757,11 @@ Adrenalin 100 ms exposure, optics reployed #adrenalin
 9763
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 9764
-Adrenalin 100 ms exposure, optics reployed #adrenalin
+Adrenalin 100 ms exposure, optics reployed #adrenalin #nolearn
 9765
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 9766
-Adrenalin 100 ms exposure, optics reployed #adrenalin
+Adrenalin 100 ms exposure, optics reployed #adrenalin #nolearn
 9767
 16th dosimetry (9767-10763) Binning16+Histogram, rate 1 min
 9768
@@ -20759,7 +20759,7 @@ Adrenalin 100 ms exposure, optics reployed #adrenalin
 10764
 Adrenalin 100 ms exposure, optics reployed #adrenalin
 10765
-Adrenalin 100 ms exposure, optics reployed #adrenalin
+Adrenalin 100 ms exposure, optics reployed #adrenalin #nolearn
 10766
 17th dosimetry (10766-###) Binning16+Histogram, rate 1 min
 10767
@@ -20831,7 +20831,7 @@ Adrenalin 100 ms exposure, optics reployed #adrenalin
 10800
 
 10801
-
+ #nolearn
 10802
 
 10803
@@ -20893,7 +20893,7 @@ Adrenalin 100 ms exposure, optics reployed #adrenalin
 10831
 
 10832
-
+ #nolearn
 10833
 
 10834
@@ -22751,9 +22751,9 @@ Adrenalin 100 ms exposure, optics reployed #adrenalin
 11760
 
 11761
-
+ #nolearn
 11762
-
+ #nolearn
 11763
 
 11764
@@ -28077,7 +28077,7 @@ Adrenalin 100 ms exposure, optics reployed #adrenalin
 14423
 
 14424
-
+ #nolearn
 14425
 
 14426

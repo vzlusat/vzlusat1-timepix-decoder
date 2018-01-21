@@ -5,6 +5,7 @@ from src.baseMethods import getExportDataName
 from src.baseMethods import getExportMetadataName
 from src.baseMethods import getExportHkName
 from src.baseMethods import getExportDescriptionFileName
+from src.baseMethods import getExportPixetName
 import datetime
 import csv
 from src.tle import *
@@ -47,12 +48,12 @@ def exportHouseKeeping(data):
             latitude, longitude, tle_date = getLatLong(data.time)
             hk_file.write("lat, long, tle_time: {}, {}, {}\n\r".format(latitude, longitude, tle_date))
 
-def exportDescriptionFile(image):
+def exportDescriptionFile(image, image_iter):
 
     if image.got_metadata == 0:
         return
 
-    with open(getExportDescriptionFileName(image.id, image.type), "w") as dsc_file:
+    with open(getExportDescriptionFileName(image_iter), "w") as dsc_file:
 
         width=0
         height=0
@@ -313,6 +314,20 @@ def exportRaw(image):
 
     exportMetadata(image)
 
+def exportPixetRaw(image, image_iter):
+
+    with open(getExportPixetName(image_iter), "w") as data_file:
+
+        writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
+
+        if platform.system() == "Windows":
+            float_delim = '.'
+        else:
+            float_delim = ','
+    
+        for i in range(0, 256):
+            writer.writerow(["{:.2f}".format(x).replace('.', float_delim) for x in image.data[i, :]])
+
 def exportImage(image):
 
     if image.type == 1:
@@ -340,4 +355,10 @@ def exportCsv(data):
     elif isinstance(data, Image):
 
         exportImage(data)
-        exportDescriptionFile(data)
+
+def exportForPixet(data, image_iter):
+
+    if isinstance(data, Image):
+
+        exportPixetRaw(data, image_iter)
+        exportDescriptionFile(data, image_iter)

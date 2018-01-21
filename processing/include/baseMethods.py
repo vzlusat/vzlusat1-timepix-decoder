@@ -154,6 +154,41 @@ def calculateTotalPixelCount(images):
 
     return np.array(doses)
 
+def calculateTotalPixelCount2(images):
+    
+    doses = []
+    total_exposure_time = 0
+    total_pixel_count = 0
+
+    for i in range(len(images)):
+
+        image_dose = 0
+
+        if images[i].got_metadata == 0:
+            print("Image {} got no metadata".format(images[i].id))
+            continue
+
+        if images[i].got_data == 0:
+            print("Image {} got no data".format(images[i].id))
+            continue
+
+        # calculate the exposure time in seconds
+        exposure = images[i].exposure
+        if exposure <= 60000:
+            exposure = exposure*0.001
+        else:
+            exposure = 60 + exposure%60000
+
+        total_exposure_time += exposure
+
+        # calculate the doses base on counts
+        total_pixel_count += images[i].original_pixels
+        image_dose = images[i].original_pixels/exposure
+
+        doses.append(image_dose)
+
+    return np.array(doses), total_exposure_time, total_pixel_count
+
 def createMap(projection, lat=0, lon=0):
 
     m = []
