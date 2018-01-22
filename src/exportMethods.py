@@ -11,7 +11,7 @@ import csv
 from src.tle import *
 import src.settings as settings
 from src.HouseKeeping import *
-from src.comments import getComment
+import src.comments as comments
 import platform
 
 def exportHouseKeeping(data):
@@ -152,6 +152,94 @@ double[2]\r\n\
 {} {}\r\n".format(latitude, longitude))
             except:
                 pass
+
+def exportInfoFileLine(image, first):
+
+    if image.got_metadata == 0:
+        return
+
+    line=""
+
+    exposure = image.exposure
+    if image.exposure <= 60000:
+        exposure = image.exposure*0.001
+    else:
+        exposure = 60 + image.exposure%60000
+
+    if first:
+        line+="exposure [s], "
+    else:
+        line+="{}, ".format(exposure)
+
+    if first:
+        line+="dacs, "
+    else:
+        line+="[1 100 255 127 127 0 {} 7 130 128 80 85 128 128], ".format(image.threshold)
+
+    # bias
+    if first:
+        line+="bias [V], "
+    else:
+        line+="70.0, "
+
+    # detector type
+    if first:
+        line+="detector type, "
+    else:
+        line+="TPX, "
+
+    # time
+    if first:
+        line+="UTC time, "
+    else:
+        line+="{}, ".format(image.time)
+
+    # human readible time
+    time_hr=datetime.datetime.utcfromtimestamp(image.time)
+    if first:
+        line+="human readable time, "
+    else:
+        line+="{}, ".format(time_hr)
+
+    # chip-board id
+    if first:
+        line+="chip-board id, "
+    else:
+        line+="I07-W0167, "
+
+    # adrenalin
+    if first:
+        line+="adrenalin mode, "
+    else:
+        if comments.isAdrenalin(image.id):
+            adrenalin=1
+        else:
+            adrenalin=0
+        line+="{}, ".format(adrenalin)
+
+    # anomaly
+    if first:
+        line+="anomaly mode, "
+    else:
+        if comments.isAnomaly(image.id):
+            anomaly=1
+        else:
+            anomaly=0
+        line+="{}, ".format(anomaly)
+
+    if first:
+        line+="latitude [deg], longitude [deg], "
+    else:
+        if settings.calculate_tle == 1:
+            try:
+                latitude, longitude, tle_date = getLatLong(image.time)
+                line+="{}, {} ".format(latitude, longitude)
+            except:
+                line+="NaN, NaN "
+        else:
+            line+="NaN, NaN "
+
+    return line
 
 def exportMetadata(image):
 

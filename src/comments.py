@@ -46,6 +46,15 @@ def isAdrenalin(idx):
     else:
         return False
 
+def isAnomaly(idx):
+
+    comment = getComment(idx)
+
+    if comment.find("#anomaly") > -1:
+        return True
+    else:
+        return False
+
 def isForLearning(idx):
 
     comment = getComment(idx)

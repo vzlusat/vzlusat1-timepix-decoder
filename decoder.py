@@ -54,6 +54,7 @@ from src.loadHouseKeeping import loadHouseKeeping
 from src.parseInputFile import parseInputFile
 from src.exportMethods import exportCsv
 from src.exportMethods import exportForPixet
+from src.exportMethods import exportInfoFileLine
 from src.baseMethods import getPngFileName
 
 # imports that depend on the python version
@@ -1103,7 +1104,7 @@ def exportRawData():
 
     image_iter = 1
 
-    with open("images_csv/mapping.txt", "w") as mapping_file:
+    with open("images_csv/info.txt", "w") as info_file:
 
         for file_name in file_names:
 
@@ -1115,7 +1116,17 @@ def exportRawData():
 
                     exportForPixet(image, image_iter)
 
-                    mapping_file.write("{} {}\r\n".format(image_iter, image.id))
+                    if image_iter == 1:
+                        first = True
+                    else:
+                        first = False
+
+                    if first:
+                        info_line = exportInfoFileLine(image, first)
+                        info_file.write("# ordinar image ID, original image ID, {}\r\n".format(info_line))
+
+                    info_line = exportInfoFileLine(image, False)
+                    info_file.write("{}, {}, {}\r\n".format(image_iter, image.id, info_line))
 
                     image_iter += 1
                     statusLine.set("Exporting image {}".format(image.id))
