@@ -158,6 +158,11 @@
     * Linux time range: 1516096331 to 
     * Human readible time range: 2018-01-16 09:52:11 to 
     * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * Dosimetry 23 [please complete]
+    * Image range: 16021 to 
+    * Linux time range: 
+    * Human readible time range: 
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
 
 # Installation
 
