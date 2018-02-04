@@ -8,8 +8,8 @@ import time
 
 from include.baseMethods import *
 
-from_time = "21.01.2018 20:00:00"
-to_time = "22.01.2018 20:00:00"
+from_time = "04.02.2018 20:00:00"
+to_time = "05.02.2018 20:00:00"
 
 anomaly_lat = -30.0
 anomaly_long = -40.0
@@ -21,8 +21,8 @@ hkc_buffer_time = 300
 dt = 240
 n = 1
 
-from_idx = 10766
-to_idx = 11361
+from_idx = 14425
+to_idx = 15115
 outliers=[]
 
 pcolor_min = 0

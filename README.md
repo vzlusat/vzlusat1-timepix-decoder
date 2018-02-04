@@ -153,13 +153,20 @@
     * Image range: 15116 to 15131
     * Linux time range: 1515968786 to 1516023566
     * Human readible time range: 2018-01-14 22:26:26 to 2018-01-15 13:39:26
-  * Dosimetry 22 [please complete]
+  * Dosimetry 22
     * Image range: 15132 to 16006
-    * Linux time range: 1516096331 to 
-    * Human readible time range: 2018-01-16 09:52:11 to 
+    * Linux time range: 1516096331 to [missing metadata for the last one]
+    * Human readible time range: 2018-01-16 09:52:11 to [missing metadata for the last one]
     * Exposure 0.05 s every 1 minute, Binning16+histograms
-  * Dosimetry 23 [please complete]
-    * Image range: 16021 to 
+  * Dosimetry 23
+    * Image range: 16021 to 16984
+    * Linux time range: 1516701071 to [missing metadata]
+    * Human readible time range: 2018-01-23 09:51:11 to [missing metadata]
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * XRB co-measurement 1
+    * Image range: 16992 to 16996
+  * Dosimetry 24 [please fix]
+    * Image range: 16997 to 17228
     * Linux time range: 
     * Human readible time range: 
     * Exposure 0.05 s every 1 minute, Binning16+histograms

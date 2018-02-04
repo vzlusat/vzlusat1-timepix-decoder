@@ -331,7 +331,7 @@ def exportMetadata(image):
             metadata_file.write(image.metadata_labels[i]+" "+metadatas_array[i])
             metadata_file.write("\r\n")
 
-        metadata_file.write("comment: {}\r\n".format(getComment(image.id)))
+        metadata_file.write("comment: {}\r\n".format(comments.getComment(image.id)))
 
         metadata_file.write("Human readable time: {}\r\n".format(datetime.datetime.utcfromtimestamp(image.time)))
 
