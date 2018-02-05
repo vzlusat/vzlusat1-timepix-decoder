@@ -13,7 +13,7 @@ to_time = "05.02.2018 20:00:00"
 
 anomaly_lat = -30.0
 anomaly_long = -40.0
-anomaly_size = 45.0
+anomaly_size = 40.0
 desired_fill = 500
 max_exposure = 1
 hkc_buffer_time = 300
@@ -151,7 +151,7 @@ with open(file_name, "w") as file:
             out_lats.append(latitude)
             out_lons.append(longitude)
             out_times.append(j)
-            pxl_count = doses_rbf_lin[int(math.floor(100*(latitude+90)/180)), int(math.floor(100*(longitude+180)/360))]
+            pxl_count = doses_rbf_lin[int(math.floor(100*(longitude+180)/360)), int(math.floor(100*(latitude+90)/180))]
             if pxl_count < 0:
                 pxl_count = 0
             out_pxl_counts.append(pxl_count)

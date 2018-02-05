@@ -22,9 +22,9 @@ from_idx = 5804
 to_idx = 6815
 outliers=[]
 
-anomaly_lat = -30.0
+anomaly_lat = -35.0
 anomaly_long = -40.0
-anomaly_size = 40.0
+anomaly_size = 20.0
 
 pcolor_min = 0
 pcolor_max = 7
@@ -75,7 +75,7 @@ doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 t = int(time.mktime(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
 t_end = int(time.mktime(time.strptime(to_time, "%d.%m.%Y %H:%M:%S")))
 
-file_name = directory+"/{}_anomaly.pln".format(from_time).replace(' ', '_').replace(':', '_')
+file_name = directory+"/{}_belts.pln".format(from_time).replace(' ', '_').replace(':', '_')
 
 from scipy import spatial
 
@@ -139,6 +139,8 @@ with open(file_name, "w") as file:
 
         in_first = False
         in_second = False 
+
+        exposure_in_first = False
 
         orbit_counter = 0
 
@@ -208,14 +210,19 @@ with open(file_name, "w") as file:
                             if add(max_lat, max_lon, best_time, orbit_counter):
 
                                 print("Appending: latitude: {}, longitude: {}".format(max_lat, max_lon))
+                                exposure_in_first = True
                         
                             else:
 
                                 print("Could not add the point, too close.")
+                                exposure_in_first = False
 
-                            max_pxl_count = 0
-                            best_would_be_pxl_count = 0
-                            best_time = 0
+                        else:
+                            exposure_in_first = False
+
+                        max_pxl_count = 0
+                        best_would_be_pxl_count = 0
+                        best_time = 0
 
                         print("Left first: latitude: {}, longitude: {}".format(latitude, longitude))
 
@@ -226,19 +233,21 @@ with open(file_name, "w") as file:
                         are_in = False
                         in_second = False
 
-                        if best_time > 1:
+                        # if not exposure_in_first:
 
-                            if add(max_lat, max_lon, best_time, orbit_counter):
+                        #     if best_time > 1:
 
-                                print("Appending: latitude: {}, longitude: {}".format(max_lat, max_lon))
+                        #         if add(max_lat, max_lon, best_time, orbit_counter):
 
-                            else:
+                        #             print("Appending: latitude: {}, longitude: {}".format(max_lat, max_lon))
 
-                                print("Could not add the point, too close.")
+                        #         else:
 
-                            max_pxl_count = 0
-                            best_would_be_pxl_count = 0
-                            best_time = 0
+                        #             print("Could not add the point, too close.")
+
+                        max_pxl_count = 0
+                        best_would_be_pxl_count = 0
+                        best_time = 0
 
                         print("Left second: latitude: {}, longitude: {}".format(latitude, longitude))
 
@@ -355,11 +364,11 @@ def plot_everything(*args):
         plt.text(x+1, y+1, '{}'.format(out_orbits[i]), fontsize=13, fontweight='bold', ha='left', va='bottom', color='k', zorder=10)
     
     # cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('Anomaly scanning, starting at {}'.format(from_time))
+    plt.title('Polar belts scanning, starting at {}'.format(from_time))
     
     plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
     
-    plt.savefig(directory+"/{}_anomaly.jpg".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
+    plt.savefig(directory+"/{}_belts.jpg".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
     
     #} end of globe south
 
@@ -429,7 +438,7 @@ def plot_everything(*args):
 
 print("total_chunks: {}".format(total_chunks))
 
-file_name = directory+"/{}_anomaly.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
+file_name = directory+"/{}_belts.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
 
 with open(file_name, "w") as file:
 
