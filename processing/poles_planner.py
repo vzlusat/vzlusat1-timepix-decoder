@@ -351,7 +351,7 @@ def plot_everything(*args):
     
     m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
     
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb = m.colorbar(location="bottom", label="Log of relative intensity [px flux]") # draw colorbar
     
     for i in range(len(orbit_line_lats)):
         x, y = m(orbit_line_lons[i], orbit_line_lats[i])
@@ -364,7 +364,7 @@ def plot_everything(*args):
         plt.text(x+1, y+1, '{}'.format(out_orbits[i]), fontsize=13, fontweight='bold', ha='left', va='bottom', color='k', zorder=10)
     
     # cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('Polar belts scanning, starting at {}'.format(from_time))
+    plt.title('Polar belts scanning, starting on {}'.format(from_time))
     
     plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
     
@@ -382,7 +382,7 @@ def plot_everything(*args):
     
     m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
     
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb = m.colorbar(location="bottom", label="") # draw colorbar
     
     # for i in range(len(orbit_line_lats)):
     #     x, y = m(orbit_line_lons[i], orbit_line_lats[i])
@@ -413,7 +413,7 @@ def plot_everything(*args):
     
     m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
     
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    cb = m.colorbar(location="bottom", label="") # draw colorbar
     
     # for i in range(len(orbit_line_lats)):
     #     x, y = m(orbit_line_lons[i], orbit_line_lats[i])
