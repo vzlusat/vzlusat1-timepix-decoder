@@ -8,23 +8,27 @@ import time
 
 from include.baseMethods import *
 
-from_time = "06.02.2018 20:00:00"
-to_time = "07.02.2018 20:00:00"
+from_time = "11.02.2018 20:00:00"
+to_time = "12.02.2018 20:00:00"
 
 desired_fill = 500
 max_exposure = 1
 hkc_buffer_time = 300
 
-aprox_pole = 20
+aprox_pole = 25
 latitude_limit = 10
 
-from_idx = 5804
-to_idx = 6815
+from_idx = 15000
+to_idx = 18061
 outliers=[]
 
-anomaly_lat = -35.0
-anomaly_long = -40.0
-anomaly_size = 20.0
+anomaly_lat = -37.0
+anomaly_long = -31.0
+anomaly_size = 25.0
+
+sgap_lat = -80.0
+sgap_long = 125.0
+sgap_size = 25.0
 
 pcolor_min = 0
 pcolor_max = 7
@@ -39,10 +43,12 @@ x_units = '(counts)'
 
 total_chunks = 0
 
+time_compensation = 15
+
 directory="scripts_poles"
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 32, 1, 1, outliers)
+images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
 
 doses = calculateTotalPixelCount(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
@@ -261,7 +267,7 @@ with open(file_name, "w") as file:
 
                         if (pxl_count+1.5) >= best_would_be_pxl_count:
 
-                            if dist(latitude, longitude, anomaly_lat, anomaly_long) > anomaly_size:
+                            if (dist(latitude, longitude, anomaly_lat, anomaly_long) > anomaly_size) and (dist(latitude, longitude, sgap_lat, sgap_long) > sgap_size):
 
                                 max_pxl_count = pxl_count
                                 best_time = i
@@ -281,7 +287,7 @@ with open(file_name, "w") as file:
     last_exposure = 0
     for i in range(len(times)):
 
-        t_now = times[i]
+        t_now = times[i]-time_compensation
 
         if first == 1:
             first = 0
