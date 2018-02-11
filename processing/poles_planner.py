@@ -43,8 +43,6 @@ x_units = '(counts)'
 
 total_chunks = 0
 
-time_compensation = 15
-
 directory="scripts_poles"
 
 # prepare data
@@ -287,7 +285,7 @@ with open(file_name, "w") as file:
     last_exposure = 0
     for i in range(len(times)):
 
-        t_now = times[i]-time_compensation
+        t_now = times[i]
 
         if first == 1:
             first = 0
@@ -296,7 +294,7 @@ with open(file_name, "w") as file:
             time = datetime.datetime.utcfromtimestamp(t_now-59-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
             file.write(time+"\tP\tsleep 4000\r\n")
             time = datetime.datetime.utcfromtimestamp(t_now-55-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
-            file.write(time+"\tP\tx sp 400 1 70 0 1 {} 80 0 0 1\r\n".format(1+2+32))
+            file.write(time+"\tP\tx sp 400 1 70 0 1 {} 80 0 0\r\n".format(1+2+32))
             # time = datetime.datetime.utcfromtimestamp(t_now-50-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
             # file.write(time+"\tP\th conf 3 3 0 01400000000000000000\r\n")
             
@@ -323,12 +321,15 @@ with open(file_name, "w") as file:
 
         total_chunks += 16+1+(round(((desired_exposure/1000.0)*pxl_count)/20))+1
 
+        time = datetime.datetime.utcfromtimestamp(t_now-30).strftime('%Y-%m-%d %H:%M:%S')
+        file.write(time+"\t\tx in\r\n")
+
         if desired_exposure != last_exposure:
-          time = datetime.datetime.utcfromtimestamp(t_now-20).strftime('%Y-%m-%d %H:%M:%S')
+          time = datetime.datetime.utcfromtimestamp(t_now-7).strftime('%Y-%m-%d %H:%M:%S')
           file.write(time+"\t\tx se {}\r\n".format(desired_exposure))
           last_exposure = desired_exposure
 
-        time = datetime.datetime.utcfromtimestamp(t_now-15).strftime('%Y-%m-%d %H:%M:%S')
+        time = datetime.datetime.utcfromtimestamp(t_now).strftime('%Y-%m-%d %H:%M:%S')
         file.write(time+"\t\tx m\r\n")
 
         print("latitude: {}, longitude: {}, intensity: {}".format(latitude, longitude, pxl_count))
