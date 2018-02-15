@@ -168,10 +168,6 @@ def calculateTotalPixelCount2(images):
             print("Image {} got no metadata".format(images[i].id))
             continue
 
-        if images[i].got_data == 0:
-            print("Image {} got no data".format(images[i].id))
-            continue
-
         # calculate the exposure time in seconds
         exposure = images[i].exposure
         if exposure <= 60000:

@@ -2,7 +2,7 @@
 
 ## Measurement log
 
-  * Dosimetry 1 (the first one, a short one)
+  * Dosimetry 1
     * Image range: 405 to 416
     * Linux time range: 1503686482 to 1503698652
     * Human readible time range: 2017-08-25 18:41:22 to 2017-08-25 22:04:12
@@ -165,15 +165,38 @@
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * XRB co-measurement 1
     * Image range: 16992 to 16996
-  * Dosimetry 24 [please fix]
+    * Linux time range: 1517212288 to 1517302923
+    * Human readible time range: 2018-01-29 07:51:28 to 2018-01-30 09:02:03
+    * Exposure 300 s, Fullres
+  * Dosimetry 24
     * Image range: 16997 to 17228
-    * Linux time range: 
-    * Human readible time range: 
+    * Linux time range: 1517308305 to 1517349218
+    * Human readible time range: 2018-01-30 10:31:45 to 2018-01-30 21:53:38
     * Exposure 0.05 s every 1 minute, Binning16+histograms
-  * Dosimetry 25 [please fix]
+  * XRB co-measurement 2
+    * Image range: 17268 to 17270
+    * Linux time range: 1517905369 to 1517943895
+    * Human readible time range: 2018-02-06 08:22:49 to 2018-02-06 19:04:55
+    * Exposure 300 s, Fullres
+  * Dosimetry 25
     * Image range: 17271 to 18061
-    * Linux time range: 
-    * Human readible time range: 
+    * Linux time range: 1517961104 to 1518046688
+    * Human readible time range: 2018-02-06 23:51:44 to 2018-02-07 23:38:08
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * XRB co-measurement 3
+    * Image range: 18062 to 18063
+    * Linux time range: 1518114380 to 1518119853
+    * Human readible time range: 2018-02-08 18:26:20 to 2018-02-08 19:57:33
+    * Exposure 300 s, Fullres
+  * Polar belts scanning 1
+    * Image range: 18064 to 18074
+    * Linux time range: 1518378628 to 1518460998
+    * Human readible time range: 2018-02-11 19:50:28 to 2018-02-12 18:43:18
+    * Exposure 300 s, Fullres
+  * Dosimetry 26 [please fix]
+    * Image range: 18075 to ??
+    * Linux time range: 1518592658 to ??
+    * Human readible time range: 2018-02-14 07:17:38 to ??
     * Exposure 0.05 s every 1 minute, Binning16+histograms
 
 # Installation
