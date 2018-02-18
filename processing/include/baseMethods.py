@@ -100,6 +100,43 @@ def loadImageRange(from_idx, to_idx, image_type, require_data=0, require_metadat
 
     return images
 
+# load reange of images having a particular type
+def loadImageRangeMulti(from_to, image_type, require_data=0, require_metadata=0, outliers=[]):
+
+    images = []
+
+    print("from_to.shape[0]: {}".format(from_to.shape[0]))
+
+    # load images
+    for j in range(0, from_to.shape[0]):
+
+      for i in range(from_to[j, 0], from_to[j, 1]):
+      
+          try:
+              dev_null = outliers.index(i)
+              continue
+          except:
+              pass
+      
+          # for count mode only
+          # load anything that has metadata and any data, so presumably it is a proper image
+          new_image = loadImage(i, image_type, image_bin_path)
+      
+          if new_image == 0:
+              print("image {} could not be loaded".format(i))
+          else:
+              if require_data and not new_image.got_data:
+                  print("image {} does not contain data".format(i))
+                  continue 
+      
+              if require_metadata and not new_image.got_metadata:
+                  print("image {} does not contain metadata".format(i))
+                  continue 
+      
+              images.append(new_image)
+
+    return images
+
 # calculate the doses in image range
 def calculateEnergyDose(images):
     

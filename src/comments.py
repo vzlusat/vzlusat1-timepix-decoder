@@ -55,6 +55,15 @@ def isAnomaly(idx):
     else:
         return False
 
+def isXrb(idx):
+
+    comment = getComment(idx)
+
+    if comment.find("#xrb") > -1:
+        return True
+    else:
+        return False
+
 def isForLearning(idx):
 
     comment = getComment(idx)

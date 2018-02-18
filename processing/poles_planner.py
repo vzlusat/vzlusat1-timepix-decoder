@@ -5,21 +5,33 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import Rbf
 import matplotlib.ticker as ticker # for colorbar
 import time
+import numpy as np
 
 from include.baseMethods import *
 
-from_time = "11.02.2018 20:00:00"
-to_time = "12.02.2018 20:00:00"
+from_time = "19.02.2018 11:00:00"
+to_time = "20.02.2018 11:00:00"
 
-desired_fill = 500
+desired_fill = 300
 max_exposure = 1
 hkc_buffer_time = 300
 
 aprox_pole = 25
 latitude_limit = 10
 
-from_idx = 15000
-to_idx = 18061
+from_to = numpy.array([
+[12342, 13165], # dos 18
+[13166, 13484], # dos 19
+[13485, 14423], # dos 20
+[14425, 15115], # dos 21
+[15132, 16006], # dos 22
+[16021, 16984], # dos 23
+[16997, 17228], # dos 24
+[17271, 18061], # dos 25
+[18064, 18074], # poles 1
+[18075, 18448], # dos 26
+])
+
 outliers=[]
 
 anomaly_lat = -37.0
@@ -37,7 +49,7 @@ mesh_size = 200
 
 step_size = 10
 
-epsilon=1.0
+epsilon=0.1
 x_label = 'Pixel count'
 x_units = '(counts)'
 
@@ -46,7 +58,7 @@ total_chunks = 0
 directory="scripts_poles"
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
+images = loadImageRangeMulti(from_to, 32, 0, 1, outliers)
 
 doses = calculateTotalPixelCount(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
@@ -130,7 +142,7 @@ with open(file_name, "w") as file:
     print("t: {}".format(t))
 
     # find the closest point to the anomaly in each orbit
-    for g in range(0, 1):
+    for g in range(0, 3):
 
         i = t
         best_time = 0
@@ -453,7 +465,7 @@ with open(file_name, "w") as file:
     file.write("to: "+to_time+"\r\n")
     file.write("desired fill: {} px per image\r\n".format(desired_fill))
     file.write("estimated number of chunks: {}\r\n".format(int(total_chunks)))
-    file.write("based on data range: {} to {}\r\n".format(from_idx, to_idx))
+    # file.write("based on data range: {} to {}\r\n".format(from_idx, to_idx))
     file.write("max blunt exposure time: {} ms".format(max_exposure))
 
 pid = os.fork()

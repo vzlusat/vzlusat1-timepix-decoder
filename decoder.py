@@ -163,6 +163,8 @@ def loadFiles():
                     pass
                 elif (show_adrenalin_var.get() and not comments.isAdrenalin(image.id)):
                     pass
+                elif (show_xrb_var.get() and not comments.isXrb(image.id)):
+                    pass
                 # elif ((not show_hidden_var.get()) and (image.hidden)):
                 #     pass
                 elif (just_fullres_var.get() and image.type > 1):
@@ -918,6 +920,7 @@ hide_without_data_var = Tk.IntVar()
 show_only_without_data_var = Tk.IntVar()
 hide_housekeeping_var = Tk.IntVar()
 show_adrenalin_var = Tk.IntVar()
+show_xrb_var = Tk.IntVar()
 
 # user can mark image as favorite or hidden
 # image_is_hidden = Tk.IntVar()
@@ -1211,6 +1214,9 @@ first_image_type.pack(side=Tk.BOTTOM)
 show_adrenalin = Tk.Checkbutton(master=frame_left, text="show only adrenalin (a)", variable=show_adrenalin_var, command=reloadList, font=customfont)
 show_adrenalin.pack(side=Tk.BOTTOM)
 
+show_xrb = Tk.Checkbutton(master=frame_left, text="show only XRB (x)", variable=show_xrb_var, command=reloadList, font=customfont)
+show_xrb.pack(side=Tk.BOTTOM)
+
 show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite (f)", variable=show_favorite_var, command=reloadList, font=customfont)
 show_favorite_only.pack(side=Tk.BOTTOM)
 
@@ -1317,6 +1323,10 @@ def on_key_event(event):
 
         if current_key == '1':
             just_fullres.toggle()
+            reloadList()
+
+        if current_key == 'x':
+            show_xrb.toggle()
             reloadList()
 
         if current_key == 'i':
