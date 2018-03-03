@@ -192,11 +192,24 @@
     * Image range: 18064 to 18074
     * Linux time range: 1518378628 to 1518460998
     * Human readible time range: 2018-02-11 19:50:28 to 2018-02-12 18:43:18
-    * Exposure 300 s, Fullres
   * Dosimetry 26
     * Image range: 18075 to 18448
     * Linux time range: 1518592658 to 1518812655
     * Human readible time range: 2018-02-14 07:17:38 to 2018-02-16 20:24:15
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * XRB co-measurement 4
+    * Image range: 18449 to 18450
+    * Linux time range: 
+    * Human readible time range: 
+    * Exposure 300 s, Fullres
+  * Polar belts scanning 2
+    * Image range: 18452 to 18463
+    * Linux time range: 
+    * Human readible time range: 
+  * Dosimetry 27
+    * Image range: 18464 to 19240
+    * Linux time range: 
+    * Human readible time range: 
     * Exposure 0.05 s every 1 minute, Binning16+histograms
 
 # Installation

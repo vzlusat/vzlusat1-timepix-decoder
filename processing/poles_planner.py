@@ -9,14 +9,14 @@ import numpy as np
 
 from include.baseMethods import *
 
-from_time = "19.02.2018 11:00:00"
-to_time = "20.02.2018 11:00:00"
+from_time = "04.03.2018 20:00:00"
+to_time = "05.03.2018 20:00:00"
 
 desired_fill = 300
 max_exposure = 1
 hkc_buffer_time = 300
 
-aprox_pole = 25
+approx_pole = 25
 latitude_limit = 10
 
 from_to = numpy.array([
@@ -30,6 +30,8 @@ from_to = numpy.array([
 [17271, 18061], # dos 25
 [18064, 18074], # poles 1
 [18075, 18448], # dos 26
+[18452, 18463], # poles 2
+[18464, 19240], # dos 27
 ])
 
 outliers=[]
@@ -181,10 +183,10 @@ with open(file_name, "w") as file:
             if not are_in:
 
                 # we are not in the equator belt
-                if abs(latitude) > (90 - (2*aprox_pole + 1)):
+                if abs(latitude) > (90 - (2*approx_pole + 1)):
 
                     # we enter from the equator belt
-                    if (((latitude > (-90 + 2*aprox_pole)) and (fut_latitude < (-90 + 2*aprox_pole))) or ((latitude < (90 - 2*aprox_pole)) and (fut_latitude > (90 - 2*aprox_pole)))):
+                    if (((latitude > (-90 + 2*approx_pole)) and (fut_latitude < (-90 + 2*approx_pole))) or ((latitude < (90 - 2*approx_pole)) and (fut_latitude > (90 - 2*approx_pole)))):
 
                         are_in = True
                         in_first = True
@@ -244,7 +246,7 @@ with open(file_name, "w") as file:
 
                 elif in_second:
 
-                    if (abs(latitude - (90 - 2*aprox_pole)) < 1) or (abs(latitude - (-90 + 2*aprox_pole)) < 1):
+                    if (abs(latitude - (90 - 2*approx_pole)) < 1) or (abs(latitude - (-90 + 2*approx_pole)) < 1):
 
                         are_in = False
                         in_second = False
@@ -288,6 +290,9 @@ with open(file_name, "w") as file:
             i += step_size
 
 # scan the surroundigs of the locations
+
+    times.sort()
+
     out_lats = []
     out_orbits = []
     out_lons = []
