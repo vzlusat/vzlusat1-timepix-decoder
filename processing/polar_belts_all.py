@@ -10,6 +10,7 @@ from include.baseMethods import *
 from_to = numpy.array([
 [18064, 18074], # poles 1
 [18452, 18463], # poles 2
+[19412, 19432], # poles 3
 ])
 
 outliers=[]
@@ -26,7 +27,7 @@ general_label = 'All polar belts scanning'
 epsilon=0.1
 
 # prepare data
-images = loadImageRangeMulti(from_to, 1, 0, 0, outliers)
+images = loadImageRangeMulti(from_to, 1, 0, 1, outliers)
 
 doses, exp, count = calculateTotalPixelCount2(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
