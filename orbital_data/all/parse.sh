@@ -29,7 +29,7 @@ do
 
   if [ ! -z "$ishkc" ]; then
 
-    cat $filename | grep 13ea5a -B 4 >> "$outhk"
+    cat $filename | grep 13ea5a -B 4 | sed '/chunk/d' | sed '/flag/d' | sed '/adr/d' >> "$outhk"
     echo "Parsing HKC from $filename"
 
   fi 
@@ -38,7 +38,7 @@ do
 
   if [ ! -z "$ishk" ]; then
 
-    cat $filename >> "$outhk"
+    cat $filename | sed '/chunk/d' | sed '/flag/d' | sed '/adr/d' >> "$outhk"
     echo "Parsing HKD from $filename"
 
   fi 
@@ -47,7 +47,7 @@ do
 
   if [ ! -z "$ismetadata" ]; then
 
-    cat $filename >> "$outmetadata"
+    cat $filename | sed '/chunk/d' | sed '/flag/d' | sed '/adr/d' >> "$outmetadata"
     echo "Parsing metadata from $filename"
 
   fi 
@@ -56,7 +56,7 @@ do
 
   if [ ! -z "$isdata" ]; then
 
-    cat $filename >> "$outdata"
+    cat $filename | sed '/chunk/d' | sed '/flag/d' | sed '/adr/d' >> "$outdata"
     echo "Parsing image from $filename"
 
   fi 
