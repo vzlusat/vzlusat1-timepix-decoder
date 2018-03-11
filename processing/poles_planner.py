@@ -9,8 +9,8 @@ import numpy as np
 
 from include.baseMethods import *
 
-from_time = "04.03.2018 20:00:00"
-to_time = "05.03.2018 20:00:00"
+from_time = "11.03.2018 20:00:00"
+to_time = "12.03.2018 20:00:00"
 
 desired_fill = 300
 max_exposure = 1
@@ -32,6 +32,7 @@ from_to = numpy.array([
 [18075, 18448], # dos 26
 [18452, 18463], # poles 2
 [18464, 19240], # dos 27
+[19412, 19432], # poles 3
 ])
 
 outliers=[]
