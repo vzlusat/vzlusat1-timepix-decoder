@@ -10,7 +10,7 @@ from include.baseMethods import *
 from_to = numpy.array([
 [18064, 18074], # poles 1
 [18452, 18463], # poles 2
-[19412, 19432], # poles 3
+[19412, 19438], # poles 3
 ])
 
 outliers=[]

@@ -212,7 +212,7 @@
     * Human readible time range: 2018-02-28 23:51:44 to 2018-03-01 23:49:35
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * Polar belts scanning 3
-    * Image range: 19412 to 19432
+    * Image range: 19412 to 19438
     * Linux time range: 
     * Human readible time range: 
 
