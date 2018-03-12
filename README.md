@@ -213,8 +213,13 @@
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * Polar belts scanning 3
     * Image range: 19412 to 19438
+    * Linux time range: 1520193718 to 1520540058
+    * Human readible time range: 2018-03-04 20:01:58 to 2018-03-08 20:14:18
+  * XRB co-measurement 5
+    * Image range: 19439 to 19441
     * Linux time range: 
     * Human readible time range: 
+    * Exposure 60 s, Fullres
 
 # Installation
 
