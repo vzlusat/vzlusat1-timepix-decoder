@@ -13,7 +13,7 @@ from_time = "14.03.2018 20:00:00"
 to_time = "15.03.2018 20:00:00"
 
 desired_fill = 100
-max_exposure = 0.1
+max_exposure = 0.05
 hkc_buffer_time = 300
 
 n = 1
@@ -24,14 +24,14 @@ approx_pole = 25
 latitude_limit = 8
 
 from_to = numpy.array([
-[16997, 17228], # dos 24
 [17271, 18061], # dos 25
 [18075, 18448], # dos 26
 [18464, 19408], # dos 27
 [18064, 18074], # poles 1
 [18452, 18463], # poles 2
 [19412, 19432], # poles 3
-[8839, 8893], # poles 3
+[7736, 7777], # anomaly 6
+[8839, 8893], # anomaly 7
 ])
 
 outliers=[]
@@ -47,7 +47,7 @@ sgap_size = 25.0
 pcolor_min = 0
 pcolor_max = 7
 
-mesh_size = 150
+mesh_size = 200
 
 step_size = 15
 
@@ -57,7 +57,7 @@ x_units = '(counts)'
 
 total_chunks = 0
 
-directory="scripts_poles"
+directory="scripts_combined"
 
 # prepare data
 images = loadImageRangeMulti(from_to, 32, 0, 1, outliers)
@@ -93,7 +93,7 @@ doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 t = int(time.mktime(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
 t_end = int(time.mktime(time.strptime(to_time, "%d.%m.%Y %H:%M:%S")))
 
-file_name = directory+"/{}_belts.pln".format(from_time).replace(' ', '_').replace(':', '_')
+file_name = directory+"/{}_combined.pln".format(from_time).replace(' ', '_').replace(':', '_')
 
 from scipy import spatial
 
@@ -355,6 +355,7 @@ with open(file_name, "w") as file:
         times.append(anom_times[z])
 
     times.sort()
+    list(set(times))
 
     out_lats = []
     # out_orbits = []
@@ -391,13 +392,16 @@ with open(file_name, "w") as file:
             pxl_count = 0
         out_pxl_counts.append(pxl_count)
 
-        if pxl_count < desired_fill:
-            desired_exposure = max_exposure
-        else:
+        if pxl_count > 0:
             desired_exposure = int(round(1000.0/(pxl_count/desired_fill)))
+        else:
+            desired_exposure = 1000*max_exposure
 
-            if desired_exposure == 0:
-                desired_exposure = 1
+        if desired_exposure == 0:
+            desired_exposure = 1
+
+        if desired_exposure > 1000*max_exposure:
+            desired_exposure = max_exposure*1000
 
         total_chunks += 16+1+(round(((desired_exposure/1000.0)*pxl_count)/20))+1
 
@@ -451,11 +455,11 @@ def plot_everything(*args):
         # plt.text(x+1, y+1, '{}'.format(out_orbits[i]), fontsize=13, fontweight='bold', ha='left', va='bottom', color='k', zorder=10)
     
     # cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('Polar belts scanning, starting on {}'.format(from_time))
+    plt.title('Combined scanning, starting on {}'.format(from_time))
     
     plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
     
-    plt.savefig(directory+"/{}_belts.jpg".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
+    plt.savefig(directory+"/{}_combined.jpg".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
     
     #} end of globe south
 
@@ -525,7 +529,7 @@ def plot_everything(*args):
 
 print("total_chunks: {}".format(total_chunks))
 
-file_name = directory+"/{}_belts.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
+file_name = directory+"/{}_combined.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
 
 with open(file_name, "w") as file:
 
