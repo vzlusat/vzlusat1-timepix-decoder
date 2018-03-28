@@ -220,6 +220,20 @@
     * Linux time range: 
     * Human readible time range: 
     * Exposure 60 s, Fullres
+  * Combined belt+anomaly scanning 1
+    * Image range: 19445 to 19522
+    * Linux time range: 
+    * Human readible time range: 
+  * Dosimetry 28
+    * Image range: 19523 to 20529
+    * Linux time range: 
+    * Human readible time range: 
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * XRB co-measurement 6
+    * Image range: 20531 to 20550
+    * Linux time range: 
+    * Human readible time range: 
+    * Exposure 60 s, Fullres
 
 # Installation
 
