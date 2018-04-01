@@ -9,11 +9,11 @@ import numpy as np
 
 from include.baseMethods import *
 
-from_time = "14.03.2018 20:00:00"
-to_time = "15.03.2018 20:00:00"
+from_time = "02.04.2018 20:00:00"
+to_time = "03.04.2018 20:00:00"
 
-desired_fill = 100
-max_exposure = 0.05
+desired_fill = 50
+max_exposure = 0.03
 hkc_buffer_time = 300
 
 n = 1
@@ -27,11 +27,13 @@ from_to = numpy.array([
 [17271, 18061], # dos 25
 [18075, 18448], # dos 26
 [18464, 19408], # dos 27
+[19523, 20529], # dos 28
 [18064, 18074], # poles 1
 [18452, 18463], # poles 2
 [19412, 19432], # poles 3
 [7736, 7777], # anomaly 6
 [8839, 8893], # anomaly 7
+[19439, 19441], # combined scanning 1
 ])
 
 outliers=[]
@@ -110,7 +112,7 @@ def is_free(x, y):
 
     for j in range(0, len(lats)):
 
-        if dist(x, y, lats[j], lons[j]) < 10:
+        if dist(x, y, lats[j], lons[j]) < 8:
 
             return False
 
@@ -203,7 +205,7 @@ with open(file_name, "w") as file:
             anom_times.append(j)
 
     # find the closest point to the anomaly in each orbit
-    for g in range(0, 3):
+    for g in range(0, 4):
 
         i = t
         best_time = 0
