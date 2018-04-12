@@ -16,14 +16,14 @@ pcolor_max = 8
 
 small_plot = 1
 
-date_range = '??.2018'
+date_range = '15-16.3.2018'
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
 general_label = '28th dosimetry 500 km LEO, VZLUSAT-1'
 epsilon=0.1
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
+images = loadImageRange(from_idx, to_idx, 32, 1, 1, outliers)
 
 doses = calculateEnergyDose(images)
 # doses = calculateTotalPixelCount(images)

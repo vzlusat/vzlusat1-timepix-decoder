@@ -226,8 +226,8 @@
     * Human readible time range: 
   * Dosimetry 28
     * Image range: 19523 to 20529
-    * Linux time range: 
-    * Human readible time range: 
+    * Linux time range: 1521157904 to 1521244217
+    * Human readible time range: 2018-03-15 23:51:44 to 2018-03-16 23:50:17
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * XRB co-measurement 6
     * Image range: 20531 to 20550
