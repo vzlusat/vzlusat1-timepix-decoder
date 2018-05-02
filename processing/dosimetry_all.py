@@ -7,9 +7,25 @@ import matplotlib.ticker as ticker # for colorbar
 
 from include.baseMethods import *
 
-from_idx = 10000
-to_idx = 22000
-outliers=[1148]
+from_to = numpy.array([
+[8894, 9760], # dos 15
+[9767, 10763], # dos 16
+[10835, 11755], # dos 17
+[13485, 14423], # dos 20
+[16997, 17228], # dos 24
+[17271, 18061], # dos 25
+[18075, 18448], # dos 26
+[18464, 19408], # dos 27
+[19523, 20529], # dos 28
+[18064, 18074], # poles 1
+[18452, 18463], # poles 2
+[19412, 19432], # poles 3
+[7736, 7777], # anomaly 6
+[8839, 8893], # anomaly 7
+[19439, 19441], # combined scanning 1
+])
+
+outliers=[]
 
 pcolor_min = 0
 pcolor_max = 7
@@ -22,7 +38,7 @@ x_label = 'Total dose in 14x14x0.3 mm Si'
 general_label = 'VZLUSAT-1, 510 km LEO'
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 32, 1, 1, outliers)
+images = loadImageRangeMulti(from_to, 32, 1, 1, outliers)
 
 doses = calculateEnergyDose(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
