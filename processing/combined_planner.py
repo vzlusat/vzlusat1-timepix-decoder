@@ -9,8 +9,8 @@ import numpy as np
 
 from include.baseMethods import *
 
-from_time = "03.04.2018 20:00:00"
-to_time = "04.04.2018 20:00:00"
+from_time = "04.05.2018 20:00:00"
+to_time = "05.05.2018 20:00:00"
 
 desired_fill = 50
 max_exposure = 0.03
