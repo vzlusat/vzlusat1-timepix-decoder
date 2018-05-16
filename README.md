@@ -244,11 +244,12 @@
     * Linux time range: 
     * Human readible time range: 
     * Exposure 60 s, Fullres
-  * Dosimetry 30
+  * Dosimetry 30 
     * Image range: 21562 to 22534
     * Linux time range: 
     * Human readible time range: 
     * Exposure 0.05 s every 1 minute, Binning16+histograms
+    * missing lot of data, cannot easily generate maps from doses
   * Combined belt+anomaly scanning 2
     * Image range: 22535 to 22585
     * Linux time range: 
