@@ -230,10 +230,34 @@
     * Human readible time range: 2018-03-15 23:51:44 to 2018-03-16 23:50:17
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * XRB co-measurement 6
-    * Image range: 20531 to 20550
+    * Image range: 20531 to 20559
     * Linux time range: 
     * Human readible time range: 
     * Exposure 60 s, Fullres
+  * Dosimetry 29
+    * Image range: 20560 to 21557
+    * Linux time range: 
+    * Human readible time range: 
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * XRB co-measurement 7
+    * Image range: 21558 to 21561 
+    * Linux time range: 
+    * Human readible time range: 
+    * Exposure 60 s, Fullres
+  * Dosimetry 30
+    * Image range: 21562 to 22534
+    * Linux time range: 
+    * Human readible time range: 
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * Combined belt+anomaly scanning 2
+    * Image range: 22535 to 22585
+    * Linux time range: 
+    * Human readible time range: 
+  * Dosimetry 31 [missing metadata, many packets missing]
+    * Image range: 22718 to 23206
+    * Linux time range: 
+    * Human readible time range: 
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
 
 # Installation
 
