@@ -16,20 +16,18 @@ pcolor_max = 7
 
 small_plot = 0
 
-date_range = '14-15.3.2018'
+date_range = ''
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
 general_label = '#2 combined scanning'
 epsilon=0.1
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 32, 1, 0, outliers)
+images = loadImageRange(from_idx, to_idx, 32, 0, 1, outliers)
 
-doses, exp, count = calculateTotalPixelCount2(images)
-# doses, exp, count = calculateEnergyDose2(images)
-doses, exp, count = np.where(doses > 0, np.log10(doses), doses)
-
-print("float(count)/float(exp): {}".format(float(count)/float(exp)))
+doses = calculateTotalPixelCount(images)
+# doses = calculateTotalPixelCount(images)
+doses_log = np.where(doses > 0, np.log10(doses), doses)
 
 lats_orig, lons_orig = extractPositions(images)
 
@@ -42,11 +40,11 @@ doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig,
 x_meshgrid, y_meshgrid = createMeshGrid(100)
 
 # calculate RBF from log data
-rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='gaussian', epsilon=20, smooth=0)
+rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='gaussian', epsilon=15, smooth=0)
 doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 
 # calculate RBF from lin data
-rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='gaussian', epsilon=20, smooth=0)
+rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='gaussian', epsilon=15, smooth=0)
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 #} end of RBF interpolation

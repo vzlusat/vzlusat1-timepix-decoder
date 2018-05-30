@@ -25,11 +25,8 @@ epsilon=0.1
 # prepare data
 images = loadImageRange(from_idx, to_idx, 32, 1, 1, outliers)
 
-# doses, exp, count = calculateTotalPixelCount2(images)
-doses, exp, count = calculateEnergyDose2(images)
-doses, exp, count = np.where(doses > 0, np.log10(doses), doses)
-
-print("float(count)/float(exp): {}".format(float(count)/float(exp)))
+doses = calculateTotalPixelCount(images)
+doses_log = np.where(doses > 0, np.log10(doses), doses)
 
 lats_orig, lons_orig = extractPositions(images)
 
