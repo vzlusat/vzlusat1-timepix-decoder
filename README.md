@@ -251,11 +251,11 @@
     * Exposure 0.05 s every 1 minute, Binning16+histograms
     * missing lot of data, cannot easily generate maps from doses
   * Combined belt+anomaly scanning 2
-    * Image range: 22535 to 22585
+    * Image range: 22535 to 22614
     * Linux time range: 
     * Human readible time range: 
   * Dosimetry 31 [missing metadata, many packets missing]
-    * Image range: 22718 to 23206
+    * Image range: 22617 to 23690
     * Linux time range: 
     * Human readible time range: 
     * Exposure 0.05 s every 1 minute, Binning16+histograms
