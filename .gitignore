@@ -19,6 +19,7 @@ for_distribution/*
 orbital_data/all/147.228.97.106/download/old*
 *.wav
 favorites.pkl
+*.zip
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
