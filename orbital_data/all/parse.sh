@@ -63,6 +63,13 @@ do
 
 done
 
+echo "Running postprocessing for new file format"
+/usr/bin/vim -E -s -c '%g/^000000/norm! f|D' -c "wqa" -- "$outdata"
+/usr/bin/vim -E -s -c '%g/^00000040/norm! ^daW^d$k$p' -c "wqa" -- "$outdata"
+/usr/bin/vim -E -s -c '%g/^00000020/norm! ^daW^d$k$p' -c "wqa" -- "$outdata"
+/usr/bin/vim -E -s -c '%g/^00000000/norm! ^daW:s/ //gIdata:  Otime:  0  0' -c "wqa" -- "$outdata"
+/usr/bin/vim -E -s -c '%g/^$/norm "_dd' -c "wqa" -- "$outdata"
+
 mv "$outhk" ../
 mv "$outmetadata" ../
 mv "$outdata" ../
