@@ -72,3 +72,41 @@ def isForLearning(idx):
         return False
     else:
         return True
+
+def hasExposure(idx):
+
+    comment = getComment(idx)
+
+    if comment.find("#exposure") > -1:
+        return True
+    else:
+        return False 
+
+def getExposure(idx):
+
+    comment = getComment(idx)
+
+    if comment.find("#exposure") > -1:
+        strip_start=comment[comment.find("#exposure")+9:]
+        time=strip_start[:strip_start.find("#")]
+        return int(time)
+    else:
+        return 0
+
+def hasMode(idx):
+
+    comment = getComment(idx)
+
+    if (comment.find("#tot") > -1) or (comment.find("#mpx") > -1):
+        return True
+    else:
+        return False
+
+def getMode(idx):
+
+    comment = getComment(idx)
+
+    if comment.find("#tot") > -1:
+        return 1
+    else:
+        return 0

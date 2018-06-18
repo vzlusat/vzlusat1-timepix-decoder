@@ -155,7 +155,9 @@ def loadFiles():
 
             if image != 0:
 
-                if (hide_without_data_var.get() and (not image.got_data)):
+                if (hide_with_metadata_var.get() and (image.got_metadata)):
+                    pass
+                elif (hide_without_data_var.get() and (not image.got_data)):
                     pass
                 elif (show_only_without_data_var.get() and image.got_data):
                     pass
@@ -917,6 +919,7 @@ just_fullres_var = Tk.IntVar()
 first_image_type_var = Tk.IntVar()
 show_favorite_var = Tk.IntVar()
 hide_without_data_var = Tk.IntVar()
+hide_with_metadata_var = Tk.IntVar()
 show_only_without_data_var = Tk.IntVar()
 hide_housekeeping_var = Tk.IntVar()
 show_adrenalin_var = Tk.IntVar()
@@ -1226,6 +1229,9 @@ show_only_without_data.pack(side=Tk.BOTTOM)
 hide_without_data = Tk.Checkbutton(master=frame_left, text="hide images without data (w)", variable=hide_without_data_var, command=reloadList, font=customfont)
 hide_without_data.pack(side=Tk.BOTTOM)
 
+hide_with_metadata = Tk.Checkbutton(master=frame_left, text="show images with missing metadata (M)", variable=hide_with_metadata_var, command=reloadList, font=customfont)
+hide_with_metadata.pack(side=Tk.BOTTOM)
+
 hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping (h)", variable=hide_housekeeping_var, command=reloadList, font=customfont)
 hide_housekeeping.pack(side=Tk.BOTTOM)
 
@@ -1355,6 +1361,10 @@ def on_key_event(event):
         if current_key == 'm':
             just_metadata.toggle()
             reloadCurrentImage()
+
+        if current_key == 'M':
+            hide_with_metadata.toggle()
+            reloadList()
 
         if current_key == 'W':
             show_only_without_data.toggle()

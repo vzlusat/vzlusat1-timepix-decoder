@@ -16,6 +16,7 @@ from src.baseMethods import getPngFileName
 import src.statusLine as statusLine
 import sys
 import os
+import src.comments as comments
 
 import datetime
 
@@ -39,7 +40,7 @@ def parseInputFile(file_path, root):
         if line.find("time") > -1:
 
             try:
-                last_time = int(line[7:16])+946684800
+                last_time = int(line[6:15])+946684800
             except:
                 last_time = 0
 
@@ -47,10 +48,7 @@ def parseInputFile(file_path, root):
         if line.find("data") > -1:
 
             # select the part with the data
-            if sys.getsizeof(line) % 2 == 1:
-                hex_data = line[7:-1]
-            else:
-                hex_data = line[7:-2]
+            hex_data = line[6:-1]
 
             # convert to binary
             try:
@@ -117,10 +115,12 @@ def parseInputFile(file_path, root):
             if isinstance(temp_image, Image):
                 files_to_save[getFileName(temp_image.id, temp_image.type)] = temp_image
 
-            # if temp_image.got_metadata == 0:
-            #     temp_image.got_metadata = 1
-            #     temp_image.time = last_time
-            #     temp_image.exposure = 1000
+                if (temp_image.got_metadata == 0) and comments.hasMode(temp_image.id) and comments.hasExposure(temp_image.id):
+                    temp_image.got_metadata = 1
+                    temp_image.time = last_time
+                    comment_exposure = comments.getExposure(temp_image.id)
+                    temp_image.exposure = comment_exposure
+                    temp_image.mode = comments.getMode(temp_image.id)
 
     statusLine.set("Saving images to binary files")
 

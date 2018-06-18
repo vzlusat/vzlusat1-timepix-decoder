@@ -64,11 +64,17 @@ do
 done
 
 echo "Running postprocessing for new file format"
-/usr/bin/vim -E -s -c '%g/^000000/norm! f|D' -c "wqa" -- "$outdata"
-/usr/bin/vim -E -s -c '%g/^00000040/norm! ^daW^d$k$p' -c "wqa" -- "$outdata"
-/usr/bin/vim -E -s -c '%g/^00000020/norm! ^daW^d$k$p' -c "wqa" -- "$outdata"
-/usr/bin/vim -E -s -c '%g/^00000000/norm! ^daW:s/ //gIdata:  Otime:  0  0' -c "wqa" -- "$outdata"
-/usr/bin/vim -E -s -c '%g/^$/norm "_dd' -c "wqa" -- "$outdata"
+/usr/bin/vim -E -s -c 'bufdo %g/^000000/norm! f|D' -c "wqa" -- "$outhk" "$outmetadata" "$outdata"
+/usr/bin/vim -E -s -c 'bufdo %g/^00000040/norm! ^daW^d$k$p' -c "wqa" -- "$outhk" "$outmetadata" "$outdata"
+/usr/bin/vim -E -s -c 'bufdo %g/^00000020/norm! ^daW^d$k$p' -c "wqa" -- "$outhk" "$outmetadata" "$outdata"
+/usr/bin/vim -E -s -c 'bufdo %g/^00000000/norm! ^daW:s/ //gIdata: Otime: 0000000000 0' -c "wqa" -- "$outhk" "$outmetadata" "$outdata"
+/usr/bin/vim -E -s -c 'bufdo %g/^$/norm! "_dd' -c "wqa" -- "$outhk" "$outmetadata" "$outdata"
+/usr/bin/vim -E -s -c '%s/\s\+/ /g' -c "wqa" -- "$outhk"
+/usr/bin/vim -E -s -c '%s/\s\+/ /g' -c "wqa" -- "$outmetadata"
+/usr/bin/vim -E -s -c '%s/\s\+/ /g' -c "wqa" -- "$outdata"
+/usr/bin/vim -E -s -c '%s/$//g' -c "wqa" -- "$outhk"
+/usr/bin/vim -E -s -c '%s/$//g' -c "wqa" -- "$outmetadata"
+/usr/bin/vim -E -s -c '%s/$//g' -c "wqa" -- "$outdata"
 
 mv "$outhk" ../
 mv "$outmetadata" ../
