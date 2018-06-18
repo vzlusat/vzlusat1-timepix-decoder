@@ -259,11 +259,15 @@
     * Linux time range: 1525625490 to 1525711357
     * Human readible time range: 2018-05-06 16:51:30 to 2018-05-07 16:42:37
     * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * XRB co-measurement 8
+    * Image range: 23691 to 23692 
+    * Linux time range: 
+    * Human readible time range: 
+    * Exposure 60 s, Fullres
   * Dosimetry 32
     * Image range: 23693 to 24730
     * Linux time range: 
     * Human readible time range: 
-    * 
     * Exposure 0.05 s every 1 minute, Binning16+histograms
 
 # Installation
