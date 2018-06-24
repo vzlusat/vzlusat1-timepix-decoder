@@ -7,9 +7,12 @@ import matplotlib.ticker as ticker # for colorbar
 
 from include.baseMethods import *
 
-from_idx = 22535
-to_idx = 22614
-outliers=[]
+from_to = numpy.array([
+# [19445, 19522], #combined 1
+[22535, 22614], # combined 2
+])
+
+outliers=[19459, 19499, 19508, 19516, 22559, 22586]
 
 pcolor_min = 0
 pcolor_max = 7
@@ -20,10 +23,10 @@ date_range = ''
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
 general_label = '#2 combined scanning'
-epsilon=0.1
+epsilon=20.0
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 32, 1, 1, outliers)
+images = loadImageRangeMulti(from_to, 32, 1, 1, outliers)
 
 doses = calculateEnergyDose(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
@@ -39,11 +42,11 @@ doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig,
 x_meshgrid, y_meshgrid = createMeshGrid(100)
 
 # calculate RBF from log data
-rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='gaussian', epsilon=15, smooth=0)
+rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='gaussian', epsilon=epsilon, smooth=0)
 doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 
 # calculate RBF from lin data
-rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='gaussian', epsilon=15, smooth=0)
+rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='gaussian', epsilon=epsilon, smooth=0)
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 #} end of RBF interpolation
