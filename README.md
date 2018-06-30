@@ -217,39 +217,38 @@
     * Human readible time range: 2018-03-04 20:01:58 to 2018-03-08 20:14:18
   * XRB co-measurement 5
     * Image range: 19439 to 19441
-    * Linux time range: 
-    * Human readible time range: 
+    * Linux time range: 1520630594 to 1520795616
+    * Human readible time range: 2018-03-09 21:23:14 to 2018-03-11 19:13:36
     * Exposure 60 s, Fullres
   * Combined belt+anomaly scanning 1
     * Image range: 19445 to 19522
-    * Linux time range: 
-    * Human readible time range: 
+    * Linux time range: 1521056978 to 1521139715
+    * Human readible time range: 2018-03-14 19:49:38 to 2018-03-15 18:48:35
   * Dosimetry 28
     * Image range: 19523 to 20529
     * Linux time range: 1521157904 to 1521244217
     * Human readible time range: 2018-03-15 23:51:44 to 2018-03-16 23:50:17
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * XRB co-measurement 6
-    * Image range: 20531 to 20559
-    * Linux time range: 
-    * Human readible time range: 
+    * Image range: 20530 to 20559
+    * Linux time range: 1521716816 to 1522272740
+    * Human readible time range: 2018-03-22 11:06:56 to 2018-03-28 21:32:20
     * Exposure 60 s, Fullres
   * Dosimetry 29
     * Image range: 20560 to 21557
-    * Linux time range: 
-    * Human readible time range: 
+    * Linux time range: 1522367504 to 1522453804
+    * Human readible time range: 2018-03-29 23:51:44 to 2018-03-30 23:50:04
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * XRB co-measurement 7
     * Image range: 21558 to 21561 
-    * Linux time range: 
-    * Human readible time range: 
+    * Linux time range: 1524642427 to 1524686868
+    * Human readible time range: 2018-04-25 07:47:07 to 2018-04-25 20:07:48
     * Exposure 60 s, Fullres
   * Dosimetry 30 
     * Image range: 21562 to 22534
-    * Linux time range: 
-    * Human readible time range: 
+    * Linux time range: 1524761488 to 1524847799
+    * Human readible time range: 2018-04-26 16:51:28 to 2018-04-27 16:49:59
     * Exposure 0.05 s every 1 minute, Binning16+histograms
-    * missing lot of data, cannot easily generate maps from doses
   * Combined belt+anomaly scanning 2
     * Image range: 22535 to 22616
     * Linux time range: 1525465148 to 1525541968
@@ -266,9 +265,14 @@
     * Exposure 60 s, Fullres
   * Dosimetry 32
     * Image range: 23693 to 24730
-    * Linux time range: 1528570258 to
-    * Human readible time range: 2018-06-09 18:50:58 to 
+    * Linux time range: 1528570258 to 1528656581
+    * Human readible time range: 2018-06-09 18:50:58 to 2018-06-10 18:49:41
     * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * XRB co-measurement 9
+    * Image range: 24731 to 24737 
+    * Linux time range: 
+    * Human readible time range: 
+    * Exposure 60 s, Fullres
 
 # Installation
 
