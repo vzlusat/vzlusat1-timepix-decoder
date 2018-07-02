@@ -9,8 +9,8 @@ import numpy as np
 
 from include.baseMethods import *
 
-from_time = "04.05.2018 20:00:00"
-to_time = "05.05.2018 20:00:00"
+from_time = "04.07.2018 20:00:00"
+to_time = "05.07.2018 20:00:00"
 
 desired_fill = 50
 max_exposure = 0.03
@@ -454,7 +454,7 @@ def plot_everything(*args):
     
     plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
     
-    plt.savefig(directory+"/{}_combined.jpg".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
+    plt.savefig(directory+"/{}_combined.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
     
     #} end of globe south
 
@@ -485,7 +485,7 @@ def plot_everything(*args):
     
     plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
     
-    # plt.savefig(directory+"/{}_anomaly.jpg".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
+    # plt.savefig(directory+"/{}_anomaly.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
     
     #} end of globe south
 
@@ -516,7 +516,7 @@ def plot_everything(*args):
     
     plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
     
-    # plt.savefig(directory+"/{}_anomaly.jpg".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
+    # plt.savefig(directory+"/{}_anomaly.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
     
     #} end of globe south
 
