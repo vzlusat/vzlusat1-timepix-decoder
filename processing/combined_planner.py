@@ -24,16 +24,9 @@ approx_pole = 25
 latitude_limit = 8
 
 from_to = numpy.array([
-[17271, 18061], # dos 25
-[18075, 18448], # dos 26
-[18464, 19408], # dos 27
-[19523, 20529], # dos 28
-[18064, 18074], # poles 1
-[18452, 18463], # poles 2
-[19412, 19432], # poles 3
-[7736, 7777], # anomaly 6
-[8839, 8893], # anomaly 7
-[19439, 19441], # combined scanning 1
+[21562, 22534], # dosimetry 30
+[22617, 23690], # dosimetry 31
+[23693, 24730], # dosimetry 32
 ])
 
 outliers=[]
@@ -49,7 +42,7 @@ sgap_size = 25.0
 pcolor_min = 0
 pcolor_max = 7
 
-mesh_size = 200
+mesh_size = 100
 
 step_size = 15
 
