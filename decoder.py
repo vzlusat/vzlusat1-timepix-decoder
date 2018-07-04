@@ -1386,6 +1386,8 @@ def on_key_event(event):
 
 listbox.bind_all('<Key>', on_key_event)
 
+
+
 def listboxFocusIn(event):
 
     global listbox_focus

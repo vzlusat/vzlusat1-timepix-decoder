@@ -24,9 +24,10 @@ approx_pole = 25
 latitude_limit = 8
 
 from_to = numpy.array([
-[21562, 22534], # dosimetry 30
-[22617, 23690], # dosimetry 31
-[23693, 24730], # dosimetry 32
+# [21562, 22534], # dosimetry 30
+# [22617, 23690], # dosimetry 31
+# [23693, 24730], # dosimetry 32
+[24738, 25754], # dosimetry 33
 ])
 
 outliers=[]
@@ -46,7 +47,7 @@ mesh_size = 100
 
 step_size = 15
 
-epsilon=0.1
+epsilon=1.0
 x_label = 'Pixel count'
 x_units = '(counts)'
 
@@ -198,7 +199,7 @@ with open(file_name, "w") as file:
             anom_times.append(j)
 
     # find the closest point to the anomaly in each orbit
-    for g in range(0, 4):
+    for g in range(0, 3):
 
         i = t
         best_time = 0
