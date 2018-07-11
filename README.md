@@ -278,6 +278,11 @@
     * Linux time range:
     * Human readible time range:
     * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * XRB co-measurement 10
+    * Image range: 25755 to 25760 
+    * Linux time range: 
+    * Human readible time range: 
+    * Exposure 60 s, Fullres
 
 # Installation
 
