@@ -9,25 +9,22 @@ import numpy as np
 
 from include.baseMethods import *
 
-from_time = "06.07.2018 19:51:00"
-to_time = "07.07.2018 20:00:00"
+from_time = "28.07.2018 20:00:00"
+to_time = "29.07.2018 20:00:00"
 
-desired_fill = 50
+desired_fill = 65
 max_exposure = 0.03
 hkc_buffer_time = 300
 
 n = 1
 
-dt = 240
+anomaly_dt = 240
 
 approx_pole = 25
 latitude_limit = 8
 
 from_to = numpy.array([
-# [21562, 22534], # dosimetry 30
-# [22617, 23690], # dosimetry 31
-# [23693, 24730], # dosimetry 32
-[24738, 25754], # dosimetry 33
+[24738, 25917], # dosimetry 33
 ])
 
 outliers=[]
@@ -45,7 +42,7 @@ pcolor_max = 7
 
 mesh_size = 100
 
-step_size = 15
+step_size = 5
 
 epsilon=1.0
 x_label = 'Pixel count'
@@ -189,7 +186,7 @@ with open(file_name, "w") as file:
 
         temp_counter = 0
         
-        for j in range(times[i]-n*dt, times[i]+(n+1)*dt, dt):
+        for j in range(times[i]-n*anomaly_dt, times[i]+(n+1)*anomaly_dt, anomaly_dt):
 
             temp_counter += 1
 
