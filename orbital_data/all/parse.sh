@@ -67,6 +67,21 @@ done
 
 echo "Running postprocessing for new file format"
 
+# find the vim binary
+if [[ "$CUSTOM_BINARY_PATH" == 0 ]]; then
+  # localte the vim binary
+  if [ -x "$(whereis nvim | awk '{print $2}')" ]; then
+    VIM_BIN="$(whereis nvim | awk '{print $2}')"
+    HEADLESS="--headless"
+  elif [ -x "$(whereis vim | awk '{print $2}')" ]; then
+    VIM_BIN="$(whereis vim | awk '{print $2}')"
+    HEADLESS=""
+  else
+    echo "Cannot find vim or neovim binary."
+    return 1
+  fi
+fi
+
 files=( "$outhk" "$outmetadata" "$outdata" )
 
 for ((i=0; i < ${#files[*]}; i++));
@@ -75,23 +90,24 @@ do
   echo "Postprocessing ${files[$i]}"
 
   # delete the human-readible transcript at the end of the lines
-  /usr/bin/vim -E -s -c '%g/^000000/norm! f|D' -c "wqa" -- "${files[$i]}"
+  $VIM_BIN $HEADLESS -E -s -c '%g/^000000/norm! f|D' -c "wqa" -- "${files[$i]}"
 
   # convert the "up-to" three lines to a single line
-  /usr/bin/vim -E -s -c '%g/^00000040/norm! ^daW^d$k$p' -c "wqa" -- "${files[$i]}"
-  /usr/bin/vim -E -s -c '%g/^00000020/norm! ^daW^d$k$p' -c "wqa" -- "${files[$i]}"
-  /usr/bin/vim -E -s -c '%g/^00000000/norm! ^daW:s/ //gIdata: Otime: 0000000000 0 0' -c "wqa" -- "${files[$i]}"
+  $VIM_BIN $HEADLESS -E -s -c '%g/^00000040/norm! ^daW^d$k$p' -c "wqa" -- "${files[$i]}"
+  $VIM_BIN $HEADLESS -E -s -c '%g/^00000020/norm! ^daW^d$k$p' -c "wqa" -- "${files[$i]}"
+  $VIM_BIN $HEADLESS -E -s -c '%g/^00000000/norm! ^daW:s/ //gIdata: Otime: 0000000000 0 0' -c "wqa" -- "${files[$i]}"
 
   # delete the empty lines
-  /usr/bin/vim -E -s -c '%g/^$/norm! "_dd' -c "wqa" -- "${files[$i]}"
+  $VIM_BIN $HEADLESS -E -s -c '%g/^$/norm! "_dd' -c "wqa" -- "${files[$i]}"
   # substitute every double space for single space
-  /usr/bin/vim -E -s -c '%s/\s\+/ /g' -c "wqa" -- "${files[$i]}"
+  $VIM_BIN $HEADLESS -E -s -c '%s/\s\+/ /g' -c "wqa" -- "${files[$i]}"
   # remove abundant endlns
-  /usr/bin/vim -E -s -c '%s/$//g' -c "wqa" -- "${files[$i]}"
+  $VIM_BIN $HEADLESS -E -s -c '%s/$//g' -c "wqa" -- "${files[$i]}"
   # remote "--" lines
-  /usr/bin/vim -E -s -c '%g/^--$/norm! dd' -c "wqa" -- "${files[$i]}"
+  $VIM_BIN $HEADLESS -E -s -c '%g/^--$/norm! dd' -c "wqa" -- "${files[$i]}"
 
   mv "${files[$i]}" ../
 done
+
 
 echo Done
