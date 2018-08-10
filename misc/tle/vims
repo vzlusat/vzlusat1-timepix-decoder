@@ -49,5 +49,4 @@ if [ "$DISABLE_VIMRC" -eq "1" ]; then
     vim_cmds=(-u NONE "${vim_cmds[@]}")
 fi
 
-vim - -nes "${vim_cmds[@]}" -c ':q!' | tail -n +2
-
+/usr/bin/vim - -nes "${vim_cmds[@]}" -c ':q!' | tail -n +2
