@@ -4,7 +4,7 @@ TLE_DIR="147.228.97.106/tle"
 MY_PATH=`dirname "$0"`
 MY_PATH=`( cd "$MY_PATH" && pwd )`
 
-wget -rN --no-parent --reject "index.html*" http://147.228.97.106/tle/
+# wget -rN --no-parent --reject "index.html*" http://147.228.97.106/tle/
 
 cd $MY_PATH/$TLE_DIR
 rm _amateur.txt
@@ -24,6 +24,8 @@ do
 
     # convert the human readable time stamp to unix epoch
     timestamp=`date -u --date="$correcttime" +"%s"`
+
+    echo $tle
 
     echo "$timestamp" >> tle.txt
     echo "$tle" >> tle.txt

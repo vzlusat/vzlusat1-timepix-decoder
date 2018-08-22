@@ -395,7 +395,7 @@ def exportRaw(image):
             if platform.system() == "Windows":
                 float_delim = '.'
             else:
-                float_delim = ','
+                float_delim = '.'
         
             for i in range(0, 256):
                 writer.writerow(["{:.2f}".format(x).replace('.', float_delim) for x in image.data[i, :]])
@@ -411,7 +411,7 @@ def exportPixetRaw(image, image_iter):
         if platform.system() == "Windows":
             float_delim = '.'
         else:
-            float_delim = ','
+            float_delim = '.'
     
         for i in range(0, 256):
             writer.writerow(["{:.2f}".format(x).replace('.', float_delim) for x in image.data[i, :]])
