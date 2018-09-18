@@ -114,22 +114,25 @@ def parseBinning8(bin_data, image_dict):
 
     image = parseImageHeader(bin_data, 2, image_dict)
 
-    statusLine.set("Parsing binning {}".format(image.id))
-
-    packet_id = bin_data[2]
-
-    if (image.data.shape[0] != 32) or (image.data.shape[1] != 32):
-        image.data = numpy.ones(shape=[32, 32]) * -1        
-
-    image_reshaped = image.data.reshape((1, 32*32))
-
-    image_reshaped[:, (packet_id*64):((packet_id+1)*64)] = bin_data[3:67]
-    
-    image.data = image_reshaped.reshape((32, 32))
-    
-    image.type = 2
-
-    image.got_data = 1
+    try:
+        statusLine.set("Parsing binning {}".format(image.id))
+        
+        packet_id = bin_data[2]
+        
+        if (image.data.shape[0] != 32) or (image.data.shape[1] != 32):
+            image.data = numpy.ones(shape=[32, 32]) * -1        
+        
+        image_reshaped = image.data.reshape((1, 32*32))
+        
+        image_reshaped[:, (packet_id*64):((packet_id+1)*64)] = bin_data[3:67]
+        
+        image.data = image_reshaped.reshape((32, 32))
+        
+        image.type = 2
+        
+        image.got_data = 1
+    except:
+        return;
 
     return image
 

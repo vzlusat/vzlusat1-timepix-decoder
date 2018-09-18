@@ -69,12 +69,12 @@ echo "Running postprocessing for new file format"
 
 # find the vim binary
 # localte the vim binary
-if [ -x "$(whereis nvim | awk '{print $2}')" ]; then
-  VIM_BIN="$(whereis nvim | awk '{print $2}')"
-  HEADLESS="--headless"
-elif [ -x "$(whereis vim | awk '{print $2}')" ]; then
+if [ -x "$(whereis vim | awk '{print $2}')" ]; then
   VIM_BIN="$(whereis vim | awk '{print $2}')"
   HEADLESS=""
+elif [ -x "$(whereis nvim | awk '{print $2}')" ]; then
+  VIM_BIN="$(whereis nvim | awk '{print $2}')"
+  HEADLESS="--headless"
 else
   echo "Cannot find vim or neovim binary."
   return 1

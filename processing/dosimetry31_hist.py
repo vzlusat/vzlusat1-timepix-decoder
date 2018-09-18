@@ -50,107 +50,107 @@ doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 def plot_everything(*args):
 
-    plt.figure(1)
+    #plt.figure(1)
 
-    #{ Figure 1
+    ##{ Figure 1
 
-    ax1 = plt.subplot2grid((2, 3), (0, 0))
+    #ax1 = plt.subplot2grid((2, 3), (0, 0))
 
 #{ log-scale scatter
 
-    m = createMap('cyl')
+    # m = createMap('cyl')
 
-    x_m, y_m = m(lons_orig, lats_orig) # project points
+    # x_m, y_m = m(lons_orig, lats_orig) # project points
 
-    CS = m.hexbin(x_m, y_m, C=numpy.array(doses), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max)
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    # CS = m.hexbin(x_m, y_m, C=numpy.array(doses), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max)
+    # cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
-    cb.set_label('log10('+x_label+') '+x_units)
-    plt.title(general_label+', '+date_range, fontsize=13)
+    # cb.set_label('log10('+x_label+') '+x_units)
+    # plt.title(general_label+', '+date_range, fontsize=13)
 
 #} end of log-scale scatter
 
-    ax2 = plt.subplot2grid((2, 3), (0, 1))
+    # ax2 = plt.subplot2grid((2, 3), (0, 1))
 
 #{ log-scale rbf
 
-    m = createMap('cyl')
+    # m = createMap('cyl')
 
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+    # x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+    # m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('RBF multiquadric (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
+    # cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    # cb.set_label('log10('+x_label+') '+x_units)
+    # plt.title('RBF multiquadric (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
 
 #} end of log-scale rbf
 
-    ax3 = plt.subplot2grid((2, 3), (0, 2))
+    # ax3 = plt.subplot2grid((2, 3), (0, 2))
 
 #{ linear rbf
 
-    m = createMap('cyl')
+    # m = createMap('cyl')
 
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+    # x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_lin, cmap=my_cm)
+    # m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_lin, cmap=my_cm)
 
-    cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
-    cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
+    # cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
+    # cb.set_label(x_label+' '+x_units)
+    # plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
 
 #} end of linear rbf
 
-    ax3 = plt.subplot2grid((2, 3), (1, 0))
+    # ax3 = plt.subplot2grid((2, 3), (1, 0))
 
 #{ south-pole, log rbf
 
-    m = createMap('ortho', -90, 0)
+    # m = createMap('ortho', -90, 0)
 
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+    # x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+    # m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
+    # cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    # cb.set_label(x_label+' '+x_units)
+    # plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
 
 #} end of south-pole, log rbf
 
-    ax3 = plt.subplot2grid((2, 3), (1, 1))
+    # ax3 = plt.subplot2grid((2, 3), (1, 1))
 
 #{ north-pole, log rbf
 
-    m = createMap('ortho', 90, 0)
+    # m = createMap('ortho', 90, 0)
 
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+    # x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+    # m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
+    # cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    # cb.set_label(x_label+' '+x_units)
+    # plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
 
 #} end of north-pole, log rbf
 
-    ax3 = plt.subplot2grid((2, 3), (1, 2))
+    # ax3 = plt.subplot2grid((2, 3), (1, 2))
 
 #{ anomaly, log rbf
 
-    m = createMap('ortho', -30, -50)
+    # m = createMap('ortho', -30, -50)
 
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+    # x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+    # m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    cb.set_label(x_label+' '+x_units)
-    plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
+    # cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    # cb.set_label(x_label+' '+x_units)
+    # plt.title('RBF multiquadric (eps={}), linear scale, '.format(epsilon)+date_range, fontsize=13)
 
 #} end of anomaly, log rbf
 
-    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
+    # plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
 
     #} end of Figure 1
 
@@ -166,11 +166,16 @@ def plot_everything(*args):
 
         x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
+        for idx, dose in enumerate(doses_log):
+            print("dose: {}, color: {}".format(dose, my_cm(dose)))
+            x, y = m(lons_orig[idx], lats_orig[idx])
+            m.scatter(x, y, 30, marker='o', edgecolor=(0.5, 0.5, 0.5, 1.0), linewidth='1.5', color=my_cm((dose-pcolor_min)/pcolor_max), zorder=10)
+
         m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
         cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-        cb.set_label('log10('+x_label+') '+x_units)
-        plt.title('RBF multiquadric (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
+        cb.set_label('log('+x_label+') '+x_units)
+        plt.title('RBF multiquadric (eps={}), log scale, '.format(epsilon)+date_range, fontsize=13)
 
         #} end of log-scale rbf
 
