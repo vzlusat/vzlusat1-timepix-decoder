@@ -6,6 +6,7 @@ from scipy.interpolate import Rbf
 import matplotlib.ticker as ticker # for colorbar
 import time
 import numpy as np
+import pickle as pkl
 
 from include.baseMethods import *
 
@@ -21,11 +22,10 @@ n = 1
 anomaly_dt = 240
 
 approx_pole = 25
-latitude_limit = 8
+latitude_limit = 10
 
 from_to = numpy.array([
-[22617, 23690], # dosimetry 31
-# [24738, 25917], # dosimetry 33
+[24738, 25917], # dosimetry 33
 ])
 
 outliers=[]
@@ -54,7 +54,7 @@ total_chunks = 0
 directory="scripts_combined"
 
 # prepare data
-images = loadImageRangeMulti(from_to, 32, 0, 1, outliers)
+images = loadImageRangeMulti(from_to, 32, 1, 1, outliers)
 
 doses = calculateTotalPixelCount(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
@@ -98,6 +98,8 @@ times = []
 orbit_line_lats = []
 orbit_line_lons = []
 
+# #{ isfree
+
 def is_free(x, y):
 
     num = 0
@@ -120,6 +122,10 @@ def is_free(x, y):
 
     return True
 
+# #} end of isfree
+
+# #{ add
+
 def add(x, y, best_time, orbit_n):
 
     if is_free(x, y):
@@ -135,6 +141,10 @@ def add(x, y, best_time, orbit_n):
 
         return False
 
+# #} end of add
+
+# #{ 
+    
 with open(file_name, "w") as file:
 
     print("t: {}".format(t))
@@ -186,7 +196,7 @@ with open(file_name, "w") as file:
     for i in range(len(lats)):
 
         temp_counter = 0
-        
+
         for j in range(times[i]-n*anomaly_dt, times[i]+(n+1)*anomaly_dt, anomaly_dt):
 
             temp_counter += 1
@@ -197,7 +207,7 @@ with open(file_name, "w") as file:
             anom_times.append(j)
 
     # find the closest point to the anomaly in each orbit
-    for g in range(0, 4):
+    for g in range(0, 3):
 
         i = t
         best_time = 0
@@ -282,7 +292,7 @@ with open(file_name, "w") as file:
 
                                 print("Appending: latitude: {}, longitude: {}".format(max_lat, max_lon))
                                 exposure_in_first = True
-                        
+
                             else:
 
                                 print("Could not add the point, too close.")
@@ -372,10 +382,10 @@ with open(file_name, "w") as file:
             file.write(time+"\tP\tx sp 400 1 70 0 1 {} 80 0 0\r\n".format(1+2+32))
             # time = datetime.datetime.utcfromtimestamp(t_now-50-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
             # file.write(time+"\tP\th conf 3 3 0 01400000000000000000\r\n")
-            
+
         # time = datetime.datetime.utcfromtimestamp(t_now-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
         # file.write(time+"\tP\th go 3 1\r\n")
-        
+
         latitude, longitude, tle_date = getLatLong(int(t_now))
         out_lats.append(latitude)
         # out_orbits.append(orbits[i])
@@ -418,15 +428,19 @@ with open(file_name, "w") as file:
     time = datetime.datetime.utcfromtimestamp(out_times[-1]+300).strftime('%Y-%m-%d %H:%M:%S')
     file.write(time+"\tP\tx pwr 0\r\n")
     time = datetime.datetime.utcfromtimestamp(out_times[-1]+300+hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
-    
+
 fig1 = []
+
+# #} end of 
+
+pkl.dump(doses_rbf_log, open('comebined_cash.pkl', 'wb'))
 
 def plot_everything(*args):
 
     fig1 = plt.figure(1)
 
-    ax1 = plt.subplot2grid((3, 2), (0, 0), colspan=2, rowspan=2)
-    # ax1 = plt.subplot2grid((1, 1), (0, 0))
+    # ax1 = plt.subplot2grid((3, 2), (0, 0), colspan=2, rowspan=2)
+    ax1 = plt.subplot2grid((1, 1), (0, 0))
 
     # #{ map
     
@@ -434,13 +448,13 @@ def plot_everything(*args):
     
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
     
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.01)
     
-    cb = m.colorbar(location="bottom", label="Log of relative intensity [px flux]") # draw colorbar
+    cb = m.colorbar(location="bottom", label="Pixel activity (px/s, log)") # draw colorbar
     
     for i in range(len(orbit_line_lats)):
         x, y = m(orbit_line_lons[i], orbit_line_lats[i])
-        m.scatter(x, y, 20, marker='o', color='grey', zorder=5)
+        m.scatter(x, y, 5, marker='o', color='grey', zorder=5)
     
     for i in range(len(out_lats)):
         x, y = m(out_lons[i], out_lats[i])
@@ -449,90 +463,28 @@ def plot_everything(*args):
         # plt.text(x+1, y+1, '{}'.format(out_orbits[i]), fontsize=13, fontweight='bold', ha='left', va='bottom', color='k', zorder=10)
     
     # cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('Combined scanning, starting on {}'.format(from_time))
+    # plt.title('Combined scanning, starting on {}'.format(from_time))
     
-    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
+    # plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
     
-    plt.savefig(directory+"/{}_combined.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
-    
-    # #} end of globe south
-
-    ax1 = plt.subplot2grid((3, 2), (2, 0))
-
-    # #{ globe south
-    
-    m = createMap('ortho', -90, 0)
-    
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
-    
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
-    
-    cb = m.colorbar(location="bottom", label="") # draw colorbar
-    
-    # for i in range(len(orbit_line_lats)):
-    #     x, y = m(orbit_line_lons[i], orbit_line_lats[i])
-    #     m.scatter(x, y, 20, marker='o', color='grey', zorder=5)
-    
-    for i in range(len(out_lats)):
-        x, y = m(out_lons[i], out_lats[i])
-        m.scatter(x, y, 80, marker='o', color='k', zorder=10)
-    
-        # plt.text(x+1, y+1, '{}'.format(out_orbits[i]), fontsize=13, fontweight='bold', ha='left', va='bottom', color='k', zorder=10)
-    
-    # cb.set_label('log10('+x_label+') '+x_units)
-    # plt.title('Anomaly scanning, starting at {}'.format(from_time))
-    
-    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
-    
-    # plt.savefig(directory+"/{}_anomaly.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
-    
-    # #} end of globe south
-
-    ax1 = plt.subplot2grid((3, 2), (2, 1))
-
-    # #{ globe south
-    
-    m = createMap('ortho', +90, 0)
-    
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
-    
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
-    
-    cb = m.colorbar(location="bottom", label="") # draw colorbar
-    
-    # for i in range(len(orbit_line_lats)):
-    #     x, y = m(orbit_line_lons[i], orbit_line_lats[i])
-    #     m.scatter(x, y, 20, marker='o', color='grey', zorder=5)
-    
-    for i in range(len(out_lats)):
-        x, y = m(out_lons[i], out_lats[i])
-        m.scatter(x, y, 80, marker='o', color='k', zorder=10)
-    
-        # plt.text(x+1, y+1, '{}'.format(out_orbits[i]), fontsize=13, fontweight='bold', ha='left', va='bottom', color='k', zorder=10)
-    
-    # cb.set_label('log10('+x_label+') '+x_units)
-    # plt.title('Anomaly scanning, starting at {}'.format(from_time))
-    
-    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
-    
-    # plt.savefig(directory+"/{}_anomaly.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
+    # plt.savefig(directory+"/{}_combined.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
     
     # #} end of globe south
 
     plt.show()
 
-print("total_chunks: {}".format(total_chunks))
+# print("total_chunks: {}".format(total_chunks))
 
-file_name = directory+"/{}_combined.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
+# file_name = directory+"/{}_combined.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
 
-with open(file_name, "w") as file:
+# with open(file_name, "w") as file:
 
-    file.write("from: "+from_time+"\r\n")
-    file.write("to: "+to_time+"\r\n")
-    file.write("desired fill: {} px per image\r\n".format(desired_fill))
-    file.write("estimated number of chunks: {}\r\n".format(int(total_chunks)))
-    # file.write("based on data range: {} to {}\r\n".format(from_idx, to_idx))
-    file.write("max blunt exposure time: {} ms".format(max_exposure))
+#     file.write("from: "+from_time+"\r\n")
+#     file.write("to: "+to_time+"\r\n")
+#     file.write("desired fill: {} px per image\r\n".format(desired_fill))
+#     file.write("estimated number of chunks: {}\r\n".format(int(total_chunks)))
+#     # file.write("based on data range: {} to {}\r\n".format(from_idx, to_idx))
+#     file.write("max blunt exposure time: {} ms".format(max_exposure))
 
 pid = os.fork()
 if pid == 0:

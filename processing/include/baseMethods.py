@@ -259,14 +259,14 @@ def createMap(projection, lat=0, lon=0):
     m = []
 
     if projection == 'ortho':
-        m = Basemap(projection=projection, lat_0=lat, lon_0=lon, resolution='l')
+        m = Basemap(projection=projection, lat_0=lat, lon_0=lon, resolution='l', suppress_ticks=True)
     else:
-        m = Basemap(projection=projection, lon_0=0, llcrnrlat=-90, urcrnrlat=90, llcrnrlon=-180, urcrnrlon=180, resolution='c')
+        m = Basemap(projection=projection, suppress_ticks=True)
 
     # draw continents
-    m.drawcoastlines()
-    m.drawparallels(np.arange(-90, 91, 30))
-    m.drawmeridians(np.arange(-180, 181, 60))
+    # m.drawparallels(np.arange(-90, 91, 30))
+    # m.drawmeridians(np.arange(-180, 181, 60))
+    m.drawcoastlines(linewidth=1.25, zorder=2)
     m.drawmapboundary(fill_color='white')
 
     return m
@@ -287,3 +287,103 @@ def createMeshGrid(n):
     XX, YY = np.meshgrid(tlat, tlon)
 
     return XX, YY
+
+def sample_sphere_uniform(n_points):
+    x = np.random.normal (0,1,n_points)
+    y = np.random.normal(0,1,n_points)
+    z = np.random.normal(0,1,n_points)
+    pts = np.vstack((x,y,z)).transpose()
+    pts = pts/np.repeat(np.atleast_2d(np.linalg.norm(pts,ord=2,axis=1)).transpose(), repeats=3, axis=1)
+    lats = np.arcsin(pts[:,-1])*180/3.14
+    longs = np.arctan2(pts[:,0], pts[:,1])*180/3.14
+    return lats, longs
+
+class Face():
+    def __init__(self, init_verts):
+        self.vertices = np.zeros((3,3))
+        self.vertices = init_verts
+
+    def get_center(self):
+        c = np.mean(self.vertices, axis=0)
+        return c/np.linalg.norm(c)
+
+    def subdivide_once(self):
+        e01 = np.mean(self.vertices[(0,1),:], axis=0)
+        e12 = np.mean(self.vertices[(1,2),:], axis=0)
+        e20 = np.mean(self.vertices[(0,2),:], axis=0)
+        f1 = Face(np.vstack((self.vertices[0,:], e01, e20)))
+        f2 = Face(np.vstack((self.vertices[1,:], e01, e12)))
+        f3 = Face(np.vstack((self.vertices[2,:], e20, e12)))    
+        f4 = Face(np.vstack((e01, e12, e20))) 
+        new_faces = [f1, f2, f3, f4]
+        for f in new_faces:
+            f.normalize()
+        return new_faces
+
+    def normalize(self):
+        vertNorm = np.linalg.norm(self.vertices, axis=1)
+        vertNorm= np.repeat(np.atleast_2d(vertNorm).transpose(),
+                            repeats=3, axis=1)
+        self.vertices = self.vertices/vertNorm
+
+##### Geodesic grid generation routines #####
+class Sphere():
+    def __init__(self, n_subdivs=3):
+        v = np.array([[1,1,1], 
+                      [-1,-1,1],
+                      [-1,1,-1],
+                      [1,-1,-1]])
+        f1 = Face(v[(0,1,2),:]);
+        f2 = Face(v[(1,2,3),:]);
+        f3 = Face(v[(0,2,3),:]);
+        f4 = Face(v[(0,1,3),:]);  
+        self.faces = [f1,f2,f3,f4]
+        v = np.array([[ 1, 0, 0],
+                      [ 0, 1, 0],
+                      [-1, 0, 0],
+                      [ 0,-1, 0],
+                      [ 0, 0, 1],
+                      [ 0, 0,-1]])
+        self.faces = list()
+        self.faces.append(Face(v[(0,3,4),:]))
+        self.faces.append(Face(v[(0,1,4),:]))
+        self.faces.append(Face(v[(1,2,4),:]))
+        self.faces.append(Face(v[(2,3,4),:]))
+        self.faces.append(Face(v[(0,3,5),:]))
+        self.faces.append(Face(v[(0,5,1),:]))
+        self.faces.append(Face(v[(5,1,2),:]))
+        self.faces.append(Face(v[(5,2,3),:]))
+
+        for f in self.faces:
+            f.normalize()
+
+        for i in range(0, n_subdivs):
+            self.subdivide()
+
+    def subdivide(self):
+        new_faces = list()
+        for f in self.faces:
+            res = f.subdivide_once()
+            new_faces.extend(res)
+        self.faces = new_faces
+
+    def get_points(self):
+        pts = np.zeros((len(self.faces), 3))
+        for i,f in enumerate(self.faces):
+            pts[i, :] = f.get_center()
+        return pts
+
+    def show(self):
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        pts = self.get_points()
+        ax.scatter(pts[:,0], pts[:,1], pts[:,2], marker='.')
+        ax.set_xlim([-1,1])
+        ax.set_ylim([-1,1])
+        ax.set_zlim([-1,1])
+        plt.show()
+
+def cart2latlong(pts):
+    lats = np.arcsin(pts[:,-1])*180/3.14
+    longs = np.arctan2(pts[:,0], pts[:,1])*180/3.14    
+    return lats, longs

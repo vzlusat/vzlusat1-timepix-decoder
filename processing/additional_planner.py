@@ -9,8 +9,8 @@ import numpy as np
 
 from include.baseMethods import *
 
-from_time = "10.05.2018 20:00:00"
-to_time = "11.05.2018 20:00:00"
+from_time = "04.10.2018 08:00:00"
+to_time = "05.10.2018 08:00:00"
 
 desired_fill = 50
 max_exposure = 0.03
@@ -21,18 +21,17 @@ n = 1
 anomaly_dt = 240
 
 approx_pole = 25
-latitude_limit = 8
+latitude_limit = 43
 
 from_to = numpy.array([
-[22617, 23690], # dosimetry 31
-# [24738, 25917], # dosimetry 33
+[24738, 25917], # dosimetry 33
 ])
 
 outliers=[]
 
 anomaly_lat = -37.0
 anomaly_long = -31.0
-anomaly_size = 55.0
+anomaly_size = 35.0
 
 sgap_lat = -80.0
 sgap_long = 125.0
@@ -51,7 +50,7 @@ x_units = '(counts)'
 
 total_chunks = 0
 
-directory="scripts_combined"
+directory="scripts_additional"
 
 # prepare data
 images = loadImageRangeMulti(from_to, 32, 0, 1, outliers)
@@ -64,7 +63,7 @@ lats_orig, lons_orig = extractPositions(images)
 doses_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses, lats_orig, lons_orig)
 doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig, lons_orig)
 
-# # #{ RBF interpolation
+#{ RBF interpolation
 
 # create meshgrid for RBF
 x_meshgrid, y_meshgrid = createMeshGrid(mesh_size)
@@ -82,12 +81,12 @@ doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 # plt.imshow(doses_rbf_lin)
 # plt.show()
 
-# # #} end of RBF interpolation
+#} end of RBF interpolation
 
 t = int(time.mktime(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
 t_end = int(time.mktime(time.strptime(to_time, "%d.%m.%Y %H:%M:%S")))
 
-file_name = directory+"/{}_combined.pln".format(from_time).replace(' ', '_').replace(':', '_')
+file_name = directory+"/{}_additional.pln".format(from_time).replace(' ', '_').replace(':', '_')
 
 from scipy import spatial
 
@@ -104,7 +103,7 @@ def is_free(x, y):
 
     for j in range(0, len(lats)):
 
-        if dist(x, y, lats[j], lons[j]) < 8:
+        if dist(x, y, lats[j], lons[j]) < 13:
 
             return False
 
@@ -137,216 +136,38 @@ def add(x, y, best_time, orbit_n):
 
 with open(file_name, "w") as file:
 
-    print("t: {}".format(t))
-
-    # scann for the anomaly
     i = t
-    anomaly_close=0
-    min_dist = 180.0
-    best_time = 0
+
+    orbit_counter = 0
+
     while i <= t_end:
 
         latitude, longitude, tle_date = getLatLong(int(i))
 
-        # if the anomaly is close
         anomaly_dist = dist(latitude, longitude, anomaly_lat, anomaly_long)
         if (anomaly_dist < anomaly_size) and (latitude > -70):
-
-            anomaly_close = 1
-
-            # if we are closer than we were
-            if anomaly_dist < min_dist:
-
-                min_dist = anomaly_dist
-                best_time = i
-
-            i += 1
-
-        else:
-
-            # we just left the vicinity of the anomaly
-            if anomaly_close == 1:
-                latitude, longitude, tle_date = getLatLong(int(best_time))
-                lats.append(latitude)
-                lons.append(longitude)
-                times.append(best_time)
-                anomaly_close = 0
-                min_dist = 180.0
-                best_time = 0
-
-            i += 60
-
-    # generate anomaly sampling
-    anom_lats = []
-    anom_lons = []
-    anom_times = []
-    out_pxl_counts = []
-    first = 1
-    last_exposure = 0
-    for i in range(len(lats)):
-
-        temp_counter = 0
-        
-        for j in range(times[i]-n*anomaly_dt, times[i]+(n+1)*anomaly_dt, anomaly_dt):
-
-            temp_counter += 1
-
-            latitude, longitude, tle_date = getLatLong(int(j))
-            anom_lats.append(latitude)
-            anom_lons.append(longitude)
-            anom_times.append(j)
-
-    # find the closest point to the anomaly in each orbit
-    for g in range(0, 4):
-
-        i = t
-        best_time = 0
-        best_would_be_pxl_count = 0
-        max_pxl_count = 0
-        max_time = 0
-        max_lat = 0
-        max_lon = 0
-        are_in = False
-
-        in_first = False
-        in_second = False 
-
-        exposure_in_first = False
-
-        orbit_counter = 0
-
-        while i <= t_end:
-
-            latitude, longitude, tle_date = getLatLong(int(i))
-
-            fut_latitude, fut_longitude, fut_tle_date = getLatLong(i+step_size)
-
-            if (g == 0):
-                if i > t: 
-                    if (dist(orbit_line_lats[-1], orbit_line_lons[-1], latitude, longitude) > 2.0):
-                        orbit_line_lats.append(latitude)
-                        orbit_line_lons.append(longitude)
-                else:
-                    orbit_line_lats.append(latitude)
-                    orbit_line_lons.append(longitude)
-
-            if latitude < 0 and fut_latitude > 0:
-                orbit_counter += 1
-
-            if not are_in:
-
-                # we are not in the equator belt
-                if abs(latitude) > (90 - (2*approx_pole + 1)):
-
-                    # we enter from the equator belt
-                    if (((latitude > (-90 + 2*approx_pole)) and (fut_latitude < (-90 + 2*approx_pole))) or ((latitude < (90 - 2*approx_pole)) and (fut_latitude > (90 - 2*approx_pole)))):
-
-                        are_in = True
-                        in_first = True
-                        in_second = False
-                        max_pxl_count = 0
-                        best_would_be_pxl_count = 0
-                        best_time = 0
-                        print("Entered the first: latitude: {}, longitude: {}".format(latitude, longitude))
-
-                    elif ((latitude > (90 - latitude_limit)) or (latitude < (-90 + latitude_limit))):
-
-                        are_in = True
-                        in_second = True
-                        in_first = False
-                        max_pxl_count = 0
-                        best_would_be_pxl_count = 0
-                        best_time = 0
-                        print("Entered the second: latitude: {}, longitude: {}".format(latitude, longitude))
-
-            if are_in:
-
-                # times.append(i)
-                # orbits.append(orbit_n)
-
-                pxl_count = doses_rbf_log[int(math.floor(mesh_size*((longitude+180)/360))), int(math.floor(mesh_size*((latitude+90)/180)))]
-
-                # we left the area
-                # if (((latitude > 0) and (latitude > (90 - latitude_limit))) or ((latitude < 0) and (latitude < (-90 + latitude_limit)))):
-
-                if in_first:
-
-                    if (((latitude > 0) and (latitude > (90 - latitude_limit))) or ((latitude < 0) and (latitude < (-90 + latitude_limit)))):
-
-                        are_in = False
-                        in_first = False
-
-                        if best_time > 1:
-
-                            if add(max_lat, max_lon, best_time, orbit_counter):
-
-                                print("Appending: latitude: {}, longitude: {}".format(max_lat, max_lon))
-                                exposure_in_first = True
-                        
-                            else:
-
-                                print("Could not add the point, too close.")
-                                exposure_in_first = False
-
-                        else:
-                            exposure_in_first = False
-
-                        max_pxl_count = 0
-                        best_would_be_pxl_count = 0
-                        best_time = 0
-
-                        print("Left first: latitude: {}, longitude: {}".format(latitude, longitude))
-
-                elif in_second:
-
-                    if (abs(latitude - (90 - 2*approx_pole)) < 1) or (abs(latitude - (-90 + 2*approx_pole)) < 1):
-
-                        are_in = False
-                        in_second = False
-
-                        # if not exposure_in_first:
-
-                        #     if best_time > 1:
-
-                        #         if add(max_lat, max_lon, best_time, orbit_counter):
-
-                        #             print("Apending: latitude: {}, longitude: {}".format(max_lat, max_lon))
-
-                        #         else:
-
-                        #             print("Could not add the point, too close.")
-
-                        max_pxl_count = 0
-                        best_would_be_pxl_count = 0
-                        best_time = 0
-
-                        print("Left second: latitude: {}, longitude: {}".format(latitude, longitude))
-
-                if pxl_count > best_would_be_pxl_count:
-
-                    best_would_be_pxl_count = pxl_count
-
-                if pxl_count > max_pxl_count:
-
-                    if is_free(latitude, longitude):
-
-                        if (pxl_count+1.5) >= best_would_be_pxl_count:
-
-                            if (dist(latitude, longitude, anomaly_lat, anomaly_long) > anomaly_size) and (dist(latitude, longitude, sgap_lat, sgap_long) > sgap_size):
-
-                                max_pxl_count = pxl_count
-                                best_time = i
-                                max_lat = latitude
-                                max_lon = longitude
-                                print("Found max: latitude: {}, longitude: {}, value: {}".format(latitude, longitude, pxl_count))
-
             i += step_size
+            continue;
+
+        if i > t: 
+            if (dist(orbit_line_lats[-1], orbit_line_lons[-1], latitude, longitude) > 2.0):
+                orbit_line_lats.append(latitude)
+                orbit_line_lons.append(longitude)
+        else:
+            orbit_line_lats.append(latitude)
+            orbit_line_lons.append(longitude)
+
+        pxl_count = doses_rbf_log[int(math.floor(mesh_size*((longitude+180)/360))), int(math.floor(mesh_size*((latitude+90)/180)))]
+
+        if (((latitude > 0) and (latitude < (90 - latitude_limit))) or ((latitude < 0) and (latitude > (-90 + latitude_limit)))):
+
+            if add(latitude, longitude, i, 0):
+
+                print("Appending: latitude: {}, longitude: {}".format(latitude, longitude))
+
+        i += step_size
 
 # scan the surroundigs of the locations
-
-    for z in range(len(anom_times)):
-
-        times.append(anom_times[z])
 
     times.sort()
     list(set(times))
@@ -428,7 +249,7 @@ def plot_everything(*args):
     ax1 = plt.subplot2grid((3, 2), (0, 0), colspan=2, rowspan=2)
     # ax1 = plt.subplot2grid((1, 1), (0, 0))
 
-    # #{ map
+    #{ map
     
     m = createMap('cyl')
     
@@ -449,17 +270,17 @@ def plot_everything(*args):
         # plt.text(x+1, y+1, '{}'.format(out_orbits[i]), fontsize=13, fontweight='bold', ha='left', va='bottom', color='k', zorder=10)
     
     # cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('Combined scanning, starting on {}'.format(from_time))
+    plt.title('Additional scanning, starting on {}'.format(from_time))
     
     plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
     
-    plt.savefig(directory+"/{}_combined.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
+    plt.savefig(directory+"/{}_additional.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
     
-    # #} end of globe south
+    #} end of globe south
 
     ax1 = plt.subplot2grid((3, 2), (2, 0))
 
-    # #{ globe south
+    #{ globe south
     
     m = createMap('ortho', -90, 0)
     
@@ -486,11 +307,11 @@ def plot_everything(*args):
     
     # plt.savefig(directory+"/{}_anomaly.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
     
-    # #} end of globe south
+    #} end of globe south
 
     ax1 = plt.subplot2grid((3, 2), (2, 1))
 
-    # #{ globe south
+    #{ globe south
     
     m = createMap('ortho', +90, 0)
     
@@ -517,13 +338,13 @@ def plot_everything(*args):
     
     # plt.savefig(directory+"/{}_anomaly.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
     
-    # #} end of globe south
+    #} end of globe south
 
     plt.show()
 
 print("total_chunks: {}".format(total_chunks))
 
-file_name = directory+"/{}_combined.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
+file_name = directory+"/{}_additional.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
 
 with open(file_name, "w") as file:
 

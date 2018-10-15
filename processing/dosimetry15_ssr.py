@@ -7,8 +7,8 @@ import matplotlib.ticker as ticker # for colorbar
 
 from include.baseMethods import *
 
-from_idx = 8894
-to_idx = 9760
+from_idx = 9767
+to_idx = 10762
 outliers=[]
 
 pcolor_min = 0
@@ -16,10 +16,10 @@ pcolor_max = 8
 
 small_plot = 1
 
-date_range = '28.11-29.11.2017'
-x_units = '(keV/s)'
-x_label = 'Dose in 14x14x0.3 mm Si'
-general_label = '15th dosimetry 510 km LEO, VZLUSAT-1'
+date_range = '06.12-07.12.2017'
+x_units = '(keV/s, log)'
+x_label = 'dose in 14x14x0.3 mm Si'
+general_label = 'In orbit radiation, VZLUSAT-1'
 epsilon=0.1
 
 # prepare data
@@ -55,26 +55,6 @@ def plot_everything(*args):
 
     #{ Figure 1
 
-    ax1 = plt.subplot2grid((2, 3), (0, 0))
-
-#{ log-scale scatter
-
-    m = createMap('cyl')
-
-    x_m, y_m = m(lons_orig, lats_orig) # project points
-
-    # CS = m.hexbin(x_m, y_m, C=numpy.array(doses), bins='log', gridsize=32, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.01)
-
-    # for i in range(len(lons_orig)):
-    m.scatter(lons_orig, lats_orig, c=doses_log, marker='o', zorder=10, s=24, edgecolor='grey', cmap=my_cm)
-
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-
-    cb.set_label('log10('+x_label+') '+x_units)
-    plt.title(general_label+', '+date_range, fontsize=13)
-
-#} end of log-scale scatter
-
     ax2 = plt.subplot2grid((2, 3), (0, 1))
 
 #{ log-scale rbf
@@ -84,6 +64,8 @@ def plot_everything(*args):
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
     m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.01)
+
+    m.scatter(lons_orig, lats_orig, c=doses_log, marker='o', zorder=10, s=24, edgecolor='grey', cmap=my_cm)
 
     cb = m.colorbar(location="bottom", label="Z") # draw colorbar
     cb.set_label('log10('+x_label+') '+x_units)
@@ -173,9 +155,10 @@ def plot_everything(*args):
 
         m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.01)
 
+        m.scatter(lons_orig, lats_orig, c=doses_log, marker='o', zorder=10, s=24, edgecolor='grey', cmap=my_cm)
         cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-        cb.set_label('log10('+x_label+') '+x_units)
-        plt.title('RBF multiquadric (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
+        cb.set_label(x_label+' '+x_units, fontsize=9)
+        plt.title('RBF multiquadric (eps={}), log scale, '.format(epsilon)+date_range, fontsize=9)
 
         #} end of log-scale rbf
 

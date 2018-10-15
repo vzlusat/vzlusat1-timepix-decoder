@@ -7,8 +7,10 @@ import matplotlib.ticker as ticker # for colorbar
 
 from include.baseMethods import *
 
-from_idx = 22617
-to_idx = 23690
+# from_idx = 385
+# to_idx = 3346
+from_idx = 3347
+to_idx = 5500
 outliers=[]
 
 pcolor_min = 0
@@ -166,13 +168,11 @@ def plot_everything(*args):
 
         x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-        for idx, dose in enumerate(doses_log):
-            x, y = m(lons_orig[idx], lats_orig[idx])
-            m.scatter(x, y, 30, marker='o', edgecolor=(0.5, 0.5, 0.5, 1.0), linewidth='1.5', color=my_cm((dose-pcolor_min)/pcolor_max), zorder=10)
+        # for idx, dose in enumerate(doses_log):
+        #     x, y = m(lons_orig[idx], lats_orig[idx])
+        #     m.scatter(x, y, 30, marker='o', edgecolor=(0.5, 0.5, 0.5, 1.0), linewidth='1.5', color=my_cm((dose-pcolor_min)/pcolor_max), zorder=10)
 
-        m.pcolormesh(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.01)
-
-        m.drawmapboundary(fill_color='white')
+        m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.0000000005)
 
         cb = m.colorbar(location="bottom", label="Z") # draw colorbar
         cb.set_label(''+x_label+' '+x_units)
