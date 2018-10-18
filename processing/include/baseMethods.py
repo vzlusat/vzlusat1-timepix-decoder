@@ -158,7 +158,10 @@ def calculateEnergyDose(images):
             exposure = 60 + exposure%60000
 
         # calculate the doses base on counts
-        image_dose = np.sum(images[i].data*kevs)/exposure
+        if images[i].type == 32:
+            image_dose = np.sum(images[i].data*kevs)/exposure
+        elif images[i].type == 1:
+            image_dose = np.sum(images[i].data)/exposure
 
         doses.append(image_dose)
 

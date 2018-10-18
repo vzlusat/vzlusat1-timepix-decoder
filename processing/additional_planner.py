@@ -9,11 +9,11 @@ import numpy as np
 
 from include.baseMethods import *
 
-from_time = "04.10.2018 08:00:00"
-to_time = "05.10.2018 08:00:00"
+from_time = "19.10.2018 20:00:00"
+to_time = "20.10.2018 20:00:00"
 
 desired_fill = 50
-max_exposure = 0.03
+max_exposure = 0.1
 hkc_buffer_time = 300
 
 n = 1
@@ -24,7 +24,7 @@ approx_pole = 25
 latitude_limit = 43
 
 from_to = numpy.array([
-[24738, 25917], # dosimetry 33
+[24738, 26917], # dosimetry 33
 ])
 
 outliers=[]

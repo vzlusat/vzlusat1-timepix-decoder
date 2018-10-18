@@ -7,7 +7,7 @@ import matplotlib.ticker as ticker # for colorbar
 
 from include.baseMethods import *
 
-from_to = numpy.array([1, 26000])
+from_to = numpy.array([[1, 27000]])
 
 outliers=[]
 
@@ -22,7 +22,9 @@ x_label = 'Total dose in 14x14x0.3 mm Si'
 general_label = 'VZLUSAT-1, 510 km LEO'
 
 # prepare data
-images = loadImageRangeMulti(from_to, 32, 1, 1, outliers)
+images = loadImageRangeMulti(from_to, 1, 1, 1, outliers)
+
+print("images: {}".format(images))
 
 doses = calculateEnergyDose(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
