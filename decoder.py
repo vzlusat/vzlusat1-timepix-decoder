@@ -416,7 +416,7 @@ def showImage(image, manual):
     #}
 
     #{ IMAGE
-    if image.got_data == 1 and dont_redraw_var.get() == 0:
+    if (image.got_data == 1 or image.original_pixels == 0) and dont_redraw_var.get() == 0:
 
         if image.type >= 1 and image.type <= 8:
 
@@ -426,8 +426,8 @@ def showImage(image, manual):
             my_figure.clf()
             subplot1 = my_figure.add_subplot(111)
 
-            subplot1.set_xlabel("Column (-)")
-            subplot1.set_ylabel("Row (-)")
+            subplot1.set_xlabel("Column (pixel)")
+            subplot1.set_ylabel("Row (pixel)")
 
             human_readable_time = datetime.datetime.utcfromtimestamp(image.time)
 
@@ -484,14 +484,14 @@ def showImage(image, manual):
                 a1.set_title("Row summs n.{0}, {1} s exposure, {2}".format(image.id, exposure, human_readable_time), fontsize=13, y=1.02)
             else:
                 a1.set_title("Row summs n.{0}, ??? s exposure ".format(image.id), fontsize=13, y=1.02)
-            a1.set_xlabel("Row (-)")
+            a1.set_xlabel("Row (pixel)")
             a1.set_ylabel("Active pixel count (-)")
 
             if image.got_metadata == 1:
                 a2.set_title("Column summs n.{0}, {1} s exposure, {2}".format(image.id, exposure, human_readable_time), fontsize=13, y=1.02)
             else:
                 a2.set_title("Column summs n.{0}, ??? s exposure ".format(image.id), fontsize=13, y=1.02)
-            a2.set_xlabel("Column (-)")
+            a2.set_xlabel("Column (pixel)")
             a2.set_ylabel("Active pixel count (-)")
 
             my_figure.tight_layout(pad=2)
