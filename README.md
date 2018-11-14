@@ -345,6 +345,19 @@
     * Unix time range: 1539633701 to 1539771581
     * Human readible time range: 2018-10-15 20:01:41 to 2018-10-17 10:19:41
     * Exposure 60 s, Fullres
+  * Equatorial scanning 3
+    * Image range: 26516 to 26597
+    * Unix time range: 1540844528 to 1540893008
+    * Human readible time range: 2018-10-29 20:22:08 to 2018-10-30 09:50:08
+  * Combined belt+anomaly scanning 9
+    * Image range: 26598 to 26632
+    * Unix time range: 1541754225 to 1541786193
+    * Human readible time range: 2018-11-09 09:03:45 to 2018-11-09 17:56:33
+  * XRB co-measurement 17
+    * Image range: 26633
+    * Unix time range: 1541967511
+    * Human readible time range: 2018-11-11 20:18:31
+    * Exposure 60 s, Fullres
 
 # Installation
 
