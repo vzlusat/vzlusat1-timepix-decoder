@@ -28,15 +28,15 @@ def getHRFileType(imagetype):
 
 def getExportDataName(image_id, image_type):
 
-    return "images_csv/"+str(image_id)+"_"+getHRFileType(image_type)+".txt".format(image_type) 
+    return "images_csv/"+str(image_id)+"_"+getHRFileType(image_type)+".txt"
 
-def getExportPixetName(image_id):
+def getExportPixetName(image_id, image_type):
 
-    return "images_csv/"+str(image_id)+".txt"
+    return "images_csv/"+str(image_id)+"_"+getHRFileType(image_type)+".txt"
 
-def getExportDescriptionFileName(image_id):
+def getExportDescriptionFileName(image_id, image_type):
 
-    return "images_csv/"+str(image_id)+".txt.dsc"
+    return "images_csv/"+str(image_id)+"_"+getHRFileType(image_type)+".txt.dsc"
 
 def getExportMetadataName(image_id, image_type):
 

@@ -53,7 +53,7 @@ def exportDescriptionFile(image, image_iter):
     if image.got_metadata == 0:
         return
 
-    with open(getExportDescriptionFileName(image_iter), "w") as dsc_file:
+    with open(getExportDescriptionFileName(image_iter, image.type), "w") as dsc_file:
 
         width=0
         height=0
@@ -153,6 +153,12 @@ double[2]\r\n\
             except:
                 pass
 
+        dsc_file.write("\r\n")
+
+        dsc_file.write("\"ImageID\" (\"Unique ID assigned to the image by the satellite\"):\r\n\
+u32[1]\r\n\
+{}\r\n".format(image.id))
+
 def exportInfoFileLine(image, first):
 
     if image.got_metadata == 0:
@@ -241,14 +247,18 @@ def exportInfoFileLine(image, first):
 
     return line
 
-def exportMetadata(image):
+def exportMetadata(image, image_iter=[]):
 
     if image.got_metadata == 0:
         return
 
     metadatas_array = [None] * 21;
 
-    with open(getExportMetadataName(image.id, image.type), "w") as metadata_file:
+    image_id = image.id
+    if isinstance(image_iter, int):
+        image_id = image_iter
+
+    with open(getExportMetadataName(image_id, image.type), "w") as metadata_file:
 
         metadatas_array[0] = str(image.id)
 
@@ -343,7 +353,10 @@ def exportMetadata(image):
             metadata_file.write("Histogram bins [bin1_min, bin1_max=bin2_min, ..., bin16_max], the last bin contains also all higher energies.\r\n")
             metadata_file.write("[2.98, 4.22, 6.43, 10.38, 16.63, 24.70, 33.78, 43.36, 53.22, 63.23, 73.34, 83.51, 93.72, 103.96, 114.23, 124.52, 134.81]\r\n")
 
-def exportBinning(image):
+def exportBinning(image, image_iter=[]):
+
+    if isinstance(image_iter, int):
+        image_id = image_iter
 
     if image.got_data == 1:
         if image.type == 2:
@@ -353,42 +366,50 @@ def exportBinning(image):
         elif image.type == 8:
             size = 8
         
-        with open(getExportDataName(image.id, image.type), "w") as data_file:
+        with open(getExportDataName(image_id, image.type), "w") as data_file:
 
             writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
         
             for i in range(0, size):
                 writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[i, :]])
 
-    exportMetadata(image)
+def exportSums(image, image_iter=[]):
 
-def exportSums(image):
+    if isinstance(image_iter, int):
+        image_id = image_iter
 
     if image.got_data == 1:
-        with open(getExportDataName(image.id, image.type), "w") as data_file:
+        with open(getExportDataName(image_id, image.type), "w") as data_file:
 
             writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
         
             writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[0, :]])
             writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[1, :]])
 
-    exportMetadata(image)
+def exportHistogram(image, image_iter=[]):
 
-def exportHistogram(image):
+    if isinstance(image_iter, int):
+        image_id = image_iter
 
     if image.got_data == 1:
-        with open(getExportDataName(image.id, image.type), "w") as data_file:
+        with open(getExportDataName(image_id, image.type), "w") as data_file:
 
             writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
         
             writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[0, :]])
         
-    exportMetadata(image)
+def exportRaw(image, image_iter=[]):
 
-def exportRaw(image):
+    image_id = image.id
+    filename = ""
+
+    if isinstance(image_iter, int):
+        image_id = image_iter
+
+    filename=getExportPixetName(image_id, image.type)
 
     if image.got_data == 1:
-        with open(getExportDataName(image.id, image.type), "w") as data_file:
+        with open(filename, "w") as data_file:
 
             writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
 
@@ -399,22 +420,6 @@ def exportRaw(image):
         
             for i in range(0, 256):
                 writer.writerow(["{:.2f}".format(x).replace('.', float_delim) for x in image.data[i, :]])
-
-    exportMetadata(image)
-
-def exportPixetRaw(image, image_iter):
-
-    with open(getExportPixetName(image_iter), "w") as data_file:
-
-        writer = csv.writer(data_file, quoting=csv.QUOTE_NONE, delimiter=' ')
-
-        if platform.system() == "Windows":
-            float_delim = '.'
-        else:
-            float_delim = '.'
-    
-        for i in range(0, 256):
-            writer.writerow(["{:.2f}".format(x).replace('.', float_delim) for x in image.data[i, :]])
 
 def exportImage(image):
 
@@ -434,6 +439,8 @@ def exportImage(image):
 
         exportHistogram(image)
 
+    exportMetadata(image)
+
 def exportCsv(data):
 
     if isinstance(data, HouseKeeping):
@@ -444,9 +451,25 @@ def exportCsv(data):
 
         exportImage(data)
 
-def exportForPixet(data, image_iter):
+def exportImageForPixet(data, image_iter):
 
     if isinstance(data, Image):
 
-        exportPixetRaw(data, image_iter)
+        if data.type == 1:
+
+            exportRaw(data, image_iter)
+
+        elif data.type >= 2 and data.type <= 8:
+
+            exportBinning(data, image_iter)
+
+        elif data.type == 16:
+
+            exportSums(data, image_iter)
+
+        elif data.type == 32:
+
+            exportHistogram(data, image_iter)
+
         exportDescriptionFile(data, image_iter)
+        exportMetadata(data, image_iter)

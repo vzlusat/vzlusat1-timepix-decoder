@@ -53,7 +53,7 @@ from src.saveHouseKeeping import saveHouseKeeping
 from src.loadHouseKeeping import loadHouseKeeping
 from src.parseInputFile import parseInputFile
 from src.exportMethods import exportCsv
-from src.exportMethods import exportForPixet
+from src.exportMethods import exportImageForPixet
 from src.exportMethods import exportInfoFileLine
 from src.baseMethods import getPngFileName
 
@@ -1104,9 +1104,9 @@ def exportCsvData():
 #}
 
 #{ exportRaw() callback
-def exportRawData():
+def exportRawFullresData():
 
-    statusLine.set("Exporting raw images for analysis")
+    statusLine.set("Exporting fullres images for analysis")
 
     image_iter = 1
 
@@ -1118,9 +1118,9 @@ def exportRawData():
 
             if isinstance(image, Image):
 
-                if image.type == 1 and image.got_data and image.got_metadata and comments.isForLearning(image.id):
+                if image.type == 1 and image.got_data and image.got_metadata:
 
-                    exportForPixet(image, image_iter)
+                    exportImageForPixet(image, image_iter)
 
                     if image_iter == 1:
                         first = True
@@ -1135,6 +1135,46 @@ def exportRawData():
                     info_file.write("{}, {}, {}\r\n".format(image_iter, image.id, info_line))
 
                     image_iter += 1
+                    statusLine.set("Exporting image {}".format(image.id))
+
+        statusLine.set("Images exported")
+
+#{ exportRaw() callback
+def exportRawNonfullresData():
+
+    statusLine.set("Exporting non-fullres images for analysis")
+
+    image_iter = 0
+    prev_id = 0
+
+    with open("images_csv/info.txt", "w") as info_file:
+
+        for file_name in file_names:
+
+            image = loadImage(file_name)
+
+            if isinstance(image, Image):
+
+                if image.type >= 1 and image.got_data and image.got_metadata:
+
+                    if image.id != prev_id:
+                        image_iter += 1
+                        prev_id = image.id
+
+                    exportImageForPixet(image, image_iter)
+
+                    if image_iter == 1:
+                        first = True
+                    else:
+                        first = False
+
+                    if first:
+                        info_line = exportInfoFileLine(image, first)
+                        info_file.write("# ordinar image ID, original image ID, {}\r\n".format(info_line))
+
+                    info_line = exportInfoFileLine(image, False)
+                    info_file.write("{}, {}, {}\r\n".format(image_iter, image.id, info_line))
+
                     statusLine.set("Exporting image {}".format(image.id))
 
         statusLine.set("Images exported")
@@ -1180,8 +1220,10 @@ def autogenerateCheckboxCallback():
 export_csv_button = Tk.Button(master=frame_list, text='Export CSV', command=exportCsvData, font=customfont)
 export_csv_button.pack(side=Tk.BOTTOM)
 
-# spawn button for exporting for carlos
-export_raw_button = Tk.Button(master=frame_list, text='Export RAW', command=exportRawData, font=customfont)
+export_raw_button = Tk.Button(master=frame_list, text='Export RAW fullres', command=exportRawFullresData, font=customfont)
+export_raw_button.pack(side=Tk.BOTTOM)
+
+export_raw_button = Tk.Button(master=frame_list, text='Export RAW other', command=exportRawNonfullresData, font=customfont)
 export_raw_button.pack(side=Tk.BOTTOM)
 
 autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing (e)", variable=autogenerate_png_view, command=autogenerateCheckboxCallback, font=customfont)
