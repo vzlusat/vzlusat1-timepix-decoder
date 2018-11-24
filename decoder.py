@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-#{ def installAndImport(package):
+# #{ def installAndImport(package):
 def installAndImport(package):
     import importlib
     try:
@@ -10,9 +10,9 @@ def installAndImport(package):
         pip.main(['install', package])
     finally:
         globals()[package] = importlib.import_module(package)
-#}
+# #}
 
-#{ IMPORTS
+# #{ IMPORTS
 
 installAndImport('matplotlib')
 installAndImport('Pmw')
@@ -77,11 +77,11 @@ comments.parseComments()
 import src.favorites as favorites
 favorites.loadFavorites()
 
-#}
+# #}
 
 # core methods
 
-#{ def reloadData(index): reloads and shows metadata and image for a particular index in the listbox
+# #{ def reloadData(index): reloads and shows metadata and image for a particular index in the listbox
 def reloadData(index, manual):
 
     # list_files = loadFiles()
@@ -108,9 +108,9 @@ def reloadData(index, manual):
         loaded_image = image
 
         showImage(image, manual)
-#}
+# #}
 
-#{ def loadFiles(): inspects "images_bin" folders and prepares the content for the listbox
+# #{ def loadFiles(): inspects "images_bin" folders and prepares the content for the listbox
 def loadFiles():
 
     print("Reloading file list")
@@ -187,9 +187,9 @@ def loadFiles():
     print("File list reloaded, {} files in total".format(len(file_names)))
 
     return list_files
-#}
+# #}
 
-#{ def showHouseKeeping(housekeeping): resets and shows housekeeping data
+# #{ def showHouseKeeping(housekeeping): resets and shows housekeeping data
 def showHouseKeeping(housekeeping):
 
     my_figure.clf()
@@ -258,9 +258,9 @@ def showHouseKeeping(housekeeping):
           clearMap()
 
     statusLine.set('')
-#}
+# #}
 
-#{ def showImage(image): resets and shows the image
+# #{ def showImage(image): resets and shows the image
 def showImage(image, manual):
 
     # marked_as_hidden_var.set(image.hidden)
@@ -290,7 +290,7 @@ def showImage(image, manual):
 
     metadatas_var[1].set(img_type)
 
-    #{ METADATA
+    # #{ METADATA
     if image.got_metadata == 0:
 
         # try to load metadata from other image
@@ -413,9 +413,9 @@ def showImage(image, manual):
     for i in range(0, len(Image.metadata_labels)):
         text_labels_var[i].set(Image.metadata_labels[i])
 
-    #}
+    # #}
 
-    #{ IMAGE
+    # #{ IMAGE
     if (image.got_data == 1 or image.original_pixels == 0) and dont_redraw_var.get() == 0:
 
         if image.type >= 1 and image.type <= 8:
@@ -462,9 +462,9 @@ def showImage(image, manual):
                 cbar.ax.set_ylabel('active pixels in the bin', rotation=270)
 
             my_figure.tight_layout(pad=1)
-        #}
+        # #}
 
-        #{ SUMS
+        # #{ SUMS
         elif image.type == 16 and dont_redraw_var.get() == 0:
 
             my_figure.clf()
@@ -495,9 +495,9 @@ def showImage(image, manual):
             a2.set_ylabel("Active pixel count (-)")
 
             my_figure.tight_layout(pad=2)
-        #}
+        # #}
 
-        #{ HISTOGRAM
+        # #{ HISTOGRAM
         elif image.type == 32 and dont_redraw_var.get() == 0:
 
             my_figure.clf()
@@ -539,7 +539,7 @@ def showImage(image, manual):
                 subplot1.set_title("Image histogram n.{0}, ??? s exposure, ".format(image.id)+"??? mode", fontsize=13, y=1.02)
 
             my_figure.tight_layout(pad=1)
-        #}
+        # #}
 
         if ((manual == 1 and autogenerate_png_view.get() == 1) or (manual == 0)) and image.got_data == 1:
 
@@ -566,7 +566,7 @@ def showImage(image, manual):
 
     id_baloon.bind(label, comments.getComment(image.id))
     statusLine.set(comments.getComment(image.id))
-#}
+# #}
 
 # callback for marking hidden/favorite checkboxex
 
@@ -637,7 +637,7 @@ def reloadList(new_idx=-1):
 
 # AFTER LAUNCH
 
-#{ create directories
+# #{ create directories
 if not os.path.exists("images_bin"):
     os.makedirs("images_bin")
 
@@ -646,7 +646,7 @@ if not os.path.exists("images_csv"):
 
 if not os.path.exists("images_png"):
     os.makedirs("images_png")
-#}
+# #}
 
 # Load TLE
 if settings.calculate_tle:
@@ -714,7 +714,7 @@ frame_mid_bottom.pack(side=Tk.BOTTOM, fill=Tk.BOTH, expand=0, padx=0, pady=0)
 # initialize Pmw (creates on-hover hints)
 Pmw.initialise(root)
 
-#{ create the labels for metadatas and their respective control variables
+# #{ create the labels for metadatas and their respective control variables
 metadatas = []
 metadatas_var = []
 text_labels = []
@@ -784,7 +784,7 @@ metadatas.append(Tk.Checkbutton(frame_mid_top, text="", variable=marked_as_favor
 
 housekeeping_values = []
 housekeeping_labels = []
-#}
+# #}
 
 # create the subframe for the figure
 frame_figure = Tk.Frame(frame_right);
@@ -948,9 +948,9 @@ global loaded_image_idx
 loaded_image_idx = 0
 loaded_image = []
 
-#{ LISTBOX (+SCROLLBAR) and its CALLBACK
+# #{ LISTBOX (+SCROLLBAR) and its CALLBACK
 
-#{ def onSelect(evt): callback function for showing the image after clicking the listbox
+# #{ def onSelect(evt): callback function for showing the image after clicking the listbox
 def onSelect(evt):
 
     global file_names
@@ -967,7 +967,7 @@ def onSelect(evt):
     loaded_image_idx = index
 
     reloadData(index, 1)
-#}
+# #}
 
 scrollbar = Tk.Scrollbar(master=frame_list2, orient=Tk.VERTICAL)
 listbox = Tk.Listbox(master=frame_list2, yscrollcommand=scrollbar.set, selectmode=Tk.SINGLE, font=customfont)
@@ -1006,11 +1006,11 @@ if len(file_names) > 0:
 
 # bind onSelect() callback function to listbox
 listbox.bind('<<ListboxSelect>>', onSelect)
-#}
+# #}
 
-#{ BUTTON for loading new images and its CALLBACK
+# #{ BUTTON for loading new images and its CALLBACK
 
-#{ loadNewImages() callback for loading new images from a text file
+# #{ loadNewImages() callback for loading new images from a text file
 def loadNewImages():
 
     if sys.version_info[0] < 3:
@@ -1079,9 +1079,9 @@ def loadNewImages():
                 showImage(image, 1)
 
     statusLine.set("All images loaded")
-#}
+# #}
 
-#{ exportCsv() callback
+# #{ exportCsv() callback
 def exportCsvData():
 
     statusLine.set("Exporting images to csv")
@@ -1101,9 +1101,9 @@ def exportCsvData():
 
     statusLine.set("Images exported")
 
-#}
+# #}
 
-#{ exportRaw() callback
+# #{ exportRaw() callback
 def exportRawFullresData():
 
     statusLine.set("Exporting fullres images for analysis")
@@ -1139,7 +1139,7 @@ def exportRawFullresData():
 
         statusLine.set("Images exported")
 
-#{ exportRaw() callback
+# #{ exportRaw() callback
 def exportRawNonfullresData():
 
     statusLine.set("Exporting non-fullres images for analysis")
@@ -1179,7 +1179,7 @@ def exportRawNonfullresData():
 
         statusLine.set("Images exported")
 
-#}
+# #}
 
 # spawn button for loading new images
 load_button = Tk.Button(master=frame_list, text='Load new images', command=loadNewImages, font=customfont)
@@ -1192,9 +1192,9 @@ autogenerate_checkbox2.pack(side=Tk.TOP)
 balloon2 = Pmw.Balloon(master=root);
 balloon2.bind(autogenerate_checkbox2, "When checked, png images will generated (if they don't already exist) while importing new data.")
 
-#}
+# #}
 
-#{ BUTTON for quitting the program and its CALLBACK
+# #{ BUTTON for quitting the program and its CALLBACK
 
 def close_window():
     root.withdraw()
@@ -1209,9 +1209,9 @@ def win_deleted():
 # spawn quit button
 button = Tk.Button(master=frame_left, text='Quit', command=close_window, font=customfont)
 button.pack(side=Tk.BOTTOM)
-#}
+# #}
 
-#{ CHECKBOX for autogenerate_png_view
+# #{ CHECKBOX for autogenerate_png_view
 
 def autogenerateCheckboxCallback():
     reloadList(int(listbox.curselection()[0]))
@@ -1232,9 +1232,9 @@ autogenerate_checkbox.pack(side=Tk.BOTTOM)
 balloon = Pmw.Balloon(master=root);
 balloon.bind(autogenerate_checkbox, "When checked, png images will be re-exported every time you click on an image.")
 
-#}
+# #}
 
-#{ CHECKBOXES for showing and hiding images
+# #{ CHECKBOXES for showing and hiding images
 
 if settings.use_globus:
   show_globus = Tk.Checkbutton(master=frame_left, text="show globus (gt)", variable=show_globus_var, command=reloadCurrentImage, font=customfont)
@@ -1277,12 +1277,12 @@ hide_with_metadata.pack(side=Tk.BOTTOM)
 hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping (h)", variable=hide_housekeeping_var, command=reloadList, font=customfont)
 hide_housekeeping.pack(side=Tk.BOTTOM)
 
-#}
+# #}
 
-#{ KEYPRESS catching and respective CALLBACKS
+# #{ KEYPRESS catching and respective CALLBACKS
 # callback for detecting keypresses
 
-#{ LISTBOX manipulation
+# #{ LISTBOX manipulation
 
 def listbox_move_up():
 
@@ -1313,7 +1313,7 @@ def listbox_move_down():
             reloadData(index, 1)
     except:
         return
-#}
+# #}
 
 global previous_key
 global current_key
@@ -1442,7 +1442,7 @@ def listboxFocusOut(event):
 
 listbox.bind('<FocusIn>', listboxFocusIn)
 listbox.bind('<FocusOut>', listboxFocusOut)
-#}
+# #}
 
 root.protocol("WM_DELETE_WINDOW", win_deleted)
 root.mainloop()
