@@ -508,13 +508,16 @@ def showImage(image, manual):
             for i in range(0, 16):
 
                 # rectangle('Position', [x(i), 0, x(i+1)-x(i), image.data(i)], 'FaceColor', [0 0.5 0.5], 'EdgeColor', 'b','LineWidth',1);
-                subplot1.add_patch(
-                    patches.Rectangle(
-                        (x[i], 0),            # (x,y)
-                        x[i+1]-x[i],          # width
-                        image.data[0, i],                  # height
+                try:
+                    subplot1.add_patch(
+                        patches.Rectangle(
+                            (x[i], 0),            # (x,y)
+                            x[i+1]-x[i],          # width
+                            image.data[0, i],                  # height
+                        )
                     )
-                )
+                except:
+                    pass
 
             # subplot1.plot(x, image.data[0, :])
 
