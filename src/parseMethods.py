@@ -138,22 +138,25 @@ def parseBinning8(bin_data, image_dict):
 
 def parseBinning16(bin_data, image_dict):
 
-    image = parseImageHeader(bin_data, 4, image_dict)
-
-    packet_id = bin_data[2]
-
-    if (image.data.shape[0] != 16) or (image.data.shape[1] != 16):
-        image.data = numpy.ones(shape=[16, 16]) * -1        
-
-    image_reshaped = image.data.reshape((1, 16*16))
-
-    image_reshaped[:, (packet_id*64):((packet_id+1)*64)] = bin_data[3:67]
-    
-    image.data = image_reshaped.reshape((16, 16))
-    
-    image.type = 4
-
-    image.got_data = 1
+    try:
+        image = parseImageHeader(bin_data, 4, image_dict)
+        
+        packet_id = bin_data[2]
+        
+        if (image.data.shape[0] != 16) or (image.data.shape[1] != 16):
+            image.data = numpy.ones(shape=[16, 16]) * -1        
+        
+        image_reshaped = image.data.reshape((1, 16*16))
+        
+        image_reshaped[:, (packet_id*64):((packet_id+1)*64)] = bin_data[3:67]
+        
+        image.data = image_reshaped.reshape((16, 16))
+        
+        image.type = 4
+        
+        image.got_data = 1
+    except:
+        return
 
     return image
 
@@ -236,6 +239,9 @@ def parseEnergyHist(bin_data, image_dict):
     return image
 
 def parseRaw(bin_data, image_dict):
+
+    if len(bin_data) < 3:
+        return
 
     image = parseImageHeader(bin_data, 1, image_dict)
 

@@ -200,7 +200,7 @@ def showHouseKeeping(housekeeping):
     subplot1.patch.set_visible(False)
     subplot1.axis('off')
 
-    figure_canvas.show()
+    figure_canvas.draw()
 
     # clear the text
     for i in range(0, len(Image.metadata_labels)):
@@ -565,7 +565,7 @@ def showImage(image, manual):
         subplot1.patch.set_visible(False)
         subplot1.axis('off')
 
-    figure_canvas.show()
+    figure_canvas.draw()
 
     id_baloon.bind(label, comments.getComment(image.id))
     statusLine.set(comments.getComment(image.id))
@@ -795,7 +795,7 @@ frame_figure.pack(side=Tk.RIGHT, fill=Tk.BOTH, expand=0, padx=5, pady=5)
 
 # create the matplotlib's figure canvas
 figure_canvas = FigureCanvasTkAgg(my_figure, master=frame_figure)
-figure_canvas.show()
+figure_canvas.draw()
 figure_canvas.get_tk_widget().pack(side=Tk.TOP)
 figure_canvas._tkcanvas.pack(side=Tk.TOP)
 
@@ -829,7 +829,7 @@ def clearMap():
     subplot2.axes.get_yaxis().set_visible(False)
     subplot2.patch.set_visible(False)
     subplot2.axis("off")
-    globus_canvas.show()
+    globus_canvas.draw()
     globus_label_var.set("")
 
 def redrawMap(lat, lon, timestamp):
@@ -858,7 +858,7 @@ def redrawMap(lat, lon, timestamp):
     globus.drawparallels(numpy.arange(-90,90,30))
     globus.nightshade(timestamp)
 
-    globus_canvas.show()
+    globus_canvas.draw()
 
 # create the toolbar for the figure
 frame_toolbar = Tk.Frame(frame_figure);
@@ -895,7 +895,7 @@ subplot1.axes.get_xaxis().set_visible(False)
 subplot1.axes.get_yaxis().set_visible(False)
 subplot1.patch.set_visible(False)
 subplot1.axis('off')
-figure_canvas.show()
+figure_canvas.draw()
 
 # we this sort function for sorting out filenames
 numbers = re.compile(r'(\d+)')

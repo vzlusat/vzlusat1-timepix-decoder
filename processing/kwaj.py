@@ -8,8 +8,8 @@ import time
 
 from include.baseMethods import *
 
-from_time = "27.11.2018 20:00:00"
-to_time = "28.11.2018 20:00:00"
+from_time = "10.12.2018 08:00:00"
+to_time = "11.12.2018 08:00:00"
 
 anomaly_lat = 8.7
 anomaly_long = 168
@@ -139,7 +139,7 @@ with open(file_name, "w") as file:
                 time = datetime.datetime.utcfromtimestamp(j-59-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
                 file.write(time+"\tP\tsleep 4000\r\n")
                 time = datetime.datetime.utcfromtimestamp(j-55-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
-                file.write(time+"\tP\tx sp 404 1 70 0 1 {} 80 0 0 1\r\n".format(1+2+32))
+                file.write(time+"\tP\tx sp 385 1 70 0 1 {} 80 0 0 1\r\n".format(1+2+32))
                 # time = datetime.datetime.utcfromtimestamp(j-50-hkc_buffer_time).strftime('%Y-%m-%d %H:%M:%S')
                 # file.write(time+"\tP\th conf 3 3 0 01400000000000000000\r\n")
                 
@@ -162,7 +162,7 @@ with open(file_name, "w") as file:
 
             if desired_exposure != last_exposure:
               time = datetime.datetime.utcfromtimestamp(j-20).strftime('%Y-%m-%d %H:%M:%S')
-              file.write(time+"\t\tx se {}\r\n".format(desired_exposure))
+              file.write(time+"\tP\tx se {}\r\n".format(desired_exposure))
               last_exposure = desired_exposure
             time = datetime.datetime.utcfromtimestamp(j-15).strftime('%Y-%m-%d %H:%M:%S')
             file.write(time+"\t\tx m\r\n")
