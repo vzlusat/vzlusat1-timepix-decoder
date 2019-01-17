@@ -1,3 +1,0 @@
-01_housekeeping.txt filter=lfs diff=lfs merge=lfs -text
-02_metadata.txt filter=lfs diff=lfs merge=lfs -text
-03_images.txt filter=lfs diff=lfs merge=lfs -text
