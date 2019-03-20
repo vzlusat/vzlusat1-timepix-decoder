@@ -9,8 +9,8 @@ import numpy as np
 
 from include.baseMethods import *
 
-from_time = "08.11.2018 20:00:00"
-to_time = "09.11.2018 20:00:00"
+from_time = "12.02.2019 20:00:00"
+to_time = "13.02.2019 20:00:00"
 
 desired_fill = 50
 ax_exposure = 0.03
@@ -43,6 +43,8 @@ pcolor_max = 7
 mesh_size = 100
 
 step_size = 5
+
+max_exposure = 0.1
 
 epsilon=1.0
 x_label = 'Pixel count'
@@ -138,7 +140,7 @@ with open(file_name, "w") as file:
 
     print("t: {}".format(t))
 
-    # scann for the anomaly
+    # scan for the anomaly
     i = t
     anomaly_close=0
     min_dist = 180.0
