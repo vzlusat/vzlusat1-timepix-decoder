@@ -358,6 +358,30 @@
     * Unix time range: 1541967511
     * Human readible time range: 2018-11-11 20:18:31
     * Exposure 60 s, Fullres
+  * XRB co-measurement 18
+    * Image range: 26639 to 26663
+    * Unix time range: 1541967511
+    * Human readible time range: 2018-11-11 20:18:31
+    * Exposure 60 s, Fullres
+  * Dosimetry 34
+    * Image range: 26671 to 27784
+    * Unix time range: 1545078672 to 1545250072
+    * Human readible time range: 2018-12-17 20:31:12 to 2018-12-19 20:07:52
+    * Exposure 0.05 s every 1 minute, Binning16+histograms
+  * XRB co-measurement 19
+    * Image range: 27786 to 27821
+    * Unix time range:
+    * Human readible time range:
+    * Exposure 60 s, Fullres
+  * Combined belt+anomaly scanning 10
+    * Image range: 27822 to 27869
+    * Unix time range: 
+    * Human readible time range: 
+  * XRB co-measurement 20
+    * Image range: 27870 to 27951
+    * Unix time range:
+    * Human readible time range:
+    * Exposure 60 s, Fullres
 
 # Installation
 

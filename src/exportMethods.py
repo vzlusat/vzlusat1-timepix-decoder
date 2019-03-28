@@ -357,6 +357,8 @@ def exportBinning(image, image_iter=[]):
 
     if isinstance(image_iter, int):
         image_id = image_iter
+    else:
+        return
 
     if image.got_data == 1:
         if image.type == 2:
@@ -377,6 +379,8 @@ def exportSums(image, image_iter=[]):
 
     if isinstance(image_iter, int):
         image_id = image_iter
+    else:
+        return
 
     if image.got_data == 1:
         with open(getExportDataName(image_id, image.type), "w") as data_file:
@@ -390,6 +394,8 @@ def exportHistogram(image, image_iter=[]):
 
     if isinstance(image_iter, int):
         image_id = image_iter
+    else:
+        return
 
     if image.got_data == 1:
         with open(getExportDataName(image_id, image.type), "w") as data_file:
@@ -405,6 +411,8 @@ def exportRaw(image, image_iter=[]):
 
     if isinstance(image_iter, int):
         image_id = image_iter
+    else:
+        return
 
     filename=getExportPixetName(image_id, image.type)
 
