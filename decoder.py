@@ -357,8 +357,8 @@ def showImage(image, manual):
             filtering = "ON"
 
         metadatas_var[6].set(filtering)
-        metadatas_var[7].set(image.filtered_pixels)
-        metadatas_var[8].set(image.original_pixels)
+        metadatas_var[7].set(image.original_pixels)
+        metadatas_var[8].set(image.filtered_pixels)
         metadatas_var[9].set(image.min_original)
         metadatas_var[10].set(image.max_original)
         metadatas_var[11].set(image.min_filtered)
