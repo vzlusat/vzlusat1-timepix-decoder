@@ -168,6 +168,38 @@ def calculateEnergyDose(images):
     return np.array(doses)
 
 # calculate the doses in image range
+def calculateImageHist(images):
+    
+    doses = []
+
+    for i in range(len(images)):
+
+        image_dose = 0
+        empty_image = False
+
+        if images[i].got_data == 0:
+
+           print("Image {} got no data".format(images[i].id))
+
+           empty_image = True 
+
+        # calculate the exposure time in seconds
+        exposure = images[i].exposure
+        if exposure <= 60000:
+            exposure = exposure*0.001
+        else:
+            exposure = 60 + exposure%60000
+
+        if empty_image:
+            image_dose = 0
+        else:
+            image_dose = np.sum(images[i].data)/exposure
+
+        doses.append(image_dose)
+
+    return np.array(doses)
+
+# calculate the doses in image range
 def calculateEnergyDose2(images):
     
     doses = []
