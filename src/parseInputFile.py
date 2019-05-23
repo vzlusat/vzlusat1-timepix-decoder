@@ -21,6 +21,8 @@ import src.comments as comments
 import datetime
 
 last_time = 0
+last_time_line = []
+obc_time_offset_ = 946684800
 
 def parseInputFile(file_path, root):
 
@@ -33,15 +35,20 @@ def parseInputFile(file_path, root):
 
     last_time = 0
 
-    # for all lines in the file 
+    # for all lines in the file
     for line in infile:
 
         # if the line contains word "time"
         if line.find("time") > -1:
 
             try:
-                last_time = int(line[6:15])+946684800
+                last_time = int(line[6:15])+obc_time_offset_
+                last_time_line = line
             except:
+                last_time = 0
+
+            # it might happen that the time was not recorded even by OBC
+            if last_time == obc_time_offset_:
                 last_time = 0
 
         # if the line contains word "data"
@@ -72,7 +79,7 @@ def parseInputFile(file_path, root):
             elif data[0] == ord('B'):
 
                 temp_image = parseRaw(bin_data[1:], files_to_save)
-                
+
             elif data[0] == ord('D'):
 
                 temp_image = parseBinning8(bin_data[1:], files_to_save)
@@ -112,15 +119,25 @@ def parseInputFile(file_path, root):
                 print("UNKNOWN packet")
                 print(hex_data)
 
+            # postprocessing
             if isinstance(temp_image, Image):
                 files_to_save[getFileName(temp_image.id, temp_image.type)] = temp_image
 
+                # if we are missing metadata and if the comments contain mode and exposure information, use those together with the time the saving of the chunk
                 if (temp_image.got_metadata == 0) and comments.hasMode(temp_image.id) and comments.hasExposure(temp_image.id):
                     temp_image.got_metadata = 1
                     temp_image.time = last_time
                     comment_exposure = comments.getExposure(temp_image.id)
                     temp_image.exposure = comment_exposure
                     temp_image.mode = comments.getMode(temp_image.id)
+                    print("[{}_{}]: Metadata missing, supplying mode ({}), time ({}) and exposure ({}) from comments.txt".format(temp_image.id, temp_image.type, temp_image.mode, temp_image.time, temp_image.exposure))
+
+                # check the time
+                # if it is close to the time of saving of the chunk by OBC, OK
+                # if it is far (and the OBC time is valid), use the time of recording by the OBC
+                if (temp_image.got_metadata == 1 and last_time > 0 and abs(temp_image.time - last_time)) > 300:
+                    print("[{}_{}]: Metadata time ({}) inconsistent with OBC time stamp ({}), using OBC time instead.".format(temp_image.id, temp_image.type, temp_image.time, last_time))
+                    temp_image.time = last_time
 
     statusLine.set("Saving images to binary files")
 

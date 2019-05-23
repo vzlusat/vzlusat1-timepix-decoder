@@ -16,6 +16,8 @@ import math
 
 image_bin_path = "../images_bin/"
 
+obc_time_offset_ = 946684800
+
 kevs = [3.6041, 5.32915, 8.40915, 13.51345, 20.67375, 29.2457, 38.5756, 48.2956, 58.22885, 68.28795, 78.4265, 88.61815, 98.84695, 109.1026, 119.37825, 129.6693]
 
 from src.tle import *
@@ -94,6 +96,10 @@ def loadImageRange(from_idx, to_idx, image_type, require_data=0, require_metadat
 
             if require_metadata and not new_image.got_metadata:
                 print("image {} does not contain metadata".format(i))
+                continue 
+
+            if require_metadata and new_image.got_metadata and new_image.time <= obc_time_offset_:
+                print("image {} does not have a valid time".format(i))
                 continue 
 
             images.append(new_image)

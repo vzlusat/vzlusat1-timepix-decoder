@@ -816,7 +816,7 @@ if settings.use_globus:
   globus_label.pack(side=Tk.BOTTOM)
 
   my_figure2 = Figure(facecolor='none', figsize=(2.0, 2.0), dpi=90)
-  
+
   # create the canvas for the globus
   globus_canvas = FigureCanvasTkAgg(my_figure2, master=frame_mid_bottom)
   globus_canvas.get_tk_widget().pack(side=Tk.BOTTOM, fill=Tk.BOTH, anchor=Tk.S)

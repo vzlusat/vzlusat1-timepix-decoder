@@ -8,11 +8,11 @@ import matplotlib.ticker as ticker # for colorbar
 from include.baseMethods import *
 
 from_idx = 28213
-to_idx = 30000
+to_idx = 33000
 outliers=[]
 
 pcolor_min = 0
-pcolor_max = 7
+pcolor_max = 6
 
 small_plot = 0
 
@@ -20,7 +20,7 @@ date_range = ''
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
 general_label = '#10 combined scanning'
-epsilon=0.1
+epsilon=5.0
 
 # prepare data
 images = loadImageRange(from_idx, to_idx, 1, 0, 1, outliers)
@@ -36,14 +36,14 @@ doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig,
 #{ RBF interpolation
 
 # create meshgrid for RBF
-x_meshgrid, y_meshgrid = createMeshGrid(50)
+x_meshgrid, y_meshgrid = createMeshGrid(150)
 
 # calculate RBF from log data
-rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=5, smooth=0)
+rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=epsilon, smooth=1)
 doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 
 # calculate RBF from lin data
-rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=5, smooth=0)
+rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=epsilon, smooth=1)
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 #} end of RBF interpolation
@@ -65,13 +65,12 @@ def plot_everything(*args):
     m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
     cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
-    cb.set_label(x_label+' '+x_units)
     plt.title('RBF gaussian (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
 
     x_m, y_m = m(lons_orig, lats_orig) # project points
 
-    CS = m.hexbin(x_m, y_m, C=numpy.array(doses), bins='log', gridsize=16, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max)
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+    # CS = m.hexbin(x_m, y_m, C=numpy.array(doses), bins='log', gridsize=16, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max)
+    # cb = m.colorbar(location="bottom", label="Z") # draw colorbar
 
     cb.set_label('log10('+x_label+') '+x_units)
 

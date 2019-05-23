@@ -1,6 +1,6 @@
 import numpy
 import math
-from src.Image import Image 
+from src.Image import Image
 from src.loadImage import loadImage
 from src.saveImage import saveImage
 from src.saveHouseKeeping import saveHouseKeeping
@@ -51,7 +51,7 @@ def parseImageHeader(bin_data, image_type, image_dict):
         image = image_dict[file_name]
     else:
         # try to load already saved image
-        image = loadImage(image_id, image_type) 
+        image = loadImage(image_id, image_type)
 
     if image == 0: # if the image file does not exist
 
@@ -72,7 +72,7 @@ def parseMetadata(bin_data, image_dict):
         image = image_dict[file_name]
     else:
         # try to load already saved image
-        image = loadImage(image_id, image_type) 
+        image = loadImage(image_id, image_type)
 
     if image == 0: # if the image file does not exist
 
@@ -106,30 +106,33 @@ def parseMetadata(bin_data, image_dict):
 
     image.time = bytesToInt32(bin_data[48], bin_data[49], bin_data[50], bin_data[51])
 
+    # check whether the time use usable for TLE extraction
+    # check if the time is close to the chunk time recorded by OBC
+
     image.got_metadata = 1
 
     return image
-    
+
 def parseBinning8(bin_data, image_dict):
 
     image = parseImageHeader(bin_data, 2, image_dict)
 
     try:
         statusLine.set("Parsing binning {}".format(image.id))
-        
+
         packet_id = bin_data[2]
-        
+
         if (image.data.shape[0] != 32) or (image.data.shape[1] != 32):
-            image.data = numpy.ones(shape=[32, 32]) * -1        
-        
+            image.data = numpy.ones(shape=[32, 32]) * -1
+
         image_reshaped = image.data.reshape((1, 32*32))
-        
+
         image_reshaped[:, (packet_id*64):((packet_id+1)*64)] = bin_data[3:67]
-        
+
         image.data = image_reshaped.reshape((32, 32))
-        
+
         image.type = 2
-        
+
         image.got_data = 1
     except:
         return;
@@ -140,20 +143,20 @@ def parseBinning16(bin_data, image_dict):
 
     try:
         image = parseImageHeader(bin_data, 4, image_dict)
-        
+
         packet_id = bin_data[2]
-        
+
         if (image.data.shape[0] != 16) or (image.data.shape[1] != 16):
-            image.data = numpy.ones(shape=[16, 16]) * -1        
-        
+            image.data = numpy.ones(shape=[16, 16]) * -1
+
         image_reshaped = image.data.reshape((1, 16*16))
-        
+
         image_reshaped[:, (packet_id*64):((packet_id+1)*64)] = bin_data[3:67]
-        
+
         image.data = image_reshaped.reshape((16, 16))
-        
+
         image.type = 4
-        
+
         image.got_data = 1
     except:
         return
@@ -164,23 +167,23 @@ def parseBinning32(bin_data, image_dict):
 
     try:
         image = parseImageHeader(bin_data, 8, image_dict)
-        
+
         packet_id = bin_data[2]
-        
+
         if (image.data.shape[0] != 8) or (image.data.shape[1] != 8):
-            image.data = numpy.ones(shape=[8, 8]) * -1        
-        
+            image.data = numpy.ones(shape=[8, 8]) * -1
+
         image_reshaped = image.data.reshape((1, 8*8))
-        
+
         image_reshaped[:, (packet_id*64):((packet_id+1)*64)] = bin_data[3:67]
-        
+
         image.data = image_reshaped.reshape((8, 8))
-        
+
         # data are downscalled by 4, we should upscale them
         image.data = image.data*4;
-        
+
         image.type = 8
-        
+
         image.got_data = 1
     except:
         return
@@ -194,16 +197,16 @@ def parseColsSums(bin_data, image_dict):
     packet_id = bin_data[2]
 
     if (image.data.shape[0] != 2) or (image.data.shape[1] != 256):
-        image.data = numpy.ones(shape=[2, 256]) * -1        
+        image.data = numpy.ones(shape=[2, 256]) * -1
 
     image.data[1, (packet_id*64):((packet_id+1)*64)] = bin_data[3:67]
-    
+
     image.type = 16
 
     image.got_data = 1
 
     return image
-    
+
 def parseRowsSums(bin_data, image_dict):
 
     image = parseImageHeader(bin_data, 16, image_dict)
@@ -213,10 +216,10 @@ def parseRowsSums(bin_data, image_dict):
     packet_id = bin_data[2]
 
     if (image.data.shape[0] != 2) or (image.data.shape[1] != 256):
-        image.data = numpy.ones(shape=[2, 256]) * -1        
+        image.data = numpy.ones(shape=[2, 256]) * -1
 
     image.data[0, (packet_id*64):((packet_id+1)*64)] = bin_data[3:67]
-    
+
     image.type = 16
 
     image.got_data = 1
@@ -234,7 +237,7 @@ def parseEnergyHist(bin_data, image_dict):
 
     for i in range(0, 16):
         image.data[0, i] = bytesToInt16(bin_data[2 + 2*i], bin_data[3 + 2*i])
-    
+
     image.type = 32
 
     image.got_data = 1
