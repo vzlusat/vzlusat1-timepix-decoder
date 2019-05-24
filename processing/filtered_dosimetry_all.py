@@ -11,7 +11,6 @@ from include.baseMethods import *
 
 from_idx = 28213
 to_idx = 33000
-# to_idx = 29213
 outliers=[]
 
 pcolor_min = 0
@@ -27,8 +26,8 @@ epsilon=5.0
 # prepare data
 images = loadImageRange(from_idx, to_idx, 1, 0, 1, outliers)
 
-n_bins = 9
-bin_size = 10.0
+n_bins = 1
+bin_size = 150
 
 bins = calculateImageHist(images, bin_size, n_bins)
 
@@ -82,53 +81,41 @@ for idx in range(n_bins):
 
 def plot_everything(*args):
 
-    n_rows = 3
-    n_cols = n_bins / n_rows
+    plt.figure(1)
 
-    print("n_rows: {}, n_cols: {}".format(n_rows, n_cols))
+    #{ Figure 1
 
-    for idx in range(n_bins):
+    ax3 = plt.subplot2grid((1, 1), (0, 0))
 
-        row = idx / n_cols
-        col = idx % n_cols
+    m = createMap('cyl')
 
-        print("plotting bin {}, row {} col {}".format(idx, row, col))
+    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-        plt.figure(1)
+    # m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[0], cmap=my_cm, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.005)
 
-        #{ Figure 1
+    cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
 
-        ax3 = plt.subplot2grid((n_rows, n_bins/n_rows), (row, col))
+    low_limit = idx*bin_size
+    high_limit = (idx+1.0)*bin_size
 
-        m = createMap('cyl')
+    if idx == (n_bins - 1):
+        high_limit = 150
 
-        x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+    plt.title('X-ray/gamma {}-{} kev'.format(low_limit, high_limit), fontsize=13)
 
-        # m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm)
-        m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.005)
+    x_m, y_m = m(lons_orig, lats_orig) # project points
 
-        cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
+    cb.set_label('log10('+x_label+') '+x_units)
 
-        low_limit = idx*bin_size
-        high_limit = (idx+1.0)*bin_size
+    for image in images:
+        latitude, longitude, tle_date = getLatLong(image.time)
+        x, y = m(longitude, latitude)
+        m.scatter(x, y, 0.2, marker='o', color='grey', zorder=10)
 
-        if idx == (n_bins - 1):
-            high_limit = 150
+    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.2, hspace=0.3)
 
-        plt.title('X-ray/gamma {}-{} kev'.format(low_limit, high_limit), fontsize=13)
-
-        x_m, y_m = m(lons_orig, lats_orig) # project points
-
-        cb.set_label('log10('+x_label+') '+x_units)
-
-        for image in images:
-            latitude, longitude, tle_date = getLatLong(image.time)
-            x, y = m(longitude, latitude)
-            m.scatter(x, y, 0.2, marker='o', color='grey', zorder=10)
-
-        plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.2, hspace=0.3)
-
-        #} end of Figure 1
+    #} end of Figure 1
 
     plt.show()
 
