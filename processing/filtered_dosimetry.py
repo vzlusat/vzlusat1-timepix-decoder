@@ -5,10 +5,13 @@ import matplotlib.pyplot as plt
 from scipy.interpolate import Rbf
 import matplotlib.ticker as ticker # for colorbar
 
+import matplotlib.patches as patches # for plotting rectangles in the custom histogram
+
 from include.baseMethods import *
 
 from_idx = 28213
 to_idx = 33000
+# to_idx = 29213
 outliers=[]
 
 pcolor_min = 0
@@ -19,91 +22,113 @@ small_plot = 0
 date_range = ''
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
-general_label = '#10 combined scanning'
 epsilon=5.0
 
 # prepare data
 images = loadImageRange(from_idx, to_idx, 1, 0, 1, outliers)
 
-doses = calculateImageHist(images)
-doses_log = np.where(doses > 0, np.log10(doses), doses)
+n_bins = 9
+bin_size = 10.0
+
+bins = calculateImageHist(images, bin_size, n_bins)
+
+print("dataset sizelen(bins[0]): {}".format(len(bins[0])))
+
+bins_log = []
+
+for idx,binn in enumerate(bins):
+    doses_log = np.where(binn > 0, np.log10(binn), binn)
+    bins_log.append(doses_log)
 
 lats_orig, lons_orig = extractPositions(images)
 
-doses_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses, lats_orig, lons_orig)
-doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig, lons_orig)
+bins_wrapped = []
+bins_log_wrapped = []
+for idx in range(n_bins):
+
+    print("wrapping aroung bin: {}".format(idx))
+
+    doses_wrapped, lats_wrapped, lons_wrapped = wrapAround(bins[idx], lats_orig, lons_orig)
+    doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(bins_log[idx], lats_orig, lons_orig)
+
+    bins_wrapped.append(doses_wrapped)
+    bins_log_wrapped.append(doses_log_wrapped)
 
 #{ RBF interpolation
 
 # create meshgrid for RBF
-x_meshgrid, y_meshgrid = createMeshGrid(150)
+x_meshgrid, y_meshgrid = createMeshGrid(100)
 
-# calculate RBF from log data
-rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=epsilon, smooth=1)
-doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
+bins_rbf_lin = []
+bins_rbf_log = []
 
-# calculate RBF from lin data
-rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=epsilon, smooth=1)
-doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
+for idx in range(n_bins):
+
+    print("interpolating bin: {}".format(idx))
+
+    # calculate RBF from log data
+    rbf_lin = Rbf(lats_wrapped, lons_wrapped, bins_wrapped[idx], function='multiquadric', epsilon=epsilon, smooth=1)
+    doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
+
+    bins_rbf_lin.append(doses_rbf_lin)
+
+    # calculate RBF from lin data
+    rbf_log = Rbf(lats_wrapped, lons_wrapped, bins_log_wrapped[idx], function='multiquadric', epsilon=epsilon, smooth=1)
+    doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
+
+    bins_rbf_log.append(doses_rbf_log)
 
 #} end of RBF interpolation
 
 def plot_everything(*args):
 
-    plt.figure(1)
+    n_rows = 3
+    n_cols = n_bins / n_rows
 
-    #{ Figure 1
+    print("n_rows: {}, n_cols: {}".format(n_rows, n_cols))
 
-    ax3 = plt.subplot2grid((1, 1), (0, 0))
+    for idx in range(n_bins):
 
-#{ linear rbf
+        row = idx / n_cols
+        col = idx % n_cols
 
-    m = createMap('cyl')
+        print("plotting bin {}, row {} col {}".format(idx, row, col))
 
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+        plt.figure(1)
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+        #{ Figure 1
 
-    cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
-    plt.title('RBF gaussian (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
-
-    x_m, y_m = m(lons_orig, lats_orig) # project points
-
-    # CS = m.hexbin(x_m, y_m, C=numpy.array(doses), bins='log', gridsize=16, cmap=my_cm, mincnt=0, reduce_C_function=np.max, zorder=10, vmin=pcolor_min, vmax=pcolor_max)
-    # cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-
-    cb.set_label('log10('+x_label+') '+x_units)
-
-    for image in images:
-        latitude, longitude, tle_date = getLatLong(image.time)
-        x, y = m(longitude, latitude)
-        m.scatter(x, y, 20, marker='o', color='k', zorder=10)
-
-#} end of linear rbf
-
-    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
-
-    #} end of Figure 1
-
-    if small_plot:
-
-        plt.figure(2)
-
-        ax2 = plt.subplot2grid((1, 1), (0, 0))
-
-        #{ log-scale rbf
+        ax3 = plt.subplot2grid((n_rows, n_bins/n_rows), (row, col))
 
         m = createMap('cyl')
 
         x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
-        m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+        # m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm)
+        m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.005)
 
-        cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+        cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
+
+        low_limit = idx*bin_size
+        high_limit = (idx+1.0)*bin_size
+
+        if idx == (n_bins - 1):
+            high_limit = 150
+
+        plt.title('X-ray/gamma {}-{} kev'.format(low_limit, high_limit), fontsize=13)
+
+        x_m, y_m = m(lons_orig, lats_orig) # project points
+
         cb.set_label('log10('+x_label+') '+x_units)
-        plt.title('RBF gaussian (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
 
-        #} end of log-scale rbf
+        for image in images:
+            latitude, longitude, tle_date = getLatLong(image.time)
+            x, y = m(longitude, latitude)
+            m.scatter(x, y, 0.2, marker='o', color='grey', zorder=10)
+
+        plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.2, hspace=0.3)
+
+        #} end of Figure 1
 
     plt.show()
 

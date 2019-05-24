@@ -14,6 +14,8 @@ from src.Image import *
 import numpy as np
 import math
 
+import copy
+
 image_bin_path = "../images_bin/"
 
 obc_time_offset_ = 946684800
@@ -92,15 +94,15 @@ def loadImageRange(from_idx, to_idx, image_type, require_data=0, require_metadat
         else:
             if require_data and not new_image.got_data:
                 print("image {} does not contain data".format(i))
-                continue 
+                continue
 
             if require_metadata and not new_image.got_metadata:
                 print("image {} does not contain metadata".format(i))
-                continue 
+                continue
 
             if require_metadata and new_image.got_metadata and new_image.time <= obc_time_offset_:
                 print("image {} does not have a valid time".format(i))
-                continue 
+                continue
 
             images.append(new_image)
 
@@ -117,35 +119,35 @@ def loadImageRangeMulti(from_to, image_type, require_data=0, require_metadata=0,
     for j in range(0, from_to.shape[0]):
 
       for i in range(from_to[j, 0], from_to[j, 1]):
-      
+
           try:
               dev_null = outliers.index(i)
               continue
           except:
               pass
-      
+
           # for count mode only
           # load anything that has metadata and any data, so presumably it is a proper image
           new_image = loadImage(i, image_type, image_bin_path)
-      
+
           if new_image == 0:
               print("image {} could not be loaded".format(i))
           else:
               if require_data and not new_image.got_data:
                   print("image {} does not contain data".format(i))
-                  continue 
-      
+                  continue
+
               if require_metadata and not new_image.got_metadata:
                   print("image {} does not contain metadata".format(i))
-                  continue 
-      
+                  continue
+
               images.append(new_image)
 
     return images
 
 # calculate the doses in image range
 def calculateEnergyDose(images):
-    
+
     doses = []
 
     for i in range(len(images)):
@@ -174,40 +176,65 @@ def calculateEnergyDose(images):
     return np.array(doses)
 
 # calculate the doses in image range
-def calculateImageHist(images):
-    
-    doses = []
+def calculateImageHist(images, bin_size, n_bins):
 
-    for i in range(len(images)):
+    bins = []
 
-        image_dose = 0
-        empty_image = False
+    for b in range(n_bins):
 
-        if images[i].got_data == 0:
+        doses = []
+        
+        low_limit = b*bin_size
+        high_limit = (b+1.0)*bin_size
 
-           print("Image {} got no data".format(images[i].id))
+        if b == n_bins - 1:
+            high_limit = 150
 
-           empty_image = True 
+        for i in range(len(images)):
 
-        # calculate the exposure time in seconds
-        exposure = images[i].exposure
-        if exposure <= 60000:
-            exposure = exposure*0.001
-        else:
-            exposure = 60 + exposure%60000
-
-        if empty_image:
             image_dose = 0
-        else:
-            image_dose = np.sum(images[i].data)/exposure
+            empty_image = False
 
-        doses.append(image_dose)
+            if images[i].got_data == 0:
 
-    return np.array(doses)
+               print("Image {} got no data".format(images[i].id))
+
+               empty_image = True
+
+            else:
+
+                temp_image = copy.deepcopy(images[i])
+
+            # calculate the exposure time in seconds
+            exposure = images[i].exposure
+            if exposure <= 60000:
+                exposure = exposure*0.001
+            else:
+                exposure = 60 + exposure%60000
+
+            if not empty_image:
+
+                nonzero_idcs = np.nonzero(temp_image.data)
+
+                for x, y in zip(nonzero_idcs[0], nonzero_idcs[1]):
+
+                    if temp_image.data[x, y] < low_limit or temp_image.data[x, y] >= high_limit:
+                        temp_image.data[x, y] = 0
+
+            if empty_image:
+                image_dose = 0
+            else:
+                image_dose = np.sum(temp_image.data)/exposure
+
+            doses.append(image_dose)
+
+        bins.append(np.array(doses))
+
+    return bins
 
 # calculate the doses in image range
 def calculateEnergyDose2(images):
-    
+
     doses = []
     total_exposure_time = 0
     total_pixel_count = 0
@@ -239,7 +266,7 @@ def calculateEnergyDose2(images):
 
 # calculate the doses in image range
 def calculateTotalPixelCount(images):
-    
+
     doses = []
 
     for i in range(len(images)):
@@ -266,7 +293,7 @@ def calculateTotalPixelCount(images):
     return np.array(doses)
 
 def calculateTotalPixelCount2(images):
-    
+
     doses = []
     total_exposure_time = 0
     total_pixel_count = 0
@@ -355,8 +382,8 @@ class Face():
         e20 = np.mean(self.vertices[(0,2),:], axis=0)
         f1 = Face(np.vstack((self.vertices[0,:], e01, e20)))
         f2 = Face(np.vstack((self.vertices[1,:], e01, e12)))
-        f3 = Face(np.vstack((self.vertices[2,:], e20, e12)))    
-        f4 = Face(np.vstack((e01, e12, e20))) 
+        f3 = Face(np.vstack((self.vertices[2,:], e20, e12)))
+        f4 = Face(np.vstack((e01, e12, e20)))
         new_faces = [f1, f2, f3, f4]
         for f in new_faces:
             f.normalize()
@@ -371,14 +398,14 @@ class Face():
 ##### Geodesic grid generation routines #####
 class Sphere():
     def __init__(self, n_subdivs=3):
-        v = np.array([[1,1,1], 
+        v = np.array([[1,1,1],
                       [-1,-1,1],
                       [-1,1,-1],
                       [1,-1,-1]])
         f1 = Face(v[(0,1,2),:]);
         f2 = Face(v[(1,2,3),:]);
         f3 = Face(v[(0,2,3),:]);
-        f4 = Face(v[(0,1,3),:]);  
+        f4 = Face(v[(0,1,3),:]);
         self.faces = [f1,f2,f3,f4]
         v = np.array([[ 1, 0, 0],
                       [ 0, 1, 0],
@@ -427,5 +454,5 @@ class Sphere():
 
 def cart2latlong(pts):
     lats = np.arcsin(pts[:,-1])*180/3.14
-    longs = np.arctan2(pts[:,0], pts[:,1])*180/3.14    
+    longs = np.arctan2(pts[:,0], pts[:,1])*180/3.14
     return lats, longs
