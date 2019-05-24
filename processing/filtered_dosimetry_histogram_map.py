@@ -4,6 +4,7 @@ import os
 import matplotlib.pyplot as plt
 from scipy.interpolate import Rbf
 import matplotlib.ticker as ticker # for colorbar
+from matplotlib.ticker import ScalarFormatter
 
 import matplotlib.patches as patches # for plotting rectangles in the custom histogram
 
@@ -22,7 +23,7 @@ small_plot = 0
 date_range = ''
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
-epsilon=5.0
+epsilon=0.1
 
 # prepare data
 images = loadImageRange(from_idx, to_idx, 1, 0, 1, outliers)
@@ -67,14 +68,21 @@ for idx in range(n_bins):
     print("interpolating bin: {}".format(idx))
 
     # calculate RBF from log data
-    rbf_lin = Rbf(lats_wrapped, lons_wrapped, bins_wrapped[idx], function='multiquadric', epsilon=epsilon, smooth=1)
+    rbf_lin = Rbf(lats_wrapped, lons_wrapped, bins_wrapped[idx], function='multiquadric', epsilon=epsilon, smooth=0)
     doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 
     bins_rbf_lin.append(doses_rbf_lin)
 
     # calculate RBF from lin data
-    rbf_log = Rbf(lats_wrapped, lons_wrapped, bins_log_wrapped[idx], function='multiquadric', epsilon=epsilon, smooth=1)
+    rbf_log = Rbf(lats_wrapped, lons_wrapped, bins_log_wrapped[idx], function='multiquadric', epsilon=epsilon, smooth=0)
     doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
+
+    negative_idcs = np.nonzero(doses_rbf_log)
+
+    for x, y in zip(negative_idcs[0], negative_idcs[1]):
+
+        if doses_rbf_log[x, y] < 0:
+            doses_rbf_log[x, y] = 0
 
     bins_rbf_log.append(doses_rbf_log)
 
@@ -107,7 +115,9 @@ def plot_everything(*args):
         # m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm)
         m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.005)
 
-        cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fmt)) # draw colorbar
+        formatter = ScalarFormatter()
+        formatter.set_scientific(False)
+        cb = m.colorbar(location="bottom", label="Z", format=ticker.FuncFormatter(fake_log_fmt)) # draw colorbar
 
         low_limit = idx*bin_size
         high_limit = (idx+1.0)*bin_size

@@ -52,6 +52,14 @@ def fmt(x, pos):
     b = int(b)
     return r'${}e{{{}}}$'.format(a, b)
 
+# formatting log scale lables
+def fake_log_fmt(x, pos):
+    a, b = '{:.0e}'.format(x).split('e')
+    b = int(b)
+    return r'$1e{{{}}}$'.format(a)
+
+print("fmt: {}".format(fmt(400000, 2)))
+
 def extractPositions(images):
 
     # prepare numpy arrays for the lats and longs
