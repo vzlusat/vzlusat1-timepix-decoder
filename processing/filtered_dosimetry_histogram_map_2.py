@@ -10,8 +10,8 @@ import matplotlib.patches as patches # for plotting rectangles in the custom his
 
 from include.baseMethods import *
 
-from_idx = 28213
-to_idx = 33000
+from_idx = 32478
+to_idx = 36000
 # to_idx = 29213
 outliers=[]
 
@@ -26,10 +26,10 @@ x_label = 'Total dose in 14x14x0.3 mm Si'
 epsilon=0.1
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 1, 0, 1, outliers)
+images = loadImageRange(from_idx, to_idx, 1, 1, 1, outliers)
 
-n_bins = 9
-bin_size = 10
+n_bins = 4
+bin_size = 25
 
 bins = calculateImageHist(images, bin_size, n_bins)
 
@@ -58,7 +58,7 @@ for idx in range(n_bins):
 #{ RBF interpolation
 
 # create meshgrid for RBF
-x_meshgrid, y_meshgrid = createMeshGrid(100)
+x_meshgrid, y_meshgrid = createMeshGrid(50)
 
 bins_rbf_lin = []
 bins_rbf_log = []
@@ -90,7 +90,7 @@ for idx in range(n_bins):
 
 def plot_everything(*args):
 
-    n_rows = 3
+    n_rows = 2
     n_cols = n_bins / n_rows
 
     print("n_rows: {}, n_cols: {}".format(n_rows, n_cols))

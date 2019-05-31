@@ -184,7 +184,7 @@ def calculateEnergyDose(images):
     return np.array(doses)
 
 # calculate the doses in image range
-def calculateImageHist(images, bin_size, n_bins):
+def calculateImageHist(images, bin_size, n_bins, count=False):
 
     bins = []
 
@@ -228,6 +228,8 @@ def calculateImageHist(images, bin_size, n_bins):
 
                     if temp_image.data[x, y] < low_limit or temp_image.data[x, y] >= high_limit:
                         temp_image.data[x, y] = 0
+                    elif count == True:
+                        temp_image.data[x, y] = 1
 
             if empty_image:
                 image_dose = 0
