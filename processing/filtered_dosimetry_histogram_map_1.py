@@ -11,22 +11,22 @@ import matplotlib.patches as patches # for plotting rectangles in the custom his
 from include.baseMethods import *
 
 from_idx = 28213
-to_idx = 33000
-# to_idx = 29213
+to_idx = 35000
+# to_idx = 32458
 outliers=[]
 
 pcolor_min = 0
-pcolor_max = 6
+pcolor_max = 4
 
 small_plot = 0
 
 date_range = ''
-x_units = '(particles/s)'
-x_label = 'Total dose in 14x14x0.3 mm Si'
+x_units = '[particles/s]'
+x_label = 'particle count in 14x14x0.3 mm Si'
 epsilon=0.1
 
 # prepare data
-images = loadImageRange(from_idx, to_idx, 1, 0, 1, outliers)
+images = loadImageRange(from_idx, to_idx, 1, 1, 1, outliers)
 
 n_bins = 9
 bin_size = 10
@@ -58,7 +58,7 @@ for idx in range(n_bins):
 #{ RBF interpolation
 
 # create meshgrid for RBF
-x_meshgrid, y_meshgrid = createMeshGrid(100)
+x_meshgrid, y_meshgrid = createMeshGrid(50)
 
 bins_rbf_lin = []
 bins_rbf_log = []
@@ -113,7 +113,7 @@ def plot_everything(*args):
         x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
         # m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm)
-        m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.005)
+        m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.005, vmin=pcolor_min, vmax=pcolor_max)
 
         formatter = ScalarFormatter()
         formatter.set_scientific(False)

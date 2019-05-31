@@ -11,27 +11,27 @@ import matplotlib.patches as patches # for plotting rectangles in the custom his
 from include.baseMethods import *
 
 from_idx = 32478
-to_idx = 36000
+to_idx = 34972
 # to_idx = 29213
 outliers=[]
 
 pcolor_min = 0
-pcolor_max = 6
+pcolor_max = 4
 
 small_plot = 0
 
 date_range = ''
-x_units = '(keV/s)'
-x_label = 'Total dose in 14x14x0.3 mm Si'
-epsilon=0.1
+x_units = '[particles/s]'
+x_label = 'particle count in 14x14x0.3 mm Si'
+epsilon=1.0
 
 # prepare data
 images = loadImageRange(from_idx, to_idx, 1, 1, 1, outliers)
 
-n_bins = 4
-bin_size = 25
+n_bins = 9
+bin_size = 10
 
-bins = calculateImageHist(images, bin_size, n_bins)
+bins = calculateImageHist(images, bin_size, n_bins, count=True)
 
 print("dataset sizelen(bins[0]): {}".format(len(bins[0])))
 
@@ -58,7 +58,7 @@ for idx in range(n_bins):
 #{ RBF interpolation
 
 # create meshgrid for RBF
-x_meshgrid, y_meshgrid = createMeshGrid(50)
+x_meshgrid, y_meshgrid = createMeshGrid(100)
 
 bins_rbf_lin = []
 bins_rbf_log = []
@@ -90,7 +90,7 @@ for idx in range(n_bins):
 
 def plot_everything(*args):
 
-    n_rows = 2
+    n_rows = 3
     n_cols = n_bins / n_rows
 
     print("n_rows: {}, n_cols: {}".format(n_rows, n_cols))
@@ -113,7 +113,7 @@ def plot_everything(*args):
         x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
 
         # m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm)
-        m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.005)
+        m.pcolor(x_m_meshgrid, y_m_meshgrid, bins_rbf_log[idx], cmap=my_cm, edgecolor=(1.0, 1.0, 1.0, 0.3), linewidth=0.005, vmin=pcolor_min, vmax=pcolor_max)
 
         formatter = ScalarFormatter()
         formatter.set_scientific(False)
@@ -125,7 +125,7 @@ def plot_everything(*args):
         if idx == (n_bins - 1):
             high_limit = 150
 
-        plt.title('X-ray/gamma {}-{} kev'.format(low_limit, high_limit), fontsize=13)
+        plt.title('X-ray/gamma {}-{} keV'.format(low_limit, high_limit), fontsize=13)
 
         x_m, y_m = m(lons_orig, lats_orig) # project points
 

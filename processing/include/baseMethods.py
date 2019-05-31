@@ -101,8 +101,9 @@ def loadImageRange(from_idx, to_idx, image_type, require_data=0, require_metadat
             print("image {} could not be loaded".format(i))
         else:
             if require_data and not new_image.got_data:
-                print("image {} does not contain data".format(i))
-                continue
+                if new_image.got_metadata and new_image.original_pixels > 0:
+                    print("image {} does not contain data".format(i))
+                    continue
 
             if require_metadata and not new_image.got_metadata:
                 print("image {} does not contain metadata".format(i))
