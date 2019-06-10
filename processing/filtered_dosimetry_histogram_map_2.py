@@ -11,7 +11,7 @@ import matplotlib.patches as patches # for plotting rectangles in the custom his
 from include.baseMethods import *
 
 from_idx = 32478
-to_idx = 34972
+to_idx = 35475
 # to_idx = 29213
 outliers=[]
 
@@ -28,8 +28,8 @@ epsilon=1.0
 # prepare data
 images = loadImageRange(from_idx, to_idx, 1, 1, 1, outliers)
 
-n_bins = 9
-bin_size = 10
+n_bins = 4
+bin_size = 25
 
 bins = calculateImageHist(images, bin_size, n_bins, count=True)
 
@@ -90,7 +90,7 @@ for idx in range(n_bins):
 
 def plot_everything(*args):
 
-    n_rows = 3
+    n_rows = 2
     n_cols = n_bins / n_rows
 
     print("n_rows: {}, n_cols: {}".format(n_rows, n_cols))
