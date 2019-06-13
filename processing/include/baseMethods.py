@@ -185,6 +185,24 @@ def calculateEnergyDose(images):
     return np.array(doses)
 
 # calculate the doses in image range
+def calculateTotalExposureTime(images):
+
+    total_time = 0
+
+    for i in range(len(images)):
+
+        # calculate the exposure time in seconds
+        exposure = images[i].exposure
+        if exposure <= 60000:
+            exposure = exposure*0.001
+        else:
+            exposure = 60 + exposure%60000
+
+        total_time += exposure
+
+    return total_time
+
+# calculate the doses in image range
 def calculateImageHist(images, bin_size, n_bins, count=False):
 
     bins = []
