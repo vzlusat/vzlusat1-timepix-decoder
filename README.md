@@ -360,8 +360,8 @@
     * Exposure 60 s, Fullres
   * XRB co-measurement 18
     * Image range: 26639 to 26663
-    * Unix time range: 1541967511
-    * Human readible time range: 2018-11-11 20:18:31
+    * Unix time range: 1541967511 to 1544080735
+    * Human readible time range: 2018-11-11 20:18:31 to 2018-12-06 07:18:55
     * Exposure 60 s, Fullres
   * Dosimetry 34
     * Image range: 26671 to 27784
