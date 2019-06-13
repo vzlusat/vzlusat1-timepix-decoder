@@ -11,7 +11,7 @@ import matplotlib.patches as patches # for plotting rectangles in the custom his
 from include.baseMethods import *
 
 from_idx = 32478
-to_idx = 35475
+to_idx = 35858
 # to_idx = 29213
 outliers=[]
 

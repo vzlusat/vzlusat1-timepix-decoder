@@ -370,18 +370,42 @@
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * XRB co-measurement 19
     * Image range: 27786 to 27821
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: missing metadata
+    * Human readible time range: missing metadata
     * Exposure 60 s, Fullres
   * Combined belt+anomaly scanning 10
     * Image range: 27822 to 27869
-    * Unix time range: 
-    * Human readible time range: 
+    * Unix time range: 1550048702 to 1550083008
+    * Human readible time range: 2019-02-13 09:05:02 to 2019-02-13 18:36:48
   * XRB co-measurement 20
-    * Image range: 27870 to 27951
-    * Unix time range:
-    * Human readible time range:
-    * Exposure 60 s, Fullres
+    * Image range: 27870 to 27978
+    * Unix time range: 1553072460 to 1554064480
+    * Human readible time range: 2019-03-20 09:01:00 to 2019-03-31 20:34:40
+    * Exposure 60 s in the beginning, later 10 s, Fullres
+  * Combined belt+anomaly scanning 10
+    * Image range: 27979 to 28095
+    * Unix time range: 1554115853 to 1554226798
+    * Human readible time range: 2019-04-01 10:50:53 to 2019-04-02 17:39:58
+  * XRB co-measurement 21
+    * Image range: 28096 to 28212
+    * Unix time range: 1554575516 to 1557867775
+    * Human readible time range: 2019-04-06 18:31:56 to 2019-05-14 21:02:55
+    * Exposure 10 s, Fullres
+  * Filtered dosimetry 1
+    * Image range: 28213 to 32458
+    * Unix time range: 1558035088 to 1558387775
+    * Human readible time range: 2019-05-16 19:31:28 to 2019-05-20 21:29:35
+    * Exposure 0.01 s every 2 minutes
+  * XRB co-measurement 22
+    * Image range: 32459 to 32477
+    * Unix time range: 1558554218 to 1558867435
+    * Human readible time range: 2019-05-22 19:43:38 to 2019-05-26 10:43:55
+    * Exposure 10 s, Fullres
+  * Filtered dosimetry 2
+    * Image range: 32478 to 35838
+    * Unix time range: 1558945872 to 1560158923
+    * Human readible time range: 2019-05-27 08:31:12 to 2019-06-10 09:28:43
+    * Exposure 0.01 s every 2 minutes
 
 # Installation
 
