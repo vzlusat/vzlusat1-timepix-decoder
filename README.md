@@ -391,21 +391,21 @@
     * Unix time range: 1554575516 to 1557867775
     * Human readible time range: 2019-04-06 18:31:56 to 2019-05-14 21:02:55
     * Exposure 10 s, Fullres
-  * Filtered dosimetry 1
+  * Single-pixel dosimetry 1
     * Image range: 28213 to 32458
     * Unix time range: 1558035088 to 1558387775
     * Human readible time range: 2019-05-16 19:31:28 to 2019-05-20 21:29:35
-    * Exposure 0.01 s every 2 minutes
+    * Exposure 0.01 s every 2 minutes, only single-pixel events
   * XRB co-measurement 22
     * Image range: 32459 to 32477
     * Unix time range: 1558554218 to 1558867435
     * Human readible time range: 2019-05-22 19:43:38 to 2019-05-26 10:43:55
     * Exposure 10 s, Fullres
-  * Filtered dosimetry 2
+  * Single-pixle dosimetry 2
     * Image range: 32478 to 35838
     * Unix time range: 1558945872 to 1560158923
     * Human readible time range: 2019-05-27 08:31:12 to 2019-06-10 09:28:43
-    * Exposure 0.01 s every 2 minutes
+    * Exposure 0.01 s every 2 minutes, only single-pixel events
 
 # Installation
 
