@@ -98,8 +98,8 @@
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * Anomaly 7
     * Image range: 8839 to 8893
-    * Unix time range: 1511347828 to 1511754196 
-    * Human readible time range: 2017-11-22 10:50:28 to 2017-11-27 03:43:16 
+    * Unix time range: 1511347828 to 1511754196
+    * Human readible time range: 2017-11-22 10:50:28 to 2017-11-27 03:43:16
   * Dosimetry 15
     * Image range: 8894 to 9760
     * Unix time range: 1511754437 to 1511998444
@@ -240,11 +240,11 @@
     * Human readible time range: 2018-03-29 23:51:44 to 2018-03-30 23:50:04
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * XRB co-measurement 7
-    * Image range: 21558 to 21561 
+    * Image range: 21558 to 21561
     * Unix time range: 1524642427 to 1524686868
     * Human readible time range: 2018-04-25 07:47:07 to 2018-04-25 20:07:48
     * Exposure 60 s, Fullres
-  * Dosimetry 30 
+  * Dosimetry 30
     * Image range: 21562 to 22534
     * Unix time range: 1524761488 to 1524847799
     * Human readible time range: 2018-04-26 16:51:28 to 2018-04-27 16:49:59
@@ -259,7 +259,7 @@
     * Human readible time range: 2018-05-06 16:51:30 to 2018-05-07 16:42:37
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * XRB co-measurement 8
-    * Image range: 23691 to 23692 
+    * Image range: 23691 to 23692
     * Unix time range: 1528532981 to 1528538737
     * Human readible time range: 2018-06-09 08:29:41 to 2018-06-09 10:05:37
     * Exposure 60 s, Fullres
@@ -269,7 +269,7 @@
     * Human readible time range: 2018-06-09 18:50:58 to 2018-06-10 18:49:41
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * XRB co-measurement 9
-    * Image range: 24731 to 24737 
+    * Image range: 24731 to 24737
     * Unix time range: 1529998470 to 1530094875
     * Human readible time range: 2018-06-26 07:34:30 to 2018-06-27 10:21:15
     * Exposure 60 s, Fullres
@@ -279,7 +279,7 @@
     * Human readible time range: 2018-06-27 18:50:58 to 2018-06-28 18:47:05
     * Exposure 0.05 s every 1 minute, Binning16+histograms
   * XRB co-measurement 10
-    * Image range: 25755 to 25760 
+    * Image range: 25755 to 25760
     * Unix time range: 1530526563 to 1530565413
     * Human readible time range: 2018-07-02 10:16:03 to 2018-07-02 21:03:33
     * Exposure 60 s, Fullres
@@ -292,7 +292,7 @@
     * Unix time range: 1531684073 to 1531738308
     * Human readible time range: 2018-07-15 19:47:53 to 2018-07-16 10:51:48
   * XRB co-measurement 11
-    * Image range: 25912 to 25917 
+    * Image range: 25912 to 25917
     * Unix time range: 1532247558 to 1532423535
     * Human readible time range: 2018-07-22 08:19:18 to 2018-07-24 09:12:15
     * Exposure 60 s, Fullres
@@ -305,7 +305,7 @@
     * Unix time range: 1533410278 to 1533453313
     * Human readible time range: 2018-08-04 19:17:58 to 2018-08-05 07:15:13
   * XRB co-measurement 12
-    * Image range: 25972 to 26001 
+    * Image range: 25972 to 26001
     * Unix time range: 1533633093 to 1535744512
     * Human readible time range: 2018-08-07 09:11:33 to 2018-08-31 19:41:52
     * Exposure 60 s, Fullres
@@ -314,7 +314,7 @@
     * Unix time range: 1535960083 to 1536042823
     * Human readible time range: 2018-09-03 07:34:43 to 2018-09-04 06:33:43
   * XRB co-measurement 13
-    * Image range: 26075 to 26101 
+    * Image range: 26075 to 26101
     * Unix time range: 1536090490 to 1536698381
     * Human readible time range: 2018-09-04 19:48:10 to 2018-09-11 20:39:41
     * Exposure 60 s, Fullres
@@ -323,7 +323,7 @@
     * Unix time range: 1537044758 to 1537192573
     * Human readible time range: 2018-09-15 20:52:38 to 2018-09-17 13:56:13
   * XRB co-measurement 14
-    * Image range: 26175 to 26178 
+    * Image range: 26175 to 26178
     * Unix time range: 1537437431 to 1537443154
     * Human readible time range: 2018-09-20 09:57:11 to 2018-09-20 11:32:34
     * Exposure 60 s, Fullres
@@ -332,7 +332,7 @@
     * Unix time range: 1537477443 to 1537523263
     * Human readible time range: 2018-09-20 21:04:03 to 2018-09-21 09:47:43
   * XRB co-measurement 15
-    * Image range: 26241 to 26249 
+    * Image range: 26241 to 26249
     * Unix time range: 1537987129 to 1538424692
     * Human readible time range: 2018-09-26 18:38:49 to 2018-10-01 20:11:32
     * Exposure 60 s, Fullres
@@ -420,19 +420,19 @@ Follow these instructions:
 Install python and matplotlib by running:
 
 ```bash
-sudo apt-get install python2.7-dev python-matplotlib python3-pip python3-tk python-pmw python-pip python-mpltoolkits.basemap python3-mpltoolkits.basemap python-scipy
+sudo apt-get install python2.7-dev python-matplotlib python3-pip python3-tk python-pmw python-pip python-mpltoolkits.basemap python3-mpltoolkits.basemap python-scipy python-ephem
 ```
 
 ### Windows
 
 1. Install the latest Python3 from the website: https://www.python.org/downloads/
- 
+
 If you want to have a TwoLineElements+Globus, follow the next three bullet points, otherwise skip to the point 2 and disable the globus feature in _settings.txt_. Following bullet points may take very long time on Windows...
 
 - Install Visual C++ Build tools 2015 from: http://landinghub.visualstudio.com/visual-cpp-build-tools
 - Install Anaconda: https://repo.continuum.io/archive/Anaconda3-4.4.0-Windows-x86_64.exe
 - Run Anaconda Prompt (Start menu->Anaconda Prompt) and input following command to the command line: ```conda install -c conda-forge basemap```
- 
+
 2. Run "run_as_admin.bat" script as Administrator (right click on it and click on "Run as administrator").
 Doing this is neccessary just for the first time (it installs required library).
 After that, double-clicking decoder.py should be sufficient.
