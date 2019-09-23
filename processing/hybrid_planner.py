@@ -20,7 +20,8 @@ n = 1
 
 anomaly_dt = 240
 
-approx_pole = 25
+approx_north_pole = 20
+approx_south_pole = 30
 latitude_limit = 8
 
 from_to = numpy.array([
@@ -34,14 +35,14 @@ outliers=[]
 
 anomaly_lat = -37.0
 anomaly_long = -31.0
-anomaly_size = 55.0
+anomaly_size = 45.0
 
 sgap_lat = -80.0
 sgap_long = 125.0
 sgap_size = 25.0
 
 pcolor_min = 0
-pcolor_max = 10000
+pcolor_max = 7
 
 mesh_size = 100
 
@@ -116,6 +117,26 @@ def is_free(x, y):
 
     return True
 
+def in_anomaly(latitude, longitude):
+
+    # if the anomaly is close
+    anomaly_dist = dist(latitude, longitude, anomaly_lat, anomaly_long)
+    if (anomaly_dist < anomaly_size) and (latitude > -70):
+
+        return True
+
+    else:
+
+        return False
+
+def in_pole(latitude):
+
+    # we are not in the equator belt
+    if ((latitude > 0) and (abs(latitude) > (90 - (2*approx_north_pole + 1)))) or ((latitude < 0) and (abs(latitude) > (90 - (2*approx_south_pole + 1)))):
+        return True
+    else:
+        return False
+
 # scan for the anomaly
 i = t
 while i <= t_end:
@@ -126,11 +147,16 @@ while i <= t_end:
     lons.append(longitude)
     times.append(i)
 
-    pxl_count = doses_rbf_lin[int(math.floor(mesh_size*((longitude+180)/360))), int(math.floor(mesh_size*((latitude+90)/180)))]
+    pxl_count = doses_rbf_log[int(math.floor(mesh_size*((longitude+180)/360))), int(math.floor(mesh_size*((latitude+90)/180)))]
 
     pxl_counts.append(pxl_count)
 
-    if pxl_count > 100:
+    # if pxl_count > 100:
+    #     state = True
+    # else:
+    #     state = False
+
+    if in_pole(latitude) or in_anomaly(latitude, longitude):
         state = True
     else:
         state = False
@@ -151,7 +177,7 @@ def plot_everything(*args):
     
     x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
     
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_lin, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
     
     cb = m.colorbar(location="bottom", label="Log of relative intensity [px flux]") # draw colorbar
     
