@@ -406,6 +406,10 @@
     * Unix time range: 1558945872 to 1560158923
     * Human readible time range: 2019-05-27 08:31:12 to 2019-06-10 09:28:43
     * Exposure 0.01 s every 2 minutes, only single-pixel events
+  * Combined belt+anomaly scanning 11
+    * Image range: 35839 to 35940
+    * Unix time range:
+    * Human readible time range:
 
 # Installation
 
