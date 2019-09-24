@@ -255,7 +255,7 @@ with open(file_name, "w") as file:
 
     # start HKC
     t = t + 3
-    file.write(get_time(t)+"\tP\thkc h go 1 1\r\n")
+    file.write(get_time(t)+"\tP\th go 1 1\r\n")
 
     # parameter setting during the orbit
     for idx,update in enumerate(updates):
@@ -271,7 +271,7 @@ with open(file_name, "w") as file:
 
     # stop HKC
     t = t + 10
-    file.write(get_time(t)+"\tP\thkc h stop 1 1\r\n")
+    file.write(get_time(t)+"\tP\th stop 1 1\r\n")
 
     # power OFF
     t = t + 10
