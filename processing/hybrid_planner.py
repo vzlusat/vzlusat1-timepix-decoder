@@ -9,8 +9,8 @@ import numpy as np
 
 from include.baseMethods import *
 
-from_time = "12.07.2019 10:00:00"
-to_time = "13.07.2019 10:00:00"
+from_time = "24.09.2019 10:00:00"
+to_time = "25.09.2019 10:00:00"
 
 desired_fill = 50
 ax_exposure = 0.03
@@ -25,10 +25,7 @@ approx_south_pole = 30
 latitude_limit = 8
 
 from_to = numpy.array([
-[22617, 23690], # dos 31
-[23693, 24730], # dos 32
-[24738, 25754], # dos 33
-[26671, 27784], # dos 34
+[32478, 35838],
 ])
 
 outliers=[]
@@ -42,11 +39,11 @@ sgap_long = 125.0
 sgap_size = 25.0
 
 pcolor_min = 0
-pcolor_max = 7
+pcolor_max = 4
 
 mesh_size = 100
 
-step_size = 60.0
+step_size = 15.0
 
 max_exposure = 0.1
 
@@ -59,7 +56,7 @@ total_chunks = 0
 directory="scripts_hybrid"
 
 # prepare data
-images = loadImageRangeMulti(from_to, 32, 0, 1, outliers)
+images = loadImageRangeMulti(from_to, 1, 0, 1, outliers)
 
 doses = calculateTotalPixelCount(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
@@ -72,6 +69,8 @@ doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig,
 # # #{ RBF interpolation
 
 # create meshgrid for RBF
+print("Interpolating")
+
 x_meshgrid, y_meshgrid = createMeshGrid(mesh_size)
 
 # calculate RBF from log data
@@ -89,21 +88,31 @@ doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 # # #} end of RBF interpolation
 
-t = int(time.mktime(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
+t_start = int(time.mktime(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
 t_end = int(time.mktime(time.strptime(to_time, "%d.%m.%Y %H:%M:%S")))
 
-file_name = directory+"/{}_combined.pln".format(from_time).replace(' ', '_').replace(':', '_')
+file_name = directory+"/{}_hybrid.pln".format(from_time).replace(' ', '_').replace(':', '_')
 
 from scipy import spatial
+
+class ExposureUpdate:
+
+    def __init__(self, time, action, latitude, longitude, exposure):
+
+        self.time = time
+        self.action = action
+        self.latitude = latitude
+        self.longitude = longitude
+        self.exposure = exposure
 
 lats = []
 lons = []
 times = []
-# orbits = []
-orbit_line_lats = []
-orbit_line_lons = []
 pxl_counts = []
 states = []
+updates = []
+
+# #{ is_free()
 
 def is_free(x, y):
 
@@ -117,6 +126,10 @@ def is_free(x, y):
 
     return True
 
+# #} end of is_free()
+
+# #{ in_anomaly()
+
 def in_anomaly(latitude, longitude):
 
     # if the anomaly is close
@@ -129,6 +142,10 @@ def in_anomaly(latitude, longitude):
 
         return False
 
+# #} end of in_anomaly()
+
+# #{ in_pole()
+
 def in_pole(latitude):
 
     # we are not in the equator belt
@@ -137,8 +154,12 @@ def in_pole(latitude):
     else:
         return False
 
-# scan for the anomaly
-i = t
+# #} end of in_pole()
+
+print("Calculating orbit")
+i = t_start+120.0
+state = True
+last_change = 0
 while i <= t_end:
 
     latitude, longitude, tle_date = getLatLong(int(i))
@@ -151,25 +172,156 @@ while i <= t_end:
 
     pxl_counts.append(pxl_count)
 
-    # if pxl_count > 100:
-    #     state = True
-    # else:
-    #     state = False
+    # we_are_in = in_pole(latitude) or in_anomaly(latitude, longitude) # position-based
+    we_are_in = pxl_count > 1 # data-based
 
-    if in_pole(latitude) or in_anomaly(latitude, longitude):
-        state = True
+    if we_are_in:
+        if (state == False):
+            state = True
+            updates.append(ExposureUpdate(i, state, latitude, longitude, 1))
+            last_change = i
     else:
-        state = False
+        if (state == True):
+            state = False
+            updates.append(ExposureUpdate(i, state, latitude, longitude, 1000))
+            last_change = i
 
     states.append(state)
 
     i += step_size
 
+# postprocess the update list
+# remove close pairs
+print("Pruning update list")
+from itertools import izip
+
+def grouped(iterable, n):
+    "s -> (s0,s1,s2,...sn-1), (sn,sn+1,sn+2,...s2n-1), (s2n,s2n+1,s2n+2,...s3n-1), ..."
+    return izip(*[iter(iterable)]*n)
+
+while True:
+
+    removed_pair = False
+    for x, y in grouped(updates, 2):
+        if abs(x.time - y.time) < 300:
+            updates.remove(x)
+            updates.remove(y)
+            removed_pair = True
+            print("removing pair")
+
+    if not removed_pair:
+        break
+
+# duplicate setting commands
+
+def get_time(t):
+    return datetime.datetime.utcfromtimestamp(t).strftime('%Y-%m-%d %H:%M:%S')
+
+print("Exporting planner script")
+hkc_start_time = 0
+hkc_period = 180
+with open(file_name, "w") as file:
+
+    t = t_start
+
+    # power it up
+    file.write(get_time(t)+"\tP\tx pwr 1\r\n")
+
+    # wait
+    t = t + 1
+    file.write(get_time(t)+"\tP\tsleep 4000\r\n")
+
+    # set overall parameters
+    t = t + 4
+    threshold = 385
+    exposure = 1
+    bias = 70
+    filtering = 0
+    mode = 1
+    output = 1+2
+    temperature = 80
+    pxl = 0
+    uv_thr = 0
+    file.write(get_time(t)+"\tP\tx sp {} {} {} {} {} {} {} {} {}\r\n".format(threshold, exposure, bias, filtering, mode, output, temperature, pxl, uv_thr))
+
+    # setup HKC for dosimetry
+    t = t + 2
+    hkc_start_time = t
+    file.write(get_time(t)+"\tP\th conf 1 {} 0 00000000008004000000\r\n".format(hkc_period))
+
+    # wait
+    t = t + 2
+    file.write(get_time(t)+"\tP\tsleep 3000\r\n")
+
+    # start HKC
+    t = t + 3
+    file.write(get_time(t)+"\tP\thkc h go 1 1\r\n")
+
+    # parameter setting during the orbit
+    for idx,update in enumerate(updates):
+
+        t = update.time
+
+        if update.action:
+            file.write(get_time(t-90)+"\t\tse {}\r\n".format(update.exposure))
+            file.write(get_time(t)+"\t\tse {}\r\n".format(update.exposure))
+        else:
+            file.write(get_time(t-90)+"\t\tse {}\r\n".format(update.exposure))
+            file.write(get_time(t)+"\t\tse {}\r\n".format(update.exposure))
+
+    # stop HKC
+    t = t + 10
+    file.write(get_time(t)+"\tP\thkc h stop 1 1\r\n")
+
+    # power OFF
+    t = t + 10
+    file.write(get_time(t)+"\tP\tx pwr 0\r\n")
+
+# simulate the orbit
+class ImageAction:
+
+    def __init__(self, time, exposure, mode, pixels, latitude, longitude):
+
+        self.time = time
+        self.exposure = exposure
+        self.mode = mode
+        self.pixels = pixels
+        self.latitude = latitude
+        self.longitude = longitude
+
+image_actions = []
+
+print("Prediction image actions")
+state = True
+i = hkc_start_time
+update_idx = 0
+exposure_time = 1
+mode = 1
+while i <= t_end:
+
+    if updates[update_idx].time < i:
+        exposure_time = updates[update_idx].exposure
+        mode = updates[update_idx].action
+        update_idx = update_idx + 1
+
+    latitude, longitude, tle_date = getLatLong(int(i))
+
+    lats.append(latitude)
+    lons.append(longitude)
+    times.append(i)
+
+    pxl_count = doses_rbf_lin[int(math.floor(mesh_size*((longitude+180)/360))), int(math.floor(mesh_size*((latitude+90)/180)))]
+
+    image_actions.append(ImageAction(i, exposure_time, mode, pxl_count * (exposure_time / 1000.0), latitude, longitude))
+
+    i = i + hkc_period
+
+print("Plotting")
 def plot_everything(*args):
 
     fig1 = plt.figure(1)
 
-    ax1 = plt.subplot2grid((1, 2), (0, 0), colspan=1, rowspan=2)
+    ax1 = plt.subplot2grid((1, 1), (0, 0), colspan=1, rowspan=1)
 
     # #{ map
 
@@ -183,30 +335,38 @@ def plot_everything(*args):
 
     for i in range(len(lats)):
         x, y = m(lons[i], lats[i])
-        if states[i]:
+        color = 'grey'
+        m.scatter(x, y, 1, marker='o', color=color, zorder=5)
+
+    total_pixel_count = 0
+    total_chunks = 0
+    for idx,image in enumerate(image_actions):
+        x, y = m(image.longitude, image.latitude)
+        if image.mode:
             color = 'red'
         else:
             color = 'blue'
-        m.scatter(x, y, 20, marker='o', color=color, zorder=5)
+        m.scatter(x, y, 40, marker='x', color=color, zorder=5)
+        total_pixel_count += image.pixels
+        total_chunks += 1+(round((image.pixels)/20))
 
-        # plt.text(x+1, y+1, '{}'.format(out_orbits[i]), fontsize=13, fontweight='bold', ha='left', va='bottom', color='k', zorder=10)
+    print("total_pixel_count: {}".format(total_pixel_count))
+    print("total_chunks: {}".format(total_chunks))
+    print("total_memory: {} kB".format((total_chunks*64)/1024.0))
 
-    # cb.set_label('log10('+x_label+') '+x_units)
-    plt.title('Combined scanning, starting on {}'.format(from_time))
+    for idx,update in enumerate(updates):
+        x, y = m(update.longitude, update.latitude)
+        if update.action:
+            color = 'red'
+        else:
+            color = 'blue'
+        m.scatter(x, y, 100, marker='o', color=color, zorder=5)
+
+    plt.title('Hybrid scanning, starting on {}'.format(from_time))
 
     plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
 
-    plt.savefig(directory+"/{}_combined.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=60, bbox_inches='tight')
-
-    # #} end of globe south
-
-    ax1 = plt.subplot2grid((1, 2), (0, 1), colspan=1, rowspan=2)
-
-    # #{ pxlcount
-
-    plt.plot(times, pxl_counts)
-
-    plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
+    plt.savefig(directory+"/{}_hybrid.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=120, bbox_inches='tight')
 
     # #} end of globe south
 
