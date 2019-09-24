@@ -6,17 +6,14 @@ from scipy.interpolate import Rbf
 import matplotlib.ticker as ticker # for colorbar
 import time
 import numpy as np
+import calendar
 
 from include.baseMethods import *
 
-from_time = "24.09.2019 10:00:00"
-to_time = "25.09.2019 10:00:00"
+from_time = "25.09.2019 11:40:00"
+to_time = "26.09.2019 07:55:00"
 
-desired_fill = 50
-ax_exposure = 0.03
 hkc_buffer_time = 300
-
-n = 1
 
 anomaly_dt = 240
 
@@ -43,15 +40,14 @@ pcolor_max = 4
 
 mesh_size = 100
 
-step_size = 15.0
+step_size = 5.0
 
-max_exposure = 0.1
+max_exposure = 1.0
+min_exposure = 0.001
 
 epsilon=10.0
 x_label = 'Pixel count'
 x_units = '(counts)'
-
-total_chunks = 0
 
 directory="scripts_hybrid"
 
@@ -88,8 +84,8 @@ doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 # # #} end of RBF interpolation
 
-t_start = int(time.mktime(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
-t_end = int(time.mktime(time.strptime(to_time, "%d.%m.%Y %H:%M:%S")))
+t_start = int(calendar.timegm(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
+t_end = int(calendar.timegm(time.strptime(to_time, "%d.%m.%Y %H:%M:%S")))
 
 file_name = directory+"/{}_hybrid.pln".format(from_time).replace(' ', '_').replace(':', '_')
 
@@ -157,7 +153,7 @@ def in_pole(latitude):
 # #} end of in_pole()
 
 print("Calculating orbit")
-i = t_start+120.0
+i = t_start
 state = True
 last_change = 0
 while i <= t_end:
@@ -167,6 +163,10 @@ while i <= t_end:
     lats.append(latitude)
     lons.append(longitude)
     times.append(i)
+
+    if i < t_start + 120:
+        i += step_size
+        continue
 
     pxl_count = doses_rbf_log[int(math.floor(mesh_size*((longitude+180)/360))), int(math.floor(mesh_size*((latitude+90)/180)))]
 
@@ -178,12 +178,12 @@ while i <= t_end:
     if we_are_in:
         if (state == False):
             state = True
-            updates.append(ExposureUpdate(i, state, latitude, longitude, 1))
+            updates.append(ExposureUpdate(i, state, latitude, longitude, int(round(min_exposure*1000.0))))
             last_change = i
     else:
         if (state == True):
             state = False
-            updates.append(ExposureUpdate(i, state, latitude, longitude, 1000))
+            updates.append(ExposureUpdate(i, state, latitude, longitude, int(round(max_exposure*1000.0))))
             last_change = i
 
     states.append(state)
@@ -234,11 +234,11 @@ with open(file_name, "w") as file:
     # set overall parameters
     t = t + 4
     threshold = 385
-    exposure = 1
+    exposure = int(round(min_exposure*1000.0))
     bias = 70
     filtering = 0
     mode = 1
-    output = 1+2
+    output = 1
     temperature = 80
     pxl = 0
     uv_thr = 0
@@ -299,22 +299,48 @@ exposure_time = 1
 mode = 1
 while i <= t_end:
 
-    if updates[update_idx].time < i:
+    if update_idx < len(updates) and updates[update_idx].time < i:
         exposure_time = updates[update_idx].exposure
         mode = updates[update_idx].action
         update_idx = update_idx + 1
 
     latitude, longitude, tle_date = getLatLong(int(i))
 
-    lats.append(latitude)
-    lons.append(longitude)
-    times.append(i)
-
     pxl_count = doses_rbf_lin[int(math.floor(mesh_size*((longitude+180)/360))), int(math.floor(mesh_size*((latitude+90)/180)))]
 
-    image_actions.append(ImageAction(i, exposure_time, mode, pxl_count * (exposure_time / 1000.0), latitude, longitude))
+    image_actions.append(ImageAction(i, exposure_time, mode, pxl_count * (float(exposure_time) / 1000.0), latitude, longitude))
 
     i = i + hkc_period
+
+print("Calculating statistics")
+total_chunks = 0
+total_memory = 0
+total_pixel_count = 0
+
+for idx,image in enumerate(image_actions):
+
+    total_pixel_count += image.pixels
+    total_chunks += (1+(int(round((image.pixels)/20.0))))
+
+total_memory = (total_chunks*64)/1024.0
+
+print("total_pixel_count: {}".format(total_pixel_count))
+print("total_chunks: {}".format(total_chunks))
+print("total_memory: {} kB".format(total_memory))
+
+file_name = directory+"/{}_hybrid.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
+with open(file_name, "w") as file:
+
+    file.write("Planned within times: "+from_time+"\r\n")
+    file.write("  from: "+from_time+"\r\n")
+    file.write("  to: "+to_time+"\r\n")
+    file.write("Number of images: {}\r\n".format(len(image_actions)))
+    file.write("Estimated number of chunks: {}\r\n".format(int(total_chunks)))
+    file.write("Estimated memory consumption: {} kB\r\n".format(total_memory))
+    file.write("Based on data range: {}\r\n".format(from_to))
+    file.write("Long exposure time: {} s\r\n".format(max_exposure))
+    file.write("Short exposure time: {} s\r\n".format(min_exposure))
+    file.write("HKC period: {} s\r\n".format(hkc_period))
 
 print("Plotting")
 def plot_everything(*args):
@@ -333,34 +359,37 @@ def plot_everything(*args):
 
     cb = m.colorbar(location="bottom", label="Log of relative intensity [px flux]") # draw colorbar
 
+    # mark the orbit
     for i in range(len(lats)):
         x, y = m(lons[i], lats[i])
         color = 'grey'
         m.scatter(x, y, 1, marker='o', color=color, zorder=5)
 
-    total_pixel_count = 0
-    total_chunks = 0
+    # mark the measurements
     for idx,image in enumerate(image_actions):
         x, y = m(image.longitude, image.latitude)
-        if image.mode:
+        if image.exposure < 10:
             color = 'red'
         else:
             color = 'blue'
         m.scatter(x, y, 40, marker='x', color=color, zorder=5)
-        total_pixel_count += image.pixels
-        total_chunks += 1+(round((image.pixels)/20))
 
-    print("total_pixel_count: {}".format(total_pixel_count))
-    print("total_chunks: {}".format(total_chunks))
-    print("total_memory: {} kB".format((total_chunks*64)/1024.0))
-
+    # marks the transitions
     for idx,update in enumerate(updates):
         x, y = m(update.longitude, update.latitude)
-        if update.action:
+        if update.exposure < 10:
             color = 'red'
         else:
             color = 'blue'
         m.scatter(x, y, 100, marker='o', color=color, zorder=5)
+
+    # mark the start
+    x, y = m(image_actions[0].longitude, image_actions[0].latitude)
+    m.scatter(x, y, 100, marker='o', color='green', zorder=5)
+
+    # mark the end
+    x, y = m(image_actions[-1].longitude, image_actions[-1].latitude)
+    m.scatter(x, y, 100, marker='o', color='black', zorder=5)
 
     plt.title('Hybrid scanning, starting on {}'.format(from_time))
 
