@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "25.09.2019 11:40:00"
-to_time = "26.09.2019 07:55:00"
+from_time = "26.09.2019 11:10:00"
+to_time = "27.09.2019 07:30:00"
 
 hkc_buffer_time = 300
 
@@ -43,7 +43,7 @@ mesh_size = 100
 step_size = 5.0
 
 max_exposure = 1.0
-min_exposure = 0.001
+min_exposure = 0.004
 
 epsilon=10.0
 x_label = 'Pixel count'
@@ -263,11 +263,11 @@ with open(file_name, "w") as file:
         t = update.time
 
         if update.action:
-            file.write(get_time(t-90)+"\t\tse {}\r\n".format(update.exposure))
-            file.write(get_time(t)+"\t\tse {}\r\n".format(update.exposure))
+            file.write(get_time(t-90)+"\t\tx se {}\r\n".format(update.exposure))
+            file.write(get_time(t)+"\t\tx se {}\r\n".format(update.exposure))
         else:
-            file.write(get_time(t-90)+"\t\tse {}\r\n".format(update.exposure))
-            file.write(get_time(t)+"\t\tse {}\r\n".format(update.exposure))
+            file.write(get_time(t-90)+"\t\tx se {}\r\n".format(update.exposure))
+            file.write(get_time(t)+"\t\tx se {}\r\n".format(update.exposure))
 
     # stop HKC
     t = t + 10
@@ -331,7 +331,7 @@ print("total_memory: {} kB".format(total_memory))
 file_name = directory+"/{}_hybrid.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
 with open(file_name, "w") as file:
 
-    file.write("Planned within times: "+from_time+"\r\n")
+    file.write("Planned within times:\r\n")
     file.write("  from: "+from_time+"\r\n")
     file.write("  to: "+to_time+"\r\n")
     file.write("Number of images: {}\r\n".format(len(image_actions)))
