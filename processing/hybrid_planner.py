@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "25.09.2019 11:40:00"
-to_time = "26.09.2019 07:55:00"
+from_time = "26.09.2019 21:55:00"
+to_time = "27.09.2019 09:50:00"
 
 hkc_buffer_time = 300
 
@@ -43,7 +43,7 @@ mesh_size = 100
 step_size = 5.0
 
 max_exposure = 1.0
-min_exposure = 0.001
+min_exposure = 0.002
 
 epsilon=10.0
 x_label = 'Pixel count'
@@ -199,18 +199,19 @@ def grouped(iterable, n):
     "s -> (s0,s1,s2,...sn-1), (sn,sn+1,sn+2,...s2n-1), (s2n,s2n+1,s2n+2,...s3n-1), ..."
     return izip(*[iter(iterable)]*n)
 
-while True:
+new_updates_list = []
 
-    removed_pair = False
-    for x, y in grouped(updates, 2):
-        if abs(x.time - y.time) < 300:
-            updates.remove(x)
-            updates.remove(y)
-            removed_pair = True
-            print("removing pair")
+for idx,x in enumerate(updates):
 
-    if not removed_pair:
-        break
+    # the last step
+    if idx == len(updates)-1:
+        if abs(updates[idx].time - updates[idx-1].time) >= 300:
+            new_updates_list.append(updates[idx])
+    else:  
+        if abs(updates[idx].time - updates[idx+1].time) >= 300:
+            new_updates_list.append(updates[idx])
+
+updates = new_updates_list
 
 # duplicate setting commands
 
@@ -256,18 +257,25 @@ with open(file_name, "w") as file:
     # start HKC
     t = t + 3
     file.write(get_time(t)+"\tP\th go 1 1\r\n")
+    
+    prev_update_time = 0
 
     # parameter setting during the orbit
     for idx,update in enumerate(updates):
 
         t = update.time
 
+        if abs(t - prev_update_time) < 300:
+            print("Close points detected!!! {} {}".format(prev_update_time, t))
+
         if update.action:
-            file.write(get_time(t-90)+"\t\tse {}\r\n".format(update.exposure))
-            file.write(get_time(t)+"\t\tse {}\r\n".format(update.exposure))
+            file.write(get_time(t-90)+"\t\tx se {}\r\n".format(update.exposure))
+            file.write(get_time(t)+"\t\tx se {}\r\n".format(update.exposure))
         else:
-            file.write(get_time(t-90)+"\t\tse {}\r\n".format(update.exposure))
-            file.write(get_time(t)+"\t\tse {}\r\n".format(update.exposure))
+            file.write(get_time(t-90)+"\t\tx se {}\r\n".format(update.exposure))
+            file.write(get_time(t)+"\t\tx se {}\r\n".format(update.exposure))
+
+        prev_update_time = t
 
     # stop HKC
     t = t + 10
@@ -331,7 +339,7 @@ print("total_memory: {} kB".format(total_memory))
 file_name = directory+"/{}_hybrid.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
 with open(file_name, "w") as file:
 
-    file.write("Planned within times: "+from_time+"\r\n")
+    file.write("Planned within times:\r\n")
     file.write("  from: "+from_time+"\r\n")
     file.write("  to: "+to_time+"\r\n")
     file.write("Number of images: {}\r\n".format(len(image_actions)))
