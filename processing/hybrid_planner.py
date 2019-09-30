@@ -22,7 +22,9 @@ approx_south_pole = 30
 latitude_limit = 8
 
 from_to = numpy.array([
-[32478, 35838],
+[32478, 35838], # filtered fullres
+[36352, 36671], # 1st full res
+[36672, 37034], # 2nd full res
 ])
 
 outliers=[]
