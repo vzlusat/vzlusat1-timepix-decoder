@@ -124,9 +124,9 @@ source_step = np.sin(deg2rad(0.05))*source_x
 target_max_y = 8.0
 target_min_y = -8.0
 
-target_step = 0.01 # moving target, 8 min run
+# target_step = 0.01 # moving target, 8 min run
 # target_step = 0.0025 # for point sources
-# target_step = 0.05 # for quick testing
+target_step = 0.05 # for quick testing
 # target_step = 0.05 # for quick testing
 
 target_x = timepix_x-20.0

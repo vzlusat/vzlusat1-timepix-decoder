@@ -19,7 +19,7 @@ def parseHouseKeeping(bin_data, time):
 
     new_hk.boot_count = numpy.uint16(bytesToInt16(bin_data[1], bin_data[0]))
     new_hk.images_taken = numpy.uint16(bytesToInt16(bin_data[3], bin_data[2]))
-    new_hk.temperature = bin_data[4]
+    new_hk.temperature = numpy.int8(numpy.uint8(bin_data[4]))
     new_hk.fram_status = bin_data[5]
     new_hk.medipix_status = bin_data[6]
     new_hk.time_since_boot = numpy.uint32(bytesToInt32(bin_data[10], bin_data[9], bin_data[8], bin_data[8]))
@@ -92,7 +92,7 @@ def parseMetadata(bin_data, image_dict):
     image.max_original = bin_data[15]
     image.min_filtered = bin_data[16]
     image.max_filtered = bin_data[17]
-    image.temperature = bin_data[18]
+    image.temperature = numpy.int8(numpy.uint8(bin_data[18]))
     image.temp_limit = bin_data[19]
     image.pxl_limit = bytesToInt16(bin_data[20], bin_data[21])
     image.uv1_thr = bytesToInt16(bin_data[22], bin_data[23])

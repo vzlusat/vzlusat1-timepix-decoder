@@ -31,8 +31,11 @@ optics_skew = 0.063
 optics_y_offset = (-n_foils/2.0)*optics_skew
 optics_y = -(foil_spacing)*n_foils*0.5
 timepix_size = 14.0
-optics_x = 1425.0 - foil_length# deployed
-# optics_x = 1681.0 - foil_length# deployed
+# optics_x = 1425.0 - foil_length
+# optics_x = 1500.0 - foil_length
+# optics_x = 1681.0 - foil_length
+# optics_x = 1300.0 - foil_length
+optics_x = 1582.5 - foil_length
 
 #{ Create Optics
 
@@ -106,13 +109,13 @@ timepix_segments_list.append(timepix_segment)
 # simulate
 
 # Sun 3362
-source_x = 1000*1000*149.6e6
+# source_x = 1000*1000*149.6e6
 
 # Lab source distance
 # source_x = 3362
 
 # aparent point size
-# source_x = 1425.0 + 50000.0
+source_x = 1425.0 + 50000.0
 
 n_processes = 11
 
