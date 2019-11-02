@@ -42,7 +42,7 @@ pcolor_max = 4
 
 mesh_size = 100
 
-step_size = 5.0
+step_size = 30.0
 
 max_exposure = 1.0
 min_exposure = 0.002
@@ -183,7 +183,7 @@ while i <= t_end:
             updates.append(ExposureUpdate(i, state, latitude, longitude, int(round(min_exposure*1000.0))))
             last_change = i
     else:
-        if (state == True):
+        if (state == True) and not in_pole(latitude):
             state = False
             updates.append(ExposureUpdate(i, state, latitude, longitude, int(round(max_exposure*1000.0))))
             last_change = i
