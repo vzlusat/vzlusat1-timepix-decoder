@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "26.09.2019 21:55:00"
-to_time = "27.09.2019 09:50:00"
+from_time = "05.11.2019 12:00:00"
+to_time = "06.11.2019 12:00:00"
 
 hkc_buffer_time = 300
 
@@ -42,7 +42,7 @@ pcolor_max = 4
 
 mesh_size = 100
 
-step_size = 30.0
+step_size = 10
 
 max_exposure = 1.0
 min_exposure = 0.002
@@ -161,6 +161,8 @@ last_change = 0
 while i <= t_end:
 
     latitude, longitude, tle_date = getLatLong(int(i))
+
+    print("latitude: {} deg, longitude: {} deg, time: {} s".format(latitude, longitude, time))
 
     lats.append(latitude)
     lons.append(longitude)
