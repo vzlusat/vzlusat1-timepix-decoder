@@ -155,9 +155,6 @@ def loadFiles():
 
             if image != 0:
 
-                if image.got_metadata and image.temperature < 0:
-                    print("Temp alert!: image {} temp {}".format(image.id, image.temperature))
-
                 if (hide_with_metadata_var.get() and (image.got_metadata)):
                     pass
                 elif (hide_without_data_var.get() and (not image.got_data)):
