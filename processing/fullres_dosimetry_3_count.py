@@ -50,6 +50,32 @@ doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
 rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=1.0, smooth=1)
 doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
+long_counts = []
+short_counts = []
+for idx,image in enumerate(images):
+    if image.got_metadata:
+
+        if image.exposure > 500:
+            long_counts.append(image.original_pixels)
+        else:
+            short_counts.append(image.original_pixels)
+
+tolerance = 3
+percentile_long = 1 - (float(tolerance)/len(long_counts))
+percentile_short = 1 - (float(tolerance)/len(short_counts))
+
+long_perc_end = np.percentile(long_counts, percentile_long*100.0)
+short_perc_end = np.percentile(short_counts, percentile_short*100.0)
+
+long_median = np.percentile(long_counts, 50)
+short_median = np.percentile(short_counts, 50)
+
+print("long {:.2f}%: {}, {} images".format(percentile_long, long_perc_end, len(long_counts)))
+print("short {:.2f}%: {}, {} images".format(percentile_short, short_perc_end, len(short_counts)))
+
+print("long {:.2f}%: {}".format(50, long_median))
+print("short {:.2f}%: {}".format(50, short_median))
+
 #} end of RBF interpolation
 
 def plot_everything(*args):
@@ -177,6 +203,16 @@ def plot_everything(*args):
         plt.title('RBF multiquadric (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
 
         #} end of log-scale rbf
+
+    plt.figure(3)
+
+    plt.hist(long_counts, 20)
+    plt.title('Long')
+
+    plt.figure(4)
+
+    plt.hist(short_counts, 20)
+    plt.title('Short')
 
     plt.show()
 
