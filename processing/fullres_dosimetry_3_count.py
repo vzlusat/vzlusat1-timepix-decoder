@@ -10,7 +10,7 @@ from include.baseMethods import *
 from_to = numpy.array([
 # [36352, 36671], # 1st full res
 # [36672, 37034], # 2nd full res
-[37101, 37631], # 2nd full res
+[37101, 37814], # 2nd full res
 ])
 outliers=[]
 
