@@ -10,12 +10,12 @@ from include.baseMethods import *
 from_to = numpy.array([
 # [36352, 36671], # 1st full res
 # [36672, 37034], # 2nd full res
-[37101, 37814], # 2nd full res
+[37101, 37862], # 3rd full res
 ])
 outliers=[]
 
 pcolor_min = 0
-pcolor_max = 4
+pcolor_max = 5
 
 small_plot = 1
 
@@ -70,8 +70,8 @@ short_perc_end = np.percentile(short_counts, percentile_short*100.0)
 long_median = np.percentile(long_counts, 50)
 short_median = np.percentile(short_counts, 50)
 
-print("long {:.2f}%: {}, {} images".format(percentile_long, long_perc_end, len(long_counts)))
-print("short {:.2f}%: {}, {} images".format(percentile_short, short_perc_end, len(short_counts)))
+print("long {:.2f}%: {}, {} images".format(percentile_long, long_perc_end, (1-percentile_long)*len(long_counts)))
+print("short {:.2f}%: {}, {} images".format(percentile_short, short_perc_end, (1-percentile_short)*len(short_counts)))
 
 print("long {:.2f}%: {}".format(50, long_median))
 print("short {:.2f}%: {}".format(50, short_median))

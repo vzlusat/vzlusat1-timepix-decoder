@@ -314,8 +314,8 @@ def calculateTotalPixelCount(images):
             exposure = 60 + exposure%60000
 
         # calculate the doses base on counts
-        # image_dose = images[i].original_pixels/exposure
-        image_dose = images[i].original_pixels
+        image_dose = images[i].original_pixels/exposure
+        # image_dose = images[i].original_pixels
 
         doses.append(image_dose)
 
