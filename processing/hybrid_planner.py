@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "05.11.2019 12:00:00"
-to_time = "06.11.2019 12:00:00"
+from_time = "16.11.2019 10:15:00"
+to_time = "17.11.2019 10:15:00"
 
 hkc_buffer_time = 300
 
@@ -22,12 +22,13 @@ approx_south_pole = 30
 latitude_limit = 8
 
 from_to = numpy.array([
-[32478, 35838], # filtered fullres
+# [32478, 35838], # filtered fullres
 [36352, 36671], # 1st full res
 [36672, 37034], # 2nd full res
+[37103, 37862], # 3rd full res
 ])
 
-outliers=[]
+outliers=[37788, 37745, 37688, 37635, 37573, 37565, 37416, 37349, 37275, 37237, 37202, 37186, 37107, 37032, 36779, 36652, 36607, 36557]
 
 anomaly_lat = -37.0
 anomaly_long = -31.0
@@ -38,13 +39,13 @@ sgap_long = 125.0
 sgap_size = 25.0
 
 pcolor_min = 0
-pcolor_max = 4
+pcolor_max = 6
 
 mesh_size = 100
 
 step_size = 10
 
-max_exposure = 1.0
+max_exposure = 1.5
 min_exposure = 0.002
 
 epsilon=10.0
@@ -319,6 +320,9 @@ while i <= t_end:
     latitude, longitude, tle_date = getLatLong(int(i))
 
     pxl_count = doses_rbf_lin[int(math.floor(mesh_size*((longitude+180)/360))), int(math.floor(mesh_size*((latitude+90)/180)))]
+
+    if pxl_count < 0:
+        pxl_count = 0
 
     image_actions.append(ImageAction(i, exposure_time, mode, pxl_count * (float(exposure_time) / 1000.0), latitude, longitude))
 
