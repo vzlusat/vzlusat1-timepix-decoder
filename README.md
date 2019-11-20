@@ -432,6 +432,10 @@
     * Image range: 37103 to 37862
     * Unix time range:
     * Human readible time range:
+  * Fullres dosimetry 4, 2 ms short, 1.5 s long
+    * Image range: 37863 to 38587
+    * Unix time range:
+    * Human readible time range:
 
 # Installation
 
