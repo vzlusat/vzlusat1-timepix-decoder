@@ -1,8 +1,8 @@
 #!/bin/bash
 
-outhk="01_housekeeping_last.txt"
-outmetadata="02_metadata_last.txt"
-outdata="03_images_last.txt"
+outhk="01_housekeeping_all.txt"
+outmetadata="02_metadata_all.txt"
+outdata="03_images_all.txt"
 
 rm "$outhk" 2> /dev/null
 rm "$outmetadata" 2> /dev/null
