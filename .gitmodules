@@ -1,0 +1,3 @@
+[submodule "submodules/classification"]
+	path = submodules/classification
+	url = git@github.com:rospix/classification

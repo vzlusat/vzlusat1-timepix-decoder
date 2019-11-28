@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "16.11.2019 10:15:00"
-to_time = "17.11.2019 10:15:00"
+from_time = "29.11.2019 21:15:00"
+to_time = "30.11.2019 12:00:00"
 
 hkc_buffer_time = 300
 
@@ -26,6 +26,7 @@ from_to = numpy.array([
 [36352, 36671], # 1st full res
 [36672, 37034], # 2nd full res
 [37103, 37862], # 3rd full res
+[37863, 38587], # 4th full res
 ])
 
 outliers=[37788, 37745, 37688, 37635, 37573, 37565, 37416, 37349, 37275, 37237, 37202, 37186, 37107, 37032, 36779, 36652, 36607, 36557]
