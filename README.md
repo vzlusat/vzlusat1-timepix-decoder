@@ -436,6 +436,15 @@
     * Image range: 37863 to 38587
     * Unix time range:
     * Human readible time range:
+  * XRB co-measurement 25
+    * Image range: 38588 to 38603
+    * Unix time range:
+    * Human readible time range: 
+    * Exposure 10 s, Fullres
+  * Fullres dosimetry 4, 2 ms short, 1.5 s long
+    * Image range: 38604 to 39191
+    * Unix time range:
+    * Human readible time range:
 
 # Installation
 
