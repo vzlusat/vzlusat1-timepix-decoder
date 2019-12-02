@@ -163,6 +163,10 @@ def loadFiles():
                     pass
                 elif (show_favorite_var.get() and not favorites.isFavorite(image)):
                     pass
+                elif (show_nolearn_var.get() and not comments.isNolearn(image.id)):
+                    pass
+                elif (hide_nolearn_var.get() and comments.isNolearn(image.id)):
+                    pass
                 elif (show_adrenalin_var.get() and not comments.isAdrenalin(image.id)):
                     pass
                 elif (show_xrb_var.get() and not comments.isXrb(image.id)):
@@ -265,6 +269,8 @@ def showImage(image, manual):
 
     # marked_as_hidden_var.set(image.hidden)
     marked_as_favorite_var.set(favorites.isFavorite(image))
+
+    marked_as_nolearn_var.set(comments.isNolearn(image.id))
 
     if manual == 0 and image.got_data == 0:
         return
@@ -599,6 +605,27 @@ def markFavoriteCallback():
 
     reloadList(int(listbox.curselection()[0]))
 
+def markNolearnCallback():
+
+    global loaded_image
+    global loaded_image_idx
+    # loaded_image.favorite = marked_as_favorite_var.get()
+
+    print("marked_as_nolearn_var.get(): {}".format(marked_as_nolearn_var.get()))
+
+    if marked_as_nolearn_var.get():
+      comments.addTag(loaded_image.id, "#nolearn")
+    else:
+      comments.removeTag(loaded_image.id, "#nolearn")
+
+    # if isinstance(loaded_image, Image):
+    #     saveImage(loaded_image)
+    # elif isinstance(loaded_image, HouseKeeping):
+    #     saveHouseKeeping(loaded_image)
+
+    # reloadList(int(listbox.curselection()[0]))
+    reloadData(loaded_image_idx, 1)
+
 def reloadList(new_idx=-1):
 
     list_files = loadFiles()
@@ -783,7 +810,10 @@ for i in range(0, len(Image.metadata_labels)): #Rows
 # metadatas.append(Tk.Checkbutton(frame_mid_top, text="", variable=marked_as_hidden_var, command=markHiddenCallback).grid(row=len(Image.metadata_labels)-2, column=1, sticky=Tk.W))
 
 marked_as_favorite_var = Tk.IntVar()
-metadatas.append(Tk.Checkbutton(frame_mid_top, text="", variable=marked_as_favorite_var, command=markFavoriteCallback).grid(row=len(Image.metadata_labels)-1, column=1, sticky=Tk.W))
+metadatas.append(Tk.Checkbutton(frame_mid_top, text="", variable=marked_as_favorite_var, command=markFavoriteCallback).grid(row=len(Image.metadata_labels)-2, column=1, sticky=Tk.W))
+
+marked_as_nolearn_var = Tk.IntVar()
+metadatas.append(Tk.Checkbutton(frame_mid_top, text="", variable=marked_as_nolearn_var, command=markNolearnCallback).grid(row=len(Image.metadata_labels)-1, column=1, sticky=Tk.W))
 
 housekeeping_values = []
 housekeeping_labels = []
@@ -921,6 +951,8 @@ dont_redraw_var = Tk.IntVar()
 just_fullres_var = Tk.IntVar()
 first_image_type_var = Tk.IntVar()
 show_favorite_var = Tk.IntVar()
+show_nolearn_var = Tk.IntVar()
+hide_nolearn_var = Tk.IntVar()
 hide_without_data_var = Tk.IntVar()
 hide_with_metadata_var = Tk.IntVar()
 show_only_without_data_var = Tk.IntVar()
@@ -1268,6 +1300,12 @@ show_xrb.pack(side=Tk.BOTTOM)
 show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite (f)", variable=show_favorite_var, command=reloadList, font=customfont)
 show_favorite_only.pack(side=Tk.BOTTOM)
 
+show_nolearn_only = Tk.Checkbutton(master=frame_left, text="show only nolearn (N)", variable=show_nolearn_var, command=reloadList, font=customfont)
+show_nolearn_only.pack(side=Tk.BOTTOM)
+
+hide_nolearn = Tk.Checkbutton(master=frame_left, text="hide nolearn (n)", variable=hide_nolearn_var, command=reloadList, font=customfont)
+hide_nolearn.pack(side=Tk.BOTTOM)
+
 show_only_without_data = Tk.Checkbutton(master=frame_left, text="show only without data (W)", variable=show_only_without_data_var, command=reloadList, font=customfont)
 show_only_without_data.pack(side=Tk.BOTTOM)
 
@@ -1392,6 +1430,19 @@ def on_key_event(event):
             else:
                 show_favorite_var.set(not show_favorite_var.get())
                 reloadList()
+
+        if current_key == 'n':
+            if previous_key == 'g':
+                current_key = []
+                marked_as_nolearn_var.set(not marked_as_nolearn_var.get())
+                markNolearnCallback()
+            else:
+                hide_nolearn_var.set(not hide_nolearn_var.get())
+                reloadList()
+
+        if current_key == 'N':
+            show_nolearn_var.set(not show_nolearn_var.get())
+            reloadList()
 
         if current_key == 'e':
             autogenerate_checkbox.toggle()

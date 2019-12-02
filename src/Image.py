@@ -70,6 +70,6 @@ class Image:
                      "Time:",
                      "Chunk ID:",
                      "",
-                     # "Mark as hidden:",
-                     "Mark as favorite (gf):"
+                     "Mark as favorite (gf):",
+                     "Mark as nolearn (gn):"
                      ]
