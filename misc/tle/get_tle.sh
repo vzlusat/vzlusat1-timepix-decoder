@@ -4,7 +4,7 @@ TLE_DIR="147.228.97.106/tle"
 MY_PATH=`dirname "$0"`
 MY_PATH=`( cd "$MY_PATH" && pwd )`
 
-wget -rN --no-parent --reject "index.html*" --accept "*2019-11*" http://147.228.97.106/tle/
+wget -rN --no-parent --reject "index.html*" --accept "*2019-12*" http://147.228.97.106/tle/
 
 cd $MY_PATH/$TLE_DIR
 rm _amateur.txt
