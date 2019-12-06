@@ -8,9 +8,11 @@ import matplotlib.ticker as ticker # for colorbar
 from include.baseMethods import *
 
 from_to = numpy.array([
-# [36352, 36671], # 1st full res
-# [36672, 37034], # 2nd full res
-[37101, 37862], # 3rd full res
+[36352, 36671], # 1st full res
+[36672, 37034], # 2nd full res
+[37103, 37862], # 3rd full res
+[37863, 38587], # 4rd full res
+[38604, 39191], # 5rd full res
 ])
 outliers=[]
 
@@ -22,7 +24,7 @@ small_plot = 1
 date_range = ''
 x_units = '(keV/s)'
 x_label = 'Total dose in 14x14x0.3 mm Si'
-general_label = '3rd fullres dosimetry 500 km LEO, VZLUSAT-1'
+general_label = 'Radiation dose, 500 km LEO, VZLUSAT-1'
 epsilon=0.1
 
 # prepare data
@@ -200,7 +202,7 @@ def plot_everything(*args):
 
         cb = m.colorbar(location="bottom", label="Z") # draw colorbar
         cb.set_label('log10('+x_label+') '+x_units)
-        plt.title('RBF multiquadric (eps={}), log10 scale, '.format(epsilon)+date_range, fontsize=13)
+        plt.title('Radiation dose, 500 km Low-Earth Orbit, VZLUSAT-1, '.format(epsilon)+date_range, fontsize=13)
 
         #} end of log-scale rbf
 

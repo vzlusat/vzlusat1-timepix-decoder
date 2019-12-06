@@ -25,6 +25,10 @@ kevs = [3.6041, 5.32915, 8.40915, 13.51345, 20.67375, 29.2457, 38.5756, 48.2956,
 from src.tle import *
 parseTLE()
 
+# for showing commentary of the images
+import src.comments as comments
+comments.parseComments()
+
 def colormapToTransparent(original):
 
     # mutate the colormap of a choice to be transparent at the low end
@@ -134,6 +138,10 @@ def loadImageRangeMulti(from_to, image_type, require_data=0, require_metadata=0,
               continue
           except:
               pass
+
+          if comments.isNolearn(i):
+              print("image {} rejected because of #nolearn".format(i))
+              continue
 
           # for count mode only
           # load anything that has metadata and any data, so presumably it is a proper image
