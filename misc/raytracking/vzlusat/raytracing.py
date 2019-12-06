@@ -11,6 +11,9 @@ from src.geometry import *
 from src.plotting import *
 from src.Results import *
 
+# set this according to your number of CPU threads... (and subtract one)
+n_processes = 15
+
 t = time.time()
 
 optics_segments_list = []
@@ -98,8 +101,6 @@ source_x = 1000*1000*149.6e6
 
 # Lab source distance
 # source_x = 3000
-
-n_processes = 15
 
 # moving source
 # source_min_y = -np.sin(deg2rad(4.0))*source_x
