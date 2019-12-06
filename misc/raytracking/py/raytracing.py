@@ -26,7 +26,7 @@ scaling_factor = 1.0
 foil_spacing = 0.450
 foil_thickness = 0.145
 foil_length = 60.0
-timepix_x = -110.0 # here is the sensos in reality
+timepix_x = -110.0 # here is the sensor in reality
 n_foils = 56
 optics_skew = 0.057
 optics_y_offset = (-n_foils/2.0)*optics_skew
@@ -37,7 +37,7 @@ if optics_deployed:
 else:
     optics_x = timepix_x + 130 - foil_length + 00 # retracted
 
-#{ Create Optics
+# #{ Creathe the optics
 
 foils = []
 
@@ -51,7 +51,7 @@ for i in range(n_foils):
     p3 = Point(optics_x, optics_y + i*foil_spacing + foil_thickness/2.0)
     p4 = Point(optics_x + foil_length, optics_y + i*foil_spacing+optics_y_offset + foil_thickness/2.0)
 
-    s1 = Segment(p1, p2) 
+    s1 = Segment(p1, p2)
     s2 = Segment(p3, p4)
     s3 = Segment(p1, p3)
     s4 = Segment(p2, p4)
@@ -80,16 +80,16 @@ foils.append(Segment(Point(27, 50), Point(27, 15)))
 foils.append(Segment(Point(27, -50), Point(27, -15)))
 # foils.append(Segment(Point(-30, -50), Point(-30, -15)))
 
-#} end of Create Optics
+# #} end of Creathe the optics
 
-#{ Create the sensor
+# #{ Create the sensor
 
 p1 = Point(timepix_x, -timepix_size/2.0)
 p2 = Point(timepix_x, +timepix_size/2.0)
 timepix_segment = Segment(p1, p2)
 timepix_segments_list.append(timepix_segment)
 
-#} end of Create the sensor
+# #} end of Create the sensor
 
 # simulate
 
@@ -99,7 +99,7 @@ source_x = 1000*1000*149.6e6
 # Lab source distance
 # source_x = 3000
 
-n_processes = 11
+n_processes = 15
 
 # moving source
 # source_min_y = -np.sin(deg2rad(4.0))*source_x
@@ -143,13 +143,13 @@ class Ray:
         self.timepix_point = timepix_point
         self.ray = ray
 
-direct_rays_queue = mp.Queue() 
-reflected_ray_queue = mp.Queue() 
+direct_rays_queue = mp.Queue()
+reflected_ray_queue = mp.Queue()
 
 stdout_lock = mp.Lock()
 queue_lock = mp.Lock()
 
-#{ Raytracing process
+# #{ Raytracing process
 
 def do_raytracing(pidx, source_ys, source_x, target_ys, target_x, foils, timepix_segment, direct_rays_queue, reflected_ray_queue, stdout_lock, queue_lock, max_reflections, critical_angle):
 
@@ -308,7 +308,9 @@ def do_raytracing(pidx, source_ys, source_x, target_ys, target_x, foils, timepix
     print("Process {} has finished".format(pidx))
     stdout_lock.release()
 
-#} end of Raytracing process
+# #} end of Raytracing process
+
+# #{ Create the target sets for each process
 
 target_ys = []
 for i in range(n_processes):
@@ -316,22 +318,31 @@ for i in range(n_processes):
     target_max = target_min_y + (i+1)*(target_max_y-target_min_y)/n_processes - target_step
     target_ys.append(np.arange(target_min, target_max, target_step))
 
+# #} end of Create the target sets for each process
+
 source_ys = []
 i = source_min_y
 while i <= source_max_y:
-   
+
     source_ys.append(i)
     i += source_step
 
 print("source_ys: {}".format(source_ys))
 
+# initialize the raytracing methods, giving each their own targets to shoot at
 processes = [mp.Process(target=do_raytracing, args=(x, source_ys, source_x, target_ys[x], target_x, foils, timepix_segment, direct_rays_queue, reflected_ray_queue, stdout_lock, queue_lock, max_reflections, critical_angle)) for x in range(n_processes)]
+
+# #{ Spawn worker processed doing the raytracking
 
 p_idx = 0
 for p in processes:
     print("Spawning process {} with min={}, max={}, step={}".format(p_idx, target_ys[p_idx][0], target_ys[p_idx][-1], target_step))
     p_idx += 1
     p.start()
+
+# #} end of Spawn worker processed doing the raytracking
+
+# #{ Gather the data from the worker processes
 
 while True:
 
@@ -379,13 +390,18 @@ while True:
 for i in foils:
     optics_segments_list.append(i)
 
+# #} end of Gather the data from the worker processes
+
 elapsed = time.time() - t
 print("elapsed: {}".format(elapsed))
 
 # try to open the file
 print("Saving results")
+
+# the results are saved to a pickle file, which alows to plot them again without raytracing
 # file_name="raytracing_{}_{}.pkl".format("deployed" if optics_deployed else "retracted", scaling_factor)
 file_name="result_new.pkl"
+
 results = Results(optics_segments_list, timepix_segments_list, optics_point_list, timepix_point_list, source_point_list, reflected_rays_segment_list, direct_rays_segment_list, columns)
 with open(file_name, 'wb') as direct_rays_queue:
 
@@ -394,4 +410,5 @@ with open(file_name, 'wb') as direct_rays_queue:
     except:
         print("file \"{}\" could not be saved".format(file_name))
 
+# plot the results
 import plot

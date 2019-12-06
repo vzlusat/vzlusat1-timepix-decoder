@@ -51,7 +51,7 @@ for i in range(n_foils):
     p3 = Point(optics_x, optics_y + i*foil_spacing + foil_thickness/2.0)
     p4 = Point(optics_x + foil_length, optics_y + i*foil_spacing+optics_y_offset + foil_thickness/2.0)
 
-    s1 = Segment(p1, p2) 
+    s1 = Segment(p1, p2)
     s2 = Segment(p3, p4)
     s3 = Segment(p1, p3)
     s4 = Segment(p2, p4)
@@ -164,8 +164,8 @@ class Ray:
         self.timepix_point = timepix_point
         self.ray = ray
 
-direct_rays_queue = mp.Queue() 
-reflected_ray_queue = mp.Queue() 
+direct_rays_queue = mp.Queue()
+reflected_ray_queue = mp.Queue()
 
 stdout_lock = mp.Lock()
 queue_lock = mp.Lock()
@@ -343,7 +343,7 @@ for i in range(n_processes):
 source_ys = []
 i = source_min_y
 while i <= source_max_y:
-   
+
     source_ys.append(i)
     i += source_step
 
