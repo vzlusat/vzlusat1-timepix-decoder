@@ -1216,6 +1216,57 @@ def exportRawNonfullresData():
 
 # #}
 
+# #{ exportRawForPublic() callback
+def exportRawForPublic():
+
+    statusLine.set("Exporting raw images for public")
+
+    image_iter = 0
+    prev_id = 0
+
+    with open("images_csv/info.txt", "w") as info_file:
+
+        for file_name in file_names:
+
+            image = loadImage(file_name)
+
+            if isinstance(image, Image):
+
+                # atempt to reconstruct the TLE
+                latitude, longitude, tle_date = getLatLong(image.time)
+
+                if image.type == 1 and image.got_data and image.got_metadata and not comments.isNolearn(image.id) and not image.filtering:
+
+                    if latitude != 0 and longitude != 0:
+
+                        if image.id != prev_id:
+                            image_iter += 1
+                            prev_id = image.id
+
+                        exportImageForPixet(image, image_iter)
+
+                        if image_iter == 1:
+                            first = True
+                        else:
+                            first = False
+
+                        if first:
+                            info_line = exportInfoFileLine(image, first)
+                            info_file.write("# ordinar image ID, original image ID, {}\r\n".format(info_line))
+
+                        info_line = exportInfoFileLine(image, False)
+                        info_file.write("{}, {}, {}\r\n".format(image_iter, image.id, info_line))
+
+                        statusLine.set("Exporting image {}".format(image.id))
+
+                    else:
+
+                        print("skipping image {}, tle could not be reconstructed", image.id)
+
+        statusLine.set("Images exported")
+
+# #}
+
 # spawn button for loading new images
 load_button = Tk.Button(master=frame_list, text='Load new images', command=loadNewImages, font=customfont)
 load_button.pack(side=Tk.TOP)
@@ -1260,6 +1311,9 @@ export_raw_button.pack(side=Tk.BOTTOM)
 
 export_raw_button = Tk.Button(master=frame_list, text='Export RAW other', command=exportRawNonfullresData, font=customfont)
 export_raw_button.pack(side=Tk.BOTTOM)
+
+export_public_button = Tk.Button(master=frame_list, text='Export data for public use', command=exportRawForPublic, font=customfont)
+export_public_button.pack(side=Tk.BOTTOM)
 
 autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing (e)", variable=autogenerate_png_view, command=autogenerateCheckboxCallback, font=customfont)
 autogenerate_checkbox.pack(side=Tk.BOTTOM)
