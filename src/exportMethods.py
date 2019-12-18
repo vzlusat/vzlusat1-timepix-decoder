@@ -43,6 +43,7 @@ def exportHouseKeeping(data):
             hk_file.write("\r\n")
 
         hk_file.write("Human readable time: {}\r\n".format(datetime.datetime.utcfromtimestamp(data.time)))
+        hk_file.write("Resolution: {}, {}\r\n".format(256, 256))
 
         if settings.calculate_tle:
             latitude, longitude, tle_date = getLatLong(data.time)
