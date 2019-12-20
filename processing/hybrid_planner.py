@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "29.11.2019 21:15:00"
-to_time = "30.11.2019 12:00:00"
+from_time = "21.12.2019 21:00:00"
+to_time = "22.12.2019 21:00:00"
 
 hkc_buffer_time = 300
 
@@ -22,14 +22,14 @@ approx_south_pole = 30
 latitude_limit = 8
 
 from_to = numpy.array([
-# [32478, 35838], # filtered fullres
 [36352, 36671], # 1st full res
 [36672, 37034], # 2nd full res
 [37103, 37862], # 3rd full res
 [37863, 38587], # 4th full res
+[38604, 39191], # 5th full res
 ])
 
-outliers=[37788, 37745, 37688, 37635, 37573, 37565, 37416, 37349, 37275, 37237, 37202, 37186, 37107, 37032, 36779, 36652, 36607, 36557]
+outliers=[]
 
 anomaly_lat = -37.0
 anomaly_long = -31.0
