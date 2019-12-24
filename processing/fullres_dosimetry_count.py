@@ -13,11 +13,12 @@ from_to = numpy.array([
 [37103, 37862], # 3rd full res
 [37863, 38587], # 4rd full res
 [38604, 39191], # 5rd full res
+[39194, 39958], # 6rd full res
 ])
 outliers=[]
 
 pcolor_min = 0
-pcolor_max = 5
+pcolor_max = 6
 
 small_plot = 1
 
@@ -28,10 +29,10 @@ general_label = 'Radiation dose, 500 km LEO, VZLUSAT-1'
 epsilon=0.1
 
 # prepare data
-images = loadImageRangeMulti(from_to, 1, 0, 1, outliers)
+images = loadImageRangeMulti(from_to, 1, 1, 1, outliers)
 
-# doses = calculateEnergyDose(images)
-doses = calculateTotalPixelCount(images)
+doses = calculateEnergyDose(images)
+# doses = calculateTotalPixelCount(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
 
 lats_orig, lons_orig = extractPositions(images)
