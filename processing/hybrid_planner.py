@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "21.12.2019 21:00:00"
-to_time = "22.12.2019 21:00:00"
+from_time = "08.01.2020 10:30:00"
+to_time = "09.01.2020 10:30:00"
 
 hkc_buffer_time = 300
 
@@ -27,6 +27,7 @@ from_to = numpy.array([
 [37103, 37862], # 3rd full res
 [37863, 38587], # 4th full res
 [38604, 39191], # 5th full res
+[39194, 39958], # 6th full res
 ])
 
 outliers=[]
@@ -213,7 +214,7 @@ for idx,x in enumerate(updates):
     if idx == len(updates)-1:
         if abs(updates[idx].time - updates[idx-1].time) >= 300:
             new_updates_list.append(updates[idx])
-    else:  
+    else:
         if abs(updates[idx].time - updates[idx+1].time) >= 300:
             new_updates_list.append(updates[idx])
 
@@ -263,7 +264,7 @@ with open(file_name, "w") as file:
     # start HKC
     t = t + 3
     file.write(get_time(t)+"\tP\th go 1 1\r\n")
-    
+
     prev_update_time = 0
 
     # parameter setting during the orbit
