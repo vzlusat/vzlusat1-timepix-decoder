@@ -451,7 +451,15 @@
     * Human readible time range: 
     * Exposure 10 s, Fullres
   * Fullres dosimetry 6, 2 ms short, 1.5 s long
-    * Image range: 39194 to 39958
+    * Image range: 39194 to 39961
+    * Unix time range:
+    * Human readible time range:
+  * Fullres dosimetry 7, 2 ms short, 1.5 s long
+    * Image range: 39962 to 40568
+    * Unix time range:
+    * Human readible time range:
+  * Fullres dosimetry 8, 2 ms short, 1.5 s long
+    * Image range: 40600 to 41429
     * Unix time range:
     * Human readible time range:
 
