@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import os
 import matplotlib.pyplot as plt
 from scipy.interpolate import Rbf
@@ -10,13 +12,12 @@ from matplotlib.colors import ListedColormap
 from matplotlib.animation import FuncAnimation
 from include.baseMethods import *
 
-
 my_cm = colormapToTransparent(pl.cm.jet)
 
 pcolor_min = 0
 pcolor_max = 7
 
-from_to = numpy.array([[1, 27000]])
+from_to = numpy.array([[1, 45000]])
 
 # #{ data preparation
 
@@ -26,7 +27,6 @@ def prepare_data():
     images = loadImageRangeMulti(from_to, 1, 1, 1, outliers)
 
     print("images: {}".format(images))
-
 
     doses = calculateEnergyDose(images)
     doses_log = np.where(doses > 0, np.log10(doses), doses)
@@ -69,19 +69,22 @@ def prepare_time_data(save=True):
         [36352, 36671], # 1st full res
         [36672, 37034], # 2nd full res
         [37103, 37862], # 3rd full res
-        [37863, 38587], # 4rd full res
-# [38604, 39191], # 5rd full res
-# [39194, 39958], # 6rd full res
+        [37863, 38587], # 4th full res
+        [38604, 39191], # 5th full res
+        [39194, 39961], # 6th full res
+        [39962, 40568], # 7th full res
+        [40600, 41429], # 8th full res
+        [41446, 42354], # 9th full res
+        [42355, 43038], # 10th full res
     ])
-    time_x_mesh = np.zeros([4,150,150])
-    time_y_mesh = np.zeros([4,150,150])
-    time_doses = np.zeros([4,150,150])
+    time_x_mesh = np.zeros([10,150,150])
+    time_y_mesh = np.zeros([10,150,150])
+    time_doses = np.zeros([10,150,150])
 
     for i in range(times.shape[0]):
         from_to = numpy.array([[times[i,0], times[i,1]]])
         start = end
         end += 2700
-
 
         outliers=[]
 
@@ -126,9 +129,6 @@ def prepare_time_data(save=True):
         time_doses[i] = doses_rbf_log
 
     return time_x_mesh, time_y_mesh, time_doses
-
-
-
 
 # #} end of prepare_time_data
 
@@ -302,7 +302,6 @@ def gen_globe_animated_with_time(n_frames,time_between_frames, save=True, plot=T
 
 # #} end of globe animation with time
 
-
 # Without time
 # x_meshgrid, y_meshgrid, doses_rbf_log = prepare_data()
 # gen_globe_animated(25, 0.1)
@@ -310,5 +309,3 @@ def gen_globe_animated_with_time(n_frames,time_between_frames, save=True, plot=T
 time_x_mesh, time_y_mesh, time_doses = prepare_time_data()
 # gen_flatmap_animation_with_time()
 gen_globe_animated_with_time(2, 0.01, save=False)
-
-
