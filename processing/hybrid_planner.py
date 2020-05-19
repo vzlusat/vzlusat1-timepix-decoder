@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "18.03.2020 21:00:00"
-to_time = "19.03.2020 21:00:00"
+from_time = "24.05.2020 00:10:00"
+to_time = "25.05.2020 00:00:00"
 
 hkc_buffer_time = 300
 
@@ -28,8 +28,10 @@ from_to = numpy.array([
 # [37863, 38587], # 4th full res
 # [38604, 39191], # 5th full res
 # [39194, 39961], # 6th full res
-[39962, 40568], # 7th full res
-[40600, 41429], # 8th full res
+# [39962, 40568], # 7th full res
+# [40600, 41429], # 8th full res
+[41446, 42354], # 9th full res
+[42355, 43038], # 10th full res
 ])
 
 outliers=[]
@@ -243,7 +245,7 @@ with open(file_name, "w") as file:
 
     # set overall parameters
     t = t + 4
-    threshold = 385
+    threshold = 380
     exposure = int(round(min_exposure*1000.0))
     bias = 70
     filtering = 0
