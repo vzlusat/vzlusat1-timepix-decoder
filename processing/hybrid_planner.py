@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "08.01.2020 10:30:00"
-to_time = "09.01.2020 10:30:00"
+from_time = "24.05.2020 00:10:00"
+to_time = "25.05.2020 00:00:00"
 
 hkc_buffer_time = 300
 
@@ -22,12 +22,16 @@ approx_south_pole = 30
 latitude_limit = 8
 
 from_to = numpy.array([
-[36352, 36671], # 1st full res
-[36672, 37034], # 2nd full res
-[37103, 37862], # 3rd full res
-[37863, 38587], # 4th full res
-[38604, 39191], # 5th full res
-[39194, 39958], # 6th full res
+# [36352, 36671], # 1st full res
+# [36672, 37034], # 2nd full res
+# [37103, 37862], # 3rd full res
+# [37863, 38587], # 4th full res
+# [38604, 39191], # 5th full res
+# [39194, 39961], # 6th full res
+# [39962, 40568], # 7th full res
+# [40600, 41429], # 8th full res
+[41446, 42354], # 9th full res
+[42355, 43038], # 10th full res
 ])
 
 outliers=[]
@@ -241,7 +245,7 @@ with open(file_name, "w") as file:
 
     # set overall parameters
     t = t + 4
-    threshold = 385
+    threshold = 380
     exposure = int(round(min_exposure*1000.0))
     bias = 70
     filtering = 0
