@@ -1,6 +1,8 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 import os
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from scipy.interpolate import Rbf
 import matplotlib.ticker as ticker
@@ -17,24 +19,27 @@ from timeit import default_timer as timer
 import multiprocessing as mp
 
 # set this according to your number of CPU threads... (and subtract one)
-n_processes = 6
+n_processes = 12
 
 load_from_cache=True
 file_name_cache="cache.pkl"
 fps = 30 # []
-single_map_duration = 2.0 # [s]
-single_rotation_duration = 6.0 # [s]
+single_map_duration = 3.0 # [s]
+single_rotation_duration = 12.0 # [s]
 data_intervals = [
-    # [36352, 36671, "title 1"], # 1st full res
-    [36672, 37034, "title 2"], # 2nd full res
-    [37103, 37862, "title 3"], # 3rd full res
-    [37863, 38587, "title 4"], # 4th full res
-    [38604, 39191, "title 5"], # 5th full res
-    [39194, 39961, "title 6"], # 6th full res
-    [39962, 40568, "title 7"], # 7th full res
-    [40600, 41429, "title 8"], # 8th full res
-    [41446, 42354, "title 9"], # 9th full res
-    [42355, 43038, "title 10"], # 10th full res
+    # [27979, 28095, "2019, duben"], # Combined belt+anomaly scanning 10
+    # [35839, 35940, "2019, cervenec"], # Combined belt+anomaly scanning 11
+    # [36352, 36671, "title 1# "], 1st full res
+    [36672, 37034, "2019, zari"], # 2nd full res
+    [37103, 37862, "2019, listopad"], # 3rd full res
+    [37863, 38587, "2019, listopad"], # 4th full res
+    [38604, 39191, "2019, listopad"], # 5th full res
+    [39194, 39961, "2019, prosinec"], # 6th full res
+    [39962, 40568, "2020, leden"], # 7th full res
+    [40600, 41429, "2020, unor"], # 8th full res
+    [41446, 42354, "2020, brezen"], # 9th full res
+    [42355, 43038, "2020, brezen"], # 10th full res
+    [43072, 43889, "2020, kveten"], # 11th full res
 ]
 
 # #{ class Cache
@@ -85,7 +90,7 @@ def loadData():
 
         doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig, lons_orig)
 
-        rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=1, smooth=1)
+        rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=5, smooth=1)
         doses_rbf_log = rbf_log(meshgrid_y, y_meshgrid)
 
         doses_all.append(doses_rbf_log)
@@ -137,7 +142,7 @@ def saveGlobe(i):
 
     fig = plt.figure()
 
-    m = Basemap(projection='ortho', lat_0=0, lon_0=i*(360.0/(fps*single_rotation_duration)), resolution='c')
+    m = Basemap(projection='ortho', lat_0=0, lon_0=(i*(360.0/(fps*single_rotation_duration)) % 360), resolution='c')
     m.drawcoastlines()
 
     map_id = int(math.floor((float(i)/float(fps))/float(single_map_duration)))
@@ -147,11 +152,11 @@ def saveGlobe(i):
 
     m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_all[map_id], cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
-    cb = m.colorbar(location="bottom", label="log(intensity) [events/s]") # draw colorbar
+    cb = m.colorbar(location="bottom", label="radiacni davka detektoru [$log_{10}$ keV/s]") # draw colorbar
 
     plt.title(data_intervals[map_id][2], fontsize=13)
 
-    plt.savefig("animation/{0:03d}.png".format(i))
+    plt.savefig("animation/{0:04d}.png".format(i))
 
 # #} end of animateGlobe()
 
@@ -165,19 +170,22 @@ def genAnimationProcess(pidx, from_frame, to_frame):
 
         saveGlobe(i)
 
-        print("process {}: {}%".format(pidx, (i/n_frames)*100))
+        print("process {}: {}%".format(pidx, int((float(i-from_frame)/float(n_frames))*100.0)))
 
 # #} end of genAnimation()
 
 # #} end of globe animation
 
-n_frames = int(fps*n_maps*single_map_duration)
+n_frames = int(float(fps)*float(n_maps)*single_map_duration)
 
 froms = []
 tos = []
 for i in range(0, n_processes):
-    froms.append(i*(n_frames/n_processes))
-    tos.append((i+1)*(n_frames/n_processes))
+
+    images_per_cpu = int(float(n_frames)/float(n_processes))
+
+    froms.append(i*images_per_cpu)
+    tos.append((i+1)*images_per_cpu)
 
 # initialize the raytracing methods, giving each their own targets to shoot at
 processes = [mp.Process(target=genAnimationProcess, args=(x, froms[x], tos[x])) for x in range(n_processes)]

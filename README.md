@@ -408,8 +408,8 @@
     * Exposure 0.01 s every 2 minutes, only single-pixel events
   * Combined belt+anomaly scanning 11
     * Image range: 35839 to 35940
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1562920905 to 1563003848
+    * Human readible time range: 2019-07-12 08:41:45 to 2019-07-13 07:44:08
   * XRB co-measurement 23
     * Image range: 35941 to 36351
     * Unix time range: 
@@ -417,12 +417,12 @@
     * Exposure 10 s, Fullres
   * Fullres dosimetry 1, 1 ms exposure
     * Image range: 36352 to 36671
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1569411665 to 1569484252
+    * Human readible time range: 2019-09-25 11:41:05 to 2019-09-26 07:50:52
   * Fullres dosimetry 2, 2 ms short, 1 s long
     * Image range: 36672 to 37034
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1569535112 to 1569620642
+    * Human readible time range: 2019-09-26 21:58:32 to 2019-09-27 21:44:02
   * XRB co-measurement 24
     * Image range: 37035 to 37102
     * Unix time range:
@@ -430,12 +430,12 @@
     * Exposure 10 s, Fullres
   * Fullres dosimetry 3, 2 ms short, 1 s long
     * Image range: 37103 to 37862
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1572869265 to 1573041144
+    * Human readible time range: 2019-11-04 12:07:45 to 2019-11-06 11:52:24
   * Fullres dosimetry 4, 2 ms short, 1.5 s long
     * Image range: 37863 to 38587
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1573899335 to 1574068826
+    * Human readible time range: 2019-11-16 10:15:35 to 2019-11-18 09:20:26
   * XRB co-measurement 25
     * Image range: 38588 to 38603
     * Unix time range:
@@ -443,8 +443,8 @@
     * Exposure 10 s, Fullres
   * Fullres dosimetry 5, 2 ms short, 1.5 s long
     * Image range: 38604 to 39191
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1574976647 to 1576865049
+    * Human readible time range: 2019-11-28 21:30:47 to 2019-12-20 18:04:09
   * XRB co-measurement 26
     * Image range: 39192 to 39193
     * Unix time range:
@@ -452,29 +452,29 @@
     * Exposure 10 s, Fullres
   * Fullres dosimetry 6, 2 ms short, 1.5 s long
     * Image range: 39194 to 39961
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1576876681 to 1576876681
+    * Human readible time range: 2019-12-20 21:18:01 to 2019-12-20 21:18:01
   * Fullres dosimetry 7, 2 ms short, 1.5 s long
     * Image range: 39962 to 40568
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1578393159 to 1578565626
+    * Human readible time range: 2020-01-07 10:32:39 to 2020-01-09 10:27:06
   * Fullres dosimetry 8, 2 ms short, 1.5 s long
     * Image range: 40600 to 41429
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1581410698 to 1581642330
+    * Human readible time range: 2020-02-11 08:44:58 to 2020-02-14 01:05:30
   * XRB co-measurement 27
     * Image range: 41434 to 41445
     * Unix time range:
     * Human readible time range: 
     * Exposure 10 s, Fullres
   * Fullres dosimetry 9, 2 ms short, 1.5 s long
-    * Image range: 41446 to 42354
-    * Unix time range:
-    * Human readible time range:
+    * Image range: 41449 to 42354
+    * Unix time range: 1583434659 to 1583665227
+    * Human readible time range: 2020-03-05 18:57:39 to 2020-03-08 11:00:27
   * Fullres dosimetry 10, 2 ms short, 1.5 s long
     * Image range: 42355 to 43038
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1584392592 to 1583665227
+    * Human readible time range: 2020-03-16 21:03:12 to 2020-03-08 11:00:27
   * XRB co-measurement 27
     * Image range: 42039 to 42069
     * Unix time range:
