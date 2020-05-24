@@ -25,7 +25,7 @@ load_from_cache=True
 file_name_cache="cache.pkl"
 fps = 30 # []
 single_map_duration = 3.0 # [s]
-single_rotation_duration = 12.0 # [s]
+single_rotation_duration = 15.0 # [s]
 data_intervals = [
     # [27979, 28095, "2019, duben"], # Combined belt+anomaly scanning 10
     # [35839, 35940, "2019, cervenec"], # Combined belt+anomaly scanning 11
