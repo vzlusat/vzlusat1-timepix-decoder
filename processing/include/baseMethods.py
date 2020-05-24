@@ -62,7 +62,7 @@ def fake_log_fmt(x, pos):
     b = int(b)
     return r'$1e{{{}}}$'.format(a)
 
-print("fmt: {}".format(fmt(400000, 2)))
+# print("fmt: {}".format(fmt(400000, 2)))
 
 def extractPositions(images):
 

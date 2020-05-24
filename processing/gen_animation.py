@@ -11,301 +11,192 @@ import numpy as np
 from matplotlib.colors import ListedColormap
 from matplotlib.animation import FuncAnimation
 from include.baseMethods import *
+import pickle
+import math
+from timeit import default_timer as timer
+import multiprocessing as mp
+
+# set this according to your number of CPU threads... (and subtract one)
+n_processes = 6
+
+load_from_cache=True
+file_name_cache="cache.pkl"
+fps = 30 # []
+single_map_duration = 2.0 # [s]
+single_rotation_duration = 6.0 # [s]
+data_intervals = [
+    # [36352, 36671, "title 1"], # 1st full res
+    [36672, 37034, "title 2"], # 2nd full res
+    [37103, 37862, "title 3"], # 3rd full res
+    [37863, 38587, "title 4"], # 4th full res
+    [38604, 39191, "title 5"], # 5th full res
+    [39194, 39961, "title 6"], # 6th full res
+    [39962, 40568, "title 7"], # 7th full res
+    [40600, 41429, "title 8"], # 8th full res
+    [41446, 42354, "title 9"], # 9th full res
+    [42355, 43038, "title 10"], # 10th full res
+]
+
+# #{ class Cache
+
+class Cache:
+
+    meshgrid_x = []
+    meshgrid_y = []
+    doses_all = []
+
+    def __init__(self, meshgrid_x, meshgrid_y, doses_all):
+
+        self.meshgrid_x = meshgrid_x
+        self.meshgrid_y = meshgrid_y
+        self.doses_all = doses_all
+
+# #} end of Cache
 
 my_cm = colormapToTransparent(pl.cm.jet)
 
 pcolor_min = 0
 pcolor_max = 7
 
-from_to = numpy.array([[1, 45000]])
+meshgrid_x = []
+meshgrid_y = []
+doses_all = []
+n_maps = len(data_intervals)
 
-# #{ data preparation
+# #{ loadData
 
-def prepare_data():
-    global from_to
-    outliers=[]
-    images = loadImageRangeMulti(from_to, 1, 1, 1, outliers)
+def loadData():
 
-    print("images: {}".format(images))
+    doses_all = []
 
-    doses = calculateEnergyDose(images)
-    doses_log = np.where(doses > 0, np.log10(doses), doses)
+    meshgrid_y, y_meshgrid = createMeshGrid(150)
 
-    lats_orig, lons_orig = extractPositions(images)
+    for i in range(0, n_maps):
 
-    doses_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses, lats_orig, lons_orig)
-    doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig, lons_orig)
+        from_to = numpy.array([[data_intervals[i][0], data_intervals[i][1]]])
 
-# #{ RBF generation
+        images = loadImageRangeMulti(from_to, 1, 1, 1, [])
 
-
-# create meshgrid for RBF
-    x_meshgrid, y_meshgrid = createMeshGrid(150)
-
-# calculate RBF from log data
-    rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=1, smooth=1)
-    doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
-
-# calculate RBF from lin data
-    rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=1, smooth=1)
-    doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
-
-
-    return x_meshgrid, y_meshgrid, doses_rbf_log
-
-
-# #} end of RBF generation
-
-
-
-# #} end of data preparation
-
-# #{ prepare_time_data
-
-def prepare_time_data(save=True):
-    start = 0
-    end = 2700
-    times = numpy.array([
-        [36352, 36671], # 1st full res
-        [36672, 37034], # 2nd full res
-        [37103, 37862], # 3rd full res
-        [37863, 38587], # 4th full res
-        [38604, 39191], # 5th full res
-        [39194, 39961], # 6th full res
-        [39962, 40568], # 7th full res
-        [40600, 41429], # 8th full res
-        [41446, 42354], # 9th full res
-        [42355, 43038], # 10th full res
-    ])
-    time_x_mesh = np.zeros([10,150,150])
-    time_y_mesh = np.zeros([10,150,150])
-    time_doses = np.zeros([10,150,150])
-
-    for i in range(times.shape[0]):
-        from_to = numpy.array([[times[i,0], times[i,1]]])
-        start = end
-        end += 2700
-
-        outliers=[]
-
-        pcolor_min = 0
-        pcolor_max = 7
-
-        small_plot = 1
-
-        date_range = 'all time'
-        x_units = '(keV/s)'
-        x_label = 'Total dose in 14x14x0.3 mm Si'
-        general_label = 'VZLUSAT-1, 510 km LEO'
-
-# prepare data
-        images = loadImageRangeMulti(from_to, 1, 1, 1, outliers)
-
-# print("images: {}".format(images))
-
+        # doses = calculateTotalPixelCount(images)
         doses = calculateEnergyDose(images)
         doses_log = np.where(doses > 0, np.log10(doses), doses)
 
         lats_orig, lons_orig = extractPositions(images)
 
-        doses_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses, lats_orig, lons_orig)
         doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig, lons_orig)
 
-#{ RBF interpolation
-
-# create meshgrid for RBF
-        x_meshgrid, y_meshgrid = createMeshGrid(150)
-
-# calculate RBF from log data
-        rbf_lin = Rbf(lats_wrapped, lons_wrapped, doses_wrapped, function='multiquadric', epsilon=1, smooth=1)
-        doses_rbf_lin = rbf_lin(x_meshgrid, y_meshgrid)
-
-# calculate RBF from lin data
         rbf_log = Rbf(lats_wrapped, lons_wrapped, doses_log_wrapped, function='multiquadric', epsilon=1, smooth=1)
-        doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
+        doses_rbf_log = rbf_log(meshgrid_y, y_meshgrid)
 
-        time_x_mesh[i] = x_meshgrid
-        time_y_mesh[i] = y_meshgrid
-        time_doses[i] = doses_rbf_log
+        doses_all.append(doses_rbf_log)
 
-    return time_x_mesh, time_y_mesh, time_doses
+    return meshgrid_y, y_meshgrid, doses_all
 
-# #} end of prepare_time_data
+# #} end of loadData
 
-# #{ generate globe
+# #{ LOAD + CACHE + UNCACHE DATA
 
-def gen_globe(x_mesh, y_mesh, doses):
-    fig = plt.figure()
-    m = createMap('ortho', -90, 0)
-    x_m_meshgrid, y_m_meshgrid = m(y_mesh, x_mesh)
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
+if load_from_cache:
 
-    plt.title('Radiation dose in (keV/s)', fontsize=13)
-    plt.show()
+    # ask OS to locate the file
+    if os.path.isfile(file_name_cache):
 
+        # if the file exists, open it
+        with open(file_name_cache, 'rb') as input:
 
-# #} end of generate globe
+            try:
+                cache = pickle.load(input)
 
-# #{ generate animated globe without time change
+                meshgrid_x = cache.meshgrid_x
+                meshgrid_y = cache.meshgrid_y
+                doses_all = cache.doses_all
 
+                print("data loaded from cache")
+            except:
+                print("file \"{}\" is corrupted".format(file_name_cache))
+                exit()
 
-def init_animation():
-    m = createMap('ortho', 0, 40)
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+else:
+    meshgrid_x, meshgrid_y, doses_all = loadData()
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+    # save to cache
+    cache = Cache(meshgrid_x, meshgrid_y, doses_all)
 
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    return m
-def animate(i):
-    plt.clf()
-    m = createMap('ortho', 0, i+10)
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
+    with open(file_name_cache, 'wb') as file_cache:
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+        pickle.dump(cache, file_cache, pickle.HIGHEST_PROTOCOL)
+        print("data save to cache")
 
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    plt.title('Radiation dose in (keV/s)', fontsize=13)
-#     mpl_toolkits.basemap.shiftgrid(i, )
-    return m
+# #} end of 
 
-# n_frames - number of globe rotation ( 1 rotation is 1 degree of the globe )
-# time_between_frames - delay between frames
-# save = True - is a bool variable that checks if to save the animation to a gif or not 
-# plot = True - is a bool variable that checks if to plot the result of animation
-def gen_globe_animated(n_frames, frame_delay, save=True, plot=True):
-    plt.style.use('seaborn-pastel')
+# #{ globe animation
+
+# #{ animateGlobe()
+
+def saveGlobe(i):
 
     fig = plt.figure()
-    m = createMap('ortho', 0, 40)
-    x_m_meshgrid, y_m_meshgrid = m(y_meshgrid, x_meshgrid)
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_rbf_log, cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
-    plt.title('RBF multiquadric (eps=10e-1), linear scale, ', fontsize=13)
-    anim = FuncAnimation(fig, animate, init_func=init_animation,
-                                   frames=frame_delay, interval=speed)
-    # print(anim.to_html5_video())
-    if save:
-        anim.save('globe_animated.gif', writer='imagemagick')
-    if plot:
-        plt.show()
-# result is in globe.gif - it is compiling 5-10 minutes though
 
+    m = Basemap(projection='ortho', lat_0=0, lon_0=i*(360.0/(fps*single_rotation_duration)), resolution='c')
+    m.drawcoastlines()
 
+    map_id = int(math.floor((float(i)/float(fps))/float(single_map_duration)))
+    # print("frame: {}/{}, map_id: {}".format(i, int(fps*n_maps*single_map_duration), map_id))
 
-# #} end of generate animated globe without time change
+    x_m_meshgrid, y_m_meshgrid = m(meshgrid_y, meshgrid_x)
 
-# #{ flat map animation generator
+    m.pcolor(x_m_meshgrid, y_m_meshgrid, doses_all[map_id], cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
 
-def init_animation_time():
-   
-    m = createMap('cyl')
-    x_m_meshgrid, y_m_meshgrid = m(time_y_mesh[0], time_x_mesh[0])
+    cb = m.colorbar(location="bottom", label="log(intensity) [events/s]") # draw colorbar
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, time_doses[0], cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+    plt.title(data_intervals[map_id][2], fontsize=13)
 
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    return m
-def animate_time(i):
-    plt.clf()
-    m = createMap('cyl')
-    x_m_meshgrid, y_m_meshgrid = m(time_y_mesh[i], time_x_mesh[i])
+    plt.savefig("animation/{0:03d}.png".format(i))
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, time_doses[i], cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+# #} end of animateGlobe()
 
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    plt.title('Radiation dose, 500 km LEO (in keV/s)', fontsize=13)
-#     mpl_toolkits.basemap.shiftgrid(i, )
-    return m
+# #{ genAnimation()
 
+def genAnimationProcess(pidx, from_frame, to_frame):
 
-# save = True - is a bool variable that checks if to save the animation to a gif or not 
-# plot = True - is a bool variable that checks if to plot the result of animation
-def gen_flatmap_animation_with_time(save=True, plot=True):
+    n_frames = to_frame - from_frame
 
-    fig = plt.figure()
-    m = createMap('cyl')
-    x_m_meshgrid, y_m_meshgrid = m(time_y_mesh[0], time_x_mesh[0])
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, time_doses[0], cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
-    plt.title('RBF multiquadric (eps=10e-1), linear scale, ', fontsize=13)
+    for i in range(from_frame, to_frame):
 
-    anim = FuncAnimation(fig, animate_time, init_func=init_animation_time,
-                                   frames=4, interval=300)
-    if save:
-        anim.save('flat_time.gif', writer='imagemagick')
-    if plot:
-        plt.show()
+        saveGlobe(i)
 
+        print("process {}: {}%".format(pidx, (i/n_frames)*100))
 
+# #} end of genAnimation()
 
-# #} end of flat map animation generator 
+# #} end of globe animation
 
-# #{ globe animation with time
+n_frames = int(fps*n_maps*single_map_duration)
 
-# time is a variable to calculate which timeFrame to load in the animate_glob_time function, that creates the next frame
-# the solution is not very elegant, I am kinda sure that you can somehow pass the arguments, but I din't do the research
-# TODO: pass variables through args to the animate function
-time = 0
+froms = []
+tos = []
+for i in range(0, n_processes):
+    froms.append(i*(n_frames/n_processes))
+    tos.append((i+1)*(n_frames/n_processes))
 
-def init_globe():
-   
-    m = createMap('ortho', 0, 40)
-    x_m_meshgrid, y_m_meshgrid = m(time_y_mesh[0], time_x_mesh[0])
+# initialize the raytracing methods, giving each their own targets to shoot at
+processes = [mp.Process(target=genAnimationProcess, args=(x, froms[x], tos[x])) for x in range(n_processes)]
 
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, time_doses[0], cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+p_idx = 0
+for p in processes:
+    print("Spawning process {}".format(p_idx))
+    p_idx += 1
+    p.start()
 
- 
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    return m
-def animate_glob_time(i):
-    plt.clf()
-    global time
-    m = createMap('ortho', 0, i+10)
-    # this selects a frame, number 4 is number of different timeframes at all, since we have only 4 defined in the generation function 
-    # again, not very elegant
-    # TODO: change to dynamic
-    t = time//4
-    x_m_meshgrid, y_m_meshgrid = m(time_y_mesh[t], time_x_mesh[t])
-    
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, time_doses[t], cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
+while True:
 
-    cb = m.colorbar(location="bottom", label="Z") # draw colorbar
-    plt.title('Radiation dose, 500 km LEO (in keV/s)', fontsize=13)
-#     mpl_toolkits.basemap.shiftgrid(i, )
-    
-    time+=1
-    if time==16:
-        time=0
-    return m
+    some_alive = 0
 
+    for p in processes:
 
-# @param:
-# n_frames - number of globe rotation ( 1 rotation is 1 degree of the globe )
-# time_between_frames - delay between frames
-# save = True - is a bool variable that checks if to save the animation to a gif or not 
-# plot = True - is a bool variable that checks if to plot the result of animation
-def gen_globe_animated_with_time(n_frames,time_between_frames, save=True, plot=True):
-    fig = plt.figure()
-    m = createMap('ortho', 0, 40)
-    x_m_meshgrid, y_m_meshgrid = m(time_y_mesh[0], time_x_mesh[0])
-    m.pcolor(x_m_meshgrid, y_m_meshgrid, time_doses[0], cmap=my_cm, vmin=pcolor_min, vmax=pcolor_max)
-    plt.title('RBF multiquadric (eps=10e-1), linear scale, ', fontsize=13)
+        if p.is_alive():
 
+            some_alive = 1
 
-    anim = FuncAnimation(fig, animate_glob_time, init_func=init_globe,
-                         frames=20, interval=1)
-    if save:
-        anim.save('globe_time.gif', writer='imagemagick')
-    if plot:
-        plt.show()
-
-
-# #} end of globe animation with time
-
-# Without time
-# x_meshgrid, y_meshgrid, doses_rbf_log = prepare_data()
-# gen_globe_animated(25, 0.1)
-# Animation with time
-time_x_mesh, time_y_mesh, time_doses = prepare_time_data()
-# gen_flatmap_animation_with_time()
-gen_globe_animated_with_time(2, 0.01, save=False)
+    if some_alive == 0:
+        break

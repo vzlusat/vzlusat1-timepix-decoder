@@ -417,7 +417,7 @@
     * Exposure 10 s, Fullres
   * Fullres dosimetry 1, 1 ms exposure
     * Image range: 36352 to 36671
-    * Unix time range:dosimetry 
+    * Unix time range:
     * Human readible time range:
   * Fullres dosimetry 2, 2 ms short, 1 s long
     * Image range: 36672 to 37034
