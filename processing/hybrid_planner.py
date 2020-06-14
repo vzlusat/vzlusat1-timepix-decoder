@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "24.05.2020 00:10:00"
-to_time = "25.05.2020 00:00:00"
+from_time = "10.06.2020 00:10:00"
+to_time = "11.06.2020 00:00:00"
 
 hkc_buffer_time = 300
 
@@ -51,8 +51,8 @@ mesh_size = 100
 
 step_size = 10
 
-max_exposure = 1.5
-min_exposure = 0.002
+max_exposure = 2.0
+min_exposure = 0.004
 
 epsilon=10.0
 x_label = 'Pixel count'
