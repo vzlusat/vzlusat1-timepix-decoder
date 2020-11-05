@@ -155,6 +155,20 @@ def loadFiles():
 
             if image != 0:
 
+                try:
+                    from_id = int(from_id_var.get())
+                    if from_id_var.get() != "" and image.id < from_id:
+                        continue
+                except:
+                    pass
+
+                try:
+                    to_id = int(to_id_var.get())
+                    if to_id_var.get() != "" and image.id > to_id:
+                        continue
+                except:
+                    pass
+
                 if (hide_with_metadata_var.get() and (image.got_metadata)):
                     pass
                 elif (hide_without_data_var.get() and (not image.got_data)):
@@ -959,6 +973,8 @@ show_only_without_data_var = Tk.IntVar()
 hide_housekeeping_var = Tk.IntVar()
 show_adrenalin_var = Tk.IntVar()
 show_xrb_var = Tk.IntVar()
+from_id_var = Tk.StringVar()
+to_id_var = Tk.StringVar()
 
 # user can mark image as favorite or hidden
 # image_is_hidden = Tk.IntVar()
@@ -1371,6 +1387,17 @@ hide_with_metadata.pack(side=Tk.BOTTOM)
 
 hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping (h)", variable=hide_housekeeping_var, command=reloadList, font=customfont)
 hide_housekeeping.pack(side=Tk.BOTTOM)
+
+frame_from_to = Tk.Frame(frame_left);
+frame_from_to.pack(side=Tk.BOTTOM)
+
+from_id = Tk.Entry(master=frame_from_to, textvariable=from_id_var, width=6)
+to_id = Tk.Entry(master=frame_from_to, textvariable=to_id_var, width=6)
+reload_but = Tk.Button(master=frame_from_to, text="R", command=reloadList)
+
+from_id.pack(side=Tk.LEFT)
+to_id.pack(side=Tk.LEFT)
+reload_but.pack(side=Tk.LEFT)
 
 # #}
 
