@@ -506,6 +506,15 @@
     * Image range: 45826 to 46193
     * Unix time range: 1601111433 to 1601197694
     * Human readible time range: 2020-09-26 09:10:33 to 2020-09-27 09:08:14
+  * XRB co-measurement 30
+    * Image range: 46194 to 46245
+    * Unix time range: 
+    * Human readible time range: 
+    * Exposure 10 s, Fullres
+  * Fullres dosimetry 15, 4 ms short, 2 s long
+    * Image range: 46246 to 46659
+    * Unix time range: 
+    * Human readible time range: 
 
 # Installation
 
