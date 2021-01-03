@@ -1,6 +1,54 @@
-# xray-decoder - Utility for decoding VZLUSAT-1 X-ray images
+# Utility for decoding VZLUSAT-1 Timepix images
 
-## Measurement log
+# Installation
+
+## Prerequisities
+
+Running the **decoder** on Linux requires installing python libraries on both Linux and Windows.
+Thought, it is much easier to run it on Linux...
+Follow these instructions:
+
+### Linux
+
+Install python and matplotlib by running:
+
+```bash
+sudo apt-get install python2.7-dev python-matplotlib python3-pip python3-tk python-pmw python-pip python-mpltoolkits.basemap python3-mpltoolkits.basemap python-scipy python-ephem
+```
+
+### Windows
+
+1. Install the latest Python3 from the website: https://www.python.org/downloads/
+
+If you want to have a TwoLineElements+Globus, follow the next three bullet points, otherwise skip to the point 2 and disable the globus feature in _settings.txt_. Following bullet points may take very long time on Windows...
+
+- Install Visual C++ Build tools 2015 from: http://landinghub.visualstudio.com/visual-cpp-build-tools
+- Install Anaconda: https://repo.continuum.io/archive/Anaconda3-4.4.0-Windows-x86_64.exe
+- Run Anaconda Prompt (Start menu->Anaconda Prompt) and input following command to the command line: ```conda install -c conda-forge basemap```
+
+2. Run "run_as_admin.bat" script as Administrator (right click on it and click on "Run as administrator").
+Doing this is neccessary just for the first time (it installs required library).
+After that, double-clicking decoder.py should be sufficient.
+
+## Running the decoder
+
+## Linux
+
+Open a Terminal window and run followoing command in the directory of the decoder:
+
+```bash
+python decoder.py
+```
+
+It might be neccessary to re-run the program multiple times, before it correctly loads its libraries for the first time.
+
+## Windows
+
+Doubleclick the **decoder.py** file.
+
+It might be neccessary to re-run the program multiple times, before it correctly loads its libraries for the first time.
+
+# Measurement log
 
   * Dosimetry 1
     * Image range: 405 to 416
@@ -508,59 +556,10 @@
     * Human readible time range: 2020-09-26 09:10:33 to 2020-09-27 09:08:14
   * XRB co-measurement 30
     * Image range: 46194 to 46245
-    * Unix time range: 
-    * Human readible time range: 
+    * Unix time range:
+    * Human readible time range:
     * Exposure 10 s, Fullres
   * Fullres dosimetry 15, 4 ms short, 2 s long
     * Image range: 46246 to 46659
-    * Unix time range: 
-    * Human readible time range: 
-
-# Installation
-
-## Prerequisities
-
-Running the **decoder** on Linux requires installing python libraries on both Linux and Windows.
-Thought, it is much easier to run it on Linux...
-Follow these instructions:
-
-### Linux
-
-Install python and matplotlib by running:
-
-```bash
-sudo apt-get install python2.7-dev python-matplotlib python3-pip python3-tk python-pmw python-pip python-mpltoolkits.basemap python3-mpltoolkits.basemap python-scipy python-ephem
-```
-
-### Windows
-
-1. Install the latest Python3 from the website: https://www.python.org/downloads/
-
-If you want to have a TwoLineElements+Globus, follow the next three bullet points, otherwise skip to the point 2 and disable the globus feature in _settings.txt_. Following bullet points may take very long time on Windows...
-
-- Install Visual C++ Build tools 2015 from: http://landinghub.visualstudio.com/visual-cpp-build-tools
-- Install Anaconda: https://repo.continuum.io/archive/Anaconda3-4.4.0-Windows-x86_64.exe
-- Run Anaconda Prompt (Start menu->Anaconda Prompt) and input following command to the command line: ```conda install -c conda-forge basemap```
-
-2. Run "run_as_admin.bat" script as Administrator (right click on it and click on "Run as administrator").
-Doing this is neccessary just for the first time (it installs required library).
-After that, double-clicking decoder.py should be sufficient.
-
-## Running the decoder
-
-## Linux
-
-Open a Terminal window and run followoing command in the directory of the decoder:
-
-```bash
-python decoder.py
-```
-
-It might be neccessary to re-run the program multiple times, before it correctly loads its libraries for the first time.
-
-## Windows
-
-Doubleclick the **decoder.py** file.
-
-It might be neccessary to re-run the program multiple times, before it correctly loads its libraries for the first time.
-
+    * Unix time range:
+    * Human readible time range:
