@@ -563,3 +563,8 @@ It might be neccessary to re-run the program multiple times, before it correctly
     * Image range: 46246 to 46659
     * Unix time range:
     * Human readible time range:
+  * XRB co-measurement 31
+    * Image range: 46660 to 46742
+    * Unix time range:
+    * Human readible time range:
+    * Exposure 10 s, Fullres
