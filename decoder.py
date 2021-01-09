@@ -185,6 +185,10 @@ def loadFiles():
                     pass
                 elif (show_xrb_var.get() and not comments.isXrb(image.id)):
                     pass
+                elif (show_fullresdos_var.get() and not comments.isFullresDos(image.id)):
+                    pass
+                elif (show_saa_belts_var.get() and not comments.isSaaBelts(image.id)):
+                    pass
                 # elif ((not show_hidden_var.get()) and (image.hidden)):
                 #     pass
                 elif (just_fullres_var.get() and image.type > 1):
@@ -973,6 +977,8 @@ show_only_without_data_var = Tk.IntVar()
 hide_housekeeping_var = Tk.IntVar()
 show_adrenalin_var = Tk.IntVar()
 show_xrb_var = Tk.IntVar()
+show_fullresdos_var = Tk.IntVar()
+show_saa_belts_var = Tk.IntVar()
 from_id_var = Tk.StringVar()
 to_id_var = Tk.StringVar()
 
@@ -1366,6 +1372,12 @@ show_adrenalin.pack(side=Tk.BOTTOM)
 
 show_xrb = Tk.Checkbutton(master=frame_left, text="show only XRB (x)", variable=show_xrb_var, command=reloadList, font=customfont)
 show_xrb.pack(side=Tk.BOTTOM)
+
+show_fullresdos = Tk.Checkbutton(master=frame_left, text="show only FullRes dosimetry", variable=show_fullresdos_var, command=reloadList, font=customfont)
+show_fullresdos.pack(side=Tk.BOTTOM)
+
+show_saa_belts = Tk.Checkbutton(master=frame_left, text="show only SAA and belt scanning", variable=show_saa_belts_var, command=reloadList, font=customfont)
+show_saa_belts.pack(side=Tk.BOTTOM)
 
 show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite (f)", variable=show_favorite_var, command=reloadList, font=customfont)
 show_favorite_only.pack(side=Tk.BOTTOM)

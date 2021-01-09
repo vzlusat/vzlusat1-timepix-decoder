@@ -15,7 +15,7 @@ def parseComments():
     i = 0
     idx = 0
 
-    # for all lines in the file 
+    # for all lines in the file
     for line in infile:
 
         # parse the idx
@@ -162,6 +162,28 @@ def isXrb(idx):
     else:
         return False
 
+def isFullresDos(idx):
+
+    global comments
+
+    comment = getComment(idx)
+
+    if comment.find("#fullresdos") > -1:
+        return True
+    else:
+        return False
+
+def isSaaBelts(idx):
+
+    global comments
+
+    comment = getComment(idx)
+
+    if comment.find("#anomaly") > -1 or comment.find("#combined") > -1 or comment.find("#poles") > -1:
+        return True
+    else:
+        return False
+
 def isNolearn(idx):
 
     global comments
@@ -193,7 +215,7 @@ def hasExposure(idx):
     if comment.find("#exposure") > -1:
         return True
     else:
-        return False 
+        return False
 
 def getExposure(idx):
 
