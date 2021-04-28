@@ -19,7 +19,12 @@ installAndImport('Pmw')
 
 matplotlib.use('TkAgg')
 
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+try:
+    from matplotlib.backends.backend_tkagg import (NavigationToolbar2TkAgg, FigureCanvasTkAgg)
+except ImportError:
+    from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk as NavigationToolbar2TkAgg
+    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg as FigureCanvasTkAgg
+
 import matplotlib.patches as patches # for plotting rectangles in the custom histogram
 from matplotlib.figure import Figure
 

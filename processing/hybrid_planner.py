@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "04.12.2020 10:10:00"
-to_time = "05.12.2020 10:10:00"
+from_time = "27.04.2021 20:00:00"
+to_time = "28.04.2021 20:00:00"
 
 hkc_buffer_time = 300
 
@@ -206,11 +206,10 @@ while i <= t_end:
 # postprocess the update list
 # remove close pairs
 print("Pruning update list")
-from itertools import izip
 
 def grouped(iterable, n):
     "s -> (s0,s1,s2,...sn-1), (sn,sn+1,sn+2,...s2n-1), (s2n,s2n+1,s2n+2,...s3n-1), ..."
-    return izip(*[iter(iterable)]*n)
+    return zip(*[iter(iterable)]*n)
 
 new_updates_list = []
 
