@@ -10,26 +10,15 @@ Follow these instructions:
 
 ### Linux
 
-Install python and matplotlib by running:
+Install python3-virtual-environment
 
 ```bash
-sudo apt-get install python2.7-dev python-matplotlib python3-pip python3-tk python-pmw python-pip python-mpltoolkits.basemap python3-mpltoolkits.basemap python-scipy python-ephem
+sudo apt-get -y install python3-venv
 ```
 
-### Windows
-
-1. Install the latest Python3 from the website: https://www.python.org/downloads/
-
-If you want to have a TwoLineElements+Globus, follow the next three bullet points, otherwise skip to the point 2 and disable the globus feature in _settings.txt_. Following bullet points may take very long time on Windows...
-
-- Install Visual C++ Build tools 2015 from: http://landinghub.visualstudio.com/visual-cpp-build-tools
-- Install Anaconda: https://repo.continuum.io/archive/Anaconda3-4.4.0-Windows-x86_64.exe
-- Run Anaconda Prompt (Start menu->Anaconda Prompt) and input following command to the command line: ```conda install -c conda-forge basemap```
-
-2. Run "run_as_admin.bat" script as Administrator (right click on it and click on "Run as administrator").
-Doing this is neccessary just for the first time (it installs required library).
-After that, double-clicking decoder.py should be sufficient.
-
+```bash
+sudo apt-get install python-matplotlib python3-pip python3-tk python-pmw python-pip python-mpltoolkits.basemap python3-mpltoolkits.basemap python-scipy python-ephem
+```
 ## Running the decoder
 
 ## Linux
@@ -39,12 +28,6 @@ Open a Terminal window and run followoing command in the directory of the decode
 ```bash
 python decoder.py
 ```
-
-It might be neccessary to re-run the program multiple times, before it correctly loads its libraries for the first time.
-
-## Windows
-
-Doubleclick the **decoder.py** file.
 
 It might be neccessary to re-run the program multiple times, before it correctly loads its libraries for the first time.
 

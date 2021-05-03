@@ -27,7 +27,7 @@ obc_time_offset_ = 946684800
 def parseInputFile(file_path, root):
 
     try:
-        infile = open(file_path, "r")
+        infile = open(file_path, "r", encoding="ascii")
     except:
         return 0
 
