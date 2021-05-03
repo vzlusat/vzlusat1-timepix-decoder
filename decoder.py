@@ -848,6 +848,7 @@ frame_figure.pack(side=Tk.RIGHT, fill=Tk.BOTH, expand=0, padx=5, pady=5)
 
 # create the matplotlib's figure canvas
 figure_canvas = FigureCanvasTkAgg(my_figure, master=frame_figure)
+figure_canvas.setStyleSheet("background-color: transparent;")
 figure_canvas.draw()
 figure_canvas.get_tk_widget().pack(side=Tk.TOP)
 figure_canvas._tkcanvas.pack(side=Tk.TOP)
