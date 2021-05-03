@@ -1,16 +1,15 @@
 #!/bin/bash
 
+# get the path to this script
+MY_PATH=`dirname "$0"`
+MY_PATH=`( cd "$MY_PATH" && pwd )`
+
 sudo apt-get -y install python3-venv
 sudo apt-get -y install python3-pip
 
 python3 -m venv python_env
 
-source ./python-env/bin/activate
+source ./python_env/bin/activate
 
 pip3 install wheel
-pip3 install matplotlib
-pip3 install tk
-pip3 install pmw
-pip3 install cartopy
-pip3 install scipy
-pip3 install ephem
+pip3 install -r requirements.txt

@@ -44,7 +44,8 @@ settings.initSettings()
 
 # for plotting the globe
 if settings.use_globus:
-  from mpl_toolkits.basemap import Basemap
+    import cartopy.crs as ccrs
+    import cartopy.feature as cfeature
 
 if settings.calculate_tle:
   installAndImport('ephem')
@@ -848,20 +849,9 @@ frame_figure.pack(side=Tk.RIGHT, fill=Tk.BOTH, expand=0, padx=5, pady=5)
 
 # create the matplotlib's figure canvas
 figure_canvas = FigureCanvasTkAgg(my_figure, master=frame_figure)
-figure_canvas.setStyleSheet("background-color: transparent;")
 figure_canvas.draw()
 figure_canvas.get_tk_widget().pack(side=Tk.TOP)
 figure_canvas._tkcanvas.pack(side=Tk.TOP)
-
-# globus = Basemap(projection='ortho', lat_0=60.0, lon_0=30.0, resolution='l')
-# map.drawcoastlines(linewidth=0.25)
-# map.drawcountries(linewidth=0.25)
-# map.fillcontinents(color='coral',lake_color='aqua')
-# # draw the edge of the map projection region (the projection limb)
-# map.drawmapboundary(fill_color='aqua')
-# # draw lat/lon grid lines every 30 degrees.
-# map.drawmeridians(numpy.arange(0,360,30))
-# map.drawparallels(numpy.arange(-90,90,30))
 
 if settings.use_globus:
 
@@ -878,7 +868,7 @@ if settings.use_globus:
 
 def clearMap():
     my_figure2.clf()
-    subplot2 = my_figure2.add_subplot(111)
+    subplot2 = my_figure2.add_subplot(111, facecolor='none')
     subplot2.axes.get_xaxis().set_visible(False)
     subplot2.axes.get_yaxis().set_visible(False)
     subplot2.patch.set_visible(False)
@@ -889,28 +879,32 @@ def clearMap():
 def redrawMap(lat, lon, timestamp):
 
     my_figure2.clf()
-    subplot2 = my_figure2.add_subplot(111)
+    subplot2 = my_figure2.add_subplot(1, 1, 1, projection=ccrs.Orthographic(lat, lon), facecolor='none')
 
-    globus = Basemap(
-        projection='ortho',
-        lat_0=lat,
-        lon_0=lon,
-        ax=subplot2
-    )
+    subplot2.set_global()
 
-    x, y = globus(lon, lat)
-    globus.scatter(x, y, 80, marker='o', color='k', zorder=10)
+    # x, y = globus(lon, lat)
+    subplot2.scatter(lat, lon, 80, marker='o', color='k', zorder=10)
 
-    # draw coastlines, country boundaries, fill continents.
-    globus.drawcoastlines(linewidth=0.25)
-    globus.drawcountries(linewidth=0.25)
-    globus.fillcontinents(color='coral', lake_color='aqua')
-    # draw the edge of the globus projection region (the projection limb)
-    globus.drawmapboundary(fill_color='aqua')
-    # draw lat/lon grid lines every 30 degrees.
-    globus.drawmeridians(numpy.arange(0,360,30))
-    globus.drawparallels(numpy.arange(-90,90,30))
-    globus.nightshade(timestamp)
+    land = cfeature.NaturalEarthFeature('physical', 'land', '50m',
+                                        edgecolor='face',
+                                        facecolor='coral')
+
+    subplot2.add_feature(land)
+    subplot2.add_feature(cfeature.OCEAN)
+    subplot2.add_feature(cfeature.COASTLINE)
+    # subplot2.add_feature(ocean)
+
+    # # draw coastlines, country boundaries, fill continents.
+    # globus.drawcoastlines(linewidth=0.25)
+    # globus.drawcountries(linewidth=0.25)
+    # globus.fillcontinents(color='coral', lake_color='aqua')
+    # # draw the edge of the globus projection region (the projection limb)
+    # globus.drawmapboundary(fill_color='aqua')
+    # # draw lat/lon grid lines every 30 degrees.
+    # globus.drawmeridians(numpy.arange(0,360,30))
+    # globus.drawparallels(numpy.arange(-90,90,30))
+    # globus.nightshade(timestamp)
 
     globus_canvas.draw()
 
