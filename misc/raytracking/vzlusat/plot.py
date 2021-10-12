@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -75,7 +75,7 @@ def plot_everything(*args):
 
     ax = plt.subplot2grid((3, 7), (0, 2), colspan=6, rowspan=2)
 
-    from scipy.misc import imread
+    from matplotlib.pyplot import imread
     import matplotlib.cbook as cbook
     # datafile = cbook.get_sample_data('./satellite.jpg')
     img = imread('satellite.jpg')
