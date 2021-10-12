@@ -13,7 +13,7 @@ Follow these instructions:
 Install python and matplotlib by running:
 
 ```bash
-sudo apt-get install python2.7-dev python-matplotlib python3-pip python3-tk python-pmw python-pip python-mpltoolkits.basemap python3-mpltoolkits.basemap python-scipy python-ephem
+sudo apt-get install python-matplotlib python3-pip python3-tk python3-pmw python3-pip python3-mpltoolkits.basemap python3-mpltoolkits.basemap python3-scipy python-ephem
 ```
 
 ### Windows
