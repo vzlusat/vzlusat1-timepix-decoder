@@ -547,7 +547,27 @@ It might be neccessary to re-run the program multiple times, before it correctly
     * Unix time range: 1605867621 to 1605994082
     * Human readible time range: 2020-11-20 10:20:21 to 2020-11-21 21:28:02
   * XRB co-measurement 31
-    * Image range: 46660 to 46742
+    * Image range: 46660 to 46938
     * Unix time range:
     * Human readible time range:
     * Exposure 10 s, Fullres
+  * Failed dosimetry
+    * Image range: 46939 to 46941
+    * Unix time range: 
+    * Human readible time range: 
+  * Fullres dosimetry 16, 4 ms short, 2 s long
+    * Image range: 46944 to 47926
+    * Unix time range: 
+    * Human readible time range: 
+  * DONNO FAILED
+    * Image range: 47927 to 47928
+    * Unix time range: 
+    * Human readible time range: 
+  * Fullres dosimetry 17, 4 ms short, 2 s long
+    * Image range: 47929 to 48659
+    * Unix time range: 
+    * Human readible time range: 
+  * Fullres dosimetry 18, 4 ms short, 2 s long
+    * Image range: 48660 to 49417
+    * Unix time range: 
+    * Human readible time range: 
