@@ -12,7 +12,7 @@ rm _cubesat.txt
 
 for filename in `ls *.txt`;
 do
-  tle=`cat $filename | grep VZLUSAT -A 2 | tail -2`
+  tle=`cat $filename | grep "VZLUSAT-1" -A 2 | tail -2`
 
   if [ ! -z "$tle" ]; then
 
