@@ -10,8 +10,8 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "28.05.2021 20:00:00"
-to_time = "29.05.2021 19:50:00"
+from_time = "15.03.2022 09:00:00"
+to_time = "16.03.2022 09:00:00"
 
 hkc_buffer_time = 300
 
