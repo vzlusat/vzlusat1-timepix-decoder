@@ -6,10 +6,11 @@ MY_PATH=`( cd "$MY_PATH" && pwd )`
 
 sudo apt-get -y install python3-venv
 sudo apt-get -y install python3-pip
+sudo apt-get -y install python3-dev
 
 python3 -m venv python_env
 
 source ./python_env/bin/activate
 
 pip3 install wheel
-pip3 install -r requirements.txt
+pip3 install --upgrade -r requirements.txt

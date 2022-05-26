@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!./python_env/bin/python3
 
 # #{ def installAndImport(package):
 def installAndImport(package):
@@ -737,9 +737,9 @@ frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
 # create the figure
 if not settings.gpd_enabled:
-    my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=90)
+    my_figure = Figure(facecolor='#d9d9d9', figsize=(8.2, 6.8), dpi=90)
 else:
-    my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=120)
+    my_figure = Figure(facecolor='#d9d9d9', figsize=(8.2, 6.8), dpi=120)
 my_figure.clf()
 
 statusLine.init(root, customfont)
@@ -859,7 +859,7 @@ if settings.use_globus:
   globus_label = Tk.Label(frame_mid_bottom, anchor=Tk.S, justify=Tk.CENTER,  textvariable=globus_label_var, font=customfont)
   globus_label.pack(side=Tk.BOTTOM)
 
-  my_figure2 = Figure(facecolor='none', figsize=(2.0, 2.0), dpi=90)
+  my_figure2 = Figure(facecolor='#d9d9d9', figsize=(2.0, 2.0), dpi=90)
 
   # create the canvas for the globus
   globus_canvas = FigureCanvasTkAgg(my_figure2, master=frame_mid_bottom)
@@ -868,7 +868,7 @@ if settings.use_globus:
 
 def clearMap():
     my_figure2.clf()
-    subplot2 = my_figure2.add_subplot(111, facecolor='none')
+    subplot2 = my_figure2.add_subplot(111, facecolor='#d9d9d9')
     subplot2.axes.get_xaxis().set_visible(False)
     subplot2.axes.get_yaxis().set_visible(False)
     subplot2.patch.set_visible(False)
@@ -879,7 +879,7 @@ def clearMap():
 def redrawMap(lat, lon, timestamp):
 
     my_figure2.clf()
-    subplot2 = my_figure2.add_subplot(1, 1, 1, projection=ccrs.Orthographic(lat, lon), facecolor='none')
+    subplot2 = my_figure2.add_subplot(1, 1, 1, projection=ccrs.Orthographic(lat, lon), facecolor='#d9d9d9')
 
     subplot2.set_global()
 
