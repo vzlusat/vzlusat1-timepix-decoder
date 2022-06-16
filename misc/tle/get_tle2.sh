@@ -4,7 +4,7 @@ TLE_DIR="147.228.97.106/tle"
 MY_PATH=`dirname "$0"`
 MY_PATH=`( cd "$MY_PATH" && pwd )`
 
-# wget -rN --no-parent --reject "index.html*" --accept "*2022*" http://147.228.97.106/tle/
+wget -rN --no-parent --reject "index.html*" --accept "*2022*" http://147.228.97.106/tle/
 
 cd $MY_PATH/$TLE_DIR
 rm _amateur.txt
@@ -12,7 +12,7 @@ rm _cubesat.txt
 
 for filename in `ls *.txt`;
 do
-  tle=`cat $filename | grep "VZLUSAT-1" -A 2 | tail -2`
+  tle=`cat $filename | grep "VZLUSAT-2" -A 2 | tail -2`
 
   if [ ! -z "$tle" ]; then
 
@@ -34,4 +34,4 @@ do
 
 done
 
-mv tle.txt $MY_PATH/../../
+mv tle.txt $MY_PATH/../../tle2.txt
