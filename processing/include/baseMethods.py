@@ -23,7 +23,12 @@ obc_time_offset_ = 946684800
 kevs = [3.6041, 5.32915, 8.40915, 13.51345, 20.67375, 29.2457, 38.5756, 48.2956, 58.22885, 68.28795, 78.4265, 88.61815, 98.84695, 109.1026, 119.37825, 129.6693]
 
 from src.tle import *
-parseTLE()
+
+def initializeTLE(file_name="tle.txt"):
+
+    tle1, tle2, tle_time = parseTLE(file_name)
+
+    return tle1, tle2, tle_time
 
 # for showing commentary of the images
 import src.comments as comments
@@ -64,7 +69,7 @@ def fake_log_fmt(x, pos):
 
 # print("fmt: {}".format(fmt(400000, 2)))
 
-def extractPositions(images):
+def extractPositions(images, tle1, tle2, tle_time):
 
     # prepare numpy arrays for the lats and longs
     lats = numpy.zeros(len(images))
@@ -73,7 +78,7 @@ def extractPositions(images):
     # decode lat and longs from tle
     for i in range(len(images)):
 
-        latitude, longitude, tle_date = getLatLong(images[i].time)
+        latitude, longitude, tle_date = getLatLong(images[i].time, tle1, tle2, tle_time)
 
         if latitude == 0 and longitude == 0 and tle_date == 0:
             print("could not extract position from {}_{}".format(images[i].id, images[i].type))

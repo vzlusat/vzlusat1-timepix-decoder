@@ -10,8 +10,10 @@ import calendar
 
 from include.baseMethods import *
 
-from_time = "15.03.2022 09:00:00"
-to_time = "16.03.2022 09:00:00"
+tle1, tle2, tle_time = initializeTLE("tle.txt")
+
+from_time = "16.06.2022 20:00:00"
+to_time = "18.06.2022 20:00:00"
 
 hkc_buffer_time = 300
 
@@ -69,7 +71,7 @@ images = loadImageRangeMulti(from_to, 1, 0, 1, outliers)
 doses = calculateTotalPixelCount(images)
 doses_log = np.where(doses > 0, np.log10(doses), doses)
 
-lats_orig, lons_orig = extractPositions(images)
+lats_orig, lons_orig = extractPositions(images, tle1, tle2, tle_time)
 
 doses_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses, lats_orig, lons_orig)
 doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig, lons_orig)
@@ -170,7 +172,7 @@ state = True
 last_change = 0
 while i <= t_end:
 
-    latitude, longitude, tle_date = getLatLong(int(i))
+    latitude, longitude, tle_date = getLatLong(int(i), tle1, tle2, tle_time)
 
     print("latitude: {} deg, longitude: {} deg, time: {} s".format(latitude, longitude, time))
 
@@ -325,7 +327,7 @@ while i <= t_end:
         mode = updates[update_idx].action
         update_idx = update_idx + 1
 
-    latitude, longitude, tle_date = getLatLong(int(i))
+    latitude, longitude, tle_date = getLatLong(int(i), tle1, tle2, tle_time)
 
     pxl_count = doses_rbf_lin[int(math.floor(mesh_size*((longitude+180)/360))), int(math.floor(mesh_size*((latitude+90)/180)))]
 

@@ -10,8 +10,11 @@ import calendar
 
 from include.baseMethods import *
 
+tle11, tle12, tle_time1 = initializeTLE("tle.txt")
+tle21, tle22, tle_time2 = initializeTLE("tle2.txt")
+
 from_time = "16.06.2022 20:00:00"
-to_time = "17.06.2022 20:00:00"
+to_time = "18.06.2022 20:00:00"
 
 hkc_buffer_time = 300
 
@@ -21,7 +24,7 @@ approx_north_pole = 20
 approx_south_pole = 30
 latitude_limit = 8
 
-from_to = numpy.array([
+from_to = np.array([
 # [36352, 36671], # 1st full res
 # [36672, 37034], # 2nd full res
 # [37103, 37862], # 3rd full res
@@ -50,9 +53,11 @@ sgap_size = 25.0
 pcolor_min = 0
 pcolor_max = 6
 
-mesh_size = 100
+mesh_size = 32
 
-step_size = 10
+step_size = 60
+
+measurement_period = 180
 
 max_exposure = 2.0
 min_exposure = 0.004
@@ -61,15 +66,15 @@ epsilon=10.0
 x_label = 'Pixel count'
 x_units = '(counts)'
 
-directory="scripts_hybrid"
+directory="scripts_vzlusat2"
 
 # prepare data
 images = loadImageRangeMulti(from_to, 1, 0, 1, outliers)
 
 doses = calculateTotalPixelCount(images)
-doses_log = np.where(doses > 0, np.log10(doses), doses)
+doses_log = np.where(doses > 1e-5, np.log10(doses), doses)
 
-lats_orig, lons_orig = extractPositions(images)
+lats_orig, lons_orig = extractPositions(images, tle11, tle12, tle_time1)
 
 doses_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses, lats_orig, lons_orig)
 doses_log_wrapped, lats_wrapped, lons_wrapped = wrapAround(doses_log, lats_orig, lons_orig)
@@ -99,7 +104,7 @@ doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 t_start = int(calendar.timegm(time.strptime(from_time, "%d.%m.%Y %H:%M:%S")))
 t_end = int(calendar.timegm(time.strptime(to_time, "%d.%m.%Y %H:%M:%S")))
 
-file_name = directory+"/{}_hybrid.pln".format(from_time).replace(' ', '_').replace(':', '_')
+file_name = directory+"/{}.pln".format(from_time).replace(' ', '_').replace(':', '_')
 
 from scipy import spatial
 
@@ -109,6 +114,15 @@ class ExposureUpdate:
 
         self.time = time
         self.action = action
+        self.latitude = latitude
+        self.longitude = longitude
+        self.exposure = exposure
+
+class MeasureUpdate:
+
+    def __init__(self, time, latitude, longitude, exposure):
+
+        self.time = time
         self.latitude = latitude
         self.longitude = longitude
         self.exposure = exposure
@@ -167,10 +181,10 @@ def in_pole(latitude):
 print("Calculating orbit")
 i = t_start
 state = True
-last_change = 0
+last_image_time = 0
 while i <= t_end:
 
-    latitude, longitude, tle_date = getLatLong(int(i))
+    latitude, longitude, tle_date = getLatLong(int(i), tle21, tle22, tle_time2)
 
     print("latitude: {} deg, longitude: {} deg, time: {} s".format(latitude, longitude, time))
 
@@ -193,12 +207,16 @@ while i <= t_end:
         if (state == False):
             state = True
             updates.append(ExposureUpdate(i, state, latitude, longitude, int(round(min_exposure*1000.0))))
-            last_change = i
     else:
         if (state == True) and not in_pole(latitude):
             state = False
             updates.append(ExposureUpdate(i, state, latitude, longitude, int(round(max_exposure*1000.0))))
-            last_change = i
+
+    if i > last_image_time + measurement_period:
+
+        last_image_time = i
+
+        updates.append(MeasureUpdate(i, latitude, longitude, state))
 
     states.append(state)
 
@@ -212,19 +230,19 @@ def grouped(iterable, n):
     "s -> (s0,s1,s2,...sn-1), (sn,sn+1,sn+2,...s2n-1), (s2n,s2n+1,s2n+2,...s3n-1), ..."
     return zip(*[iter(iterable)]*n)
 
-new_updates_list = []
+# new_updates_list = []
 
-for idx,x in enumerate(updates):
+# for idx,x in enumerate(updates):
 
-    # the last step
-    if idx == len(updates)-1:
-        if abs(updates[idx].time - updates[idx-1].time) >= 300:
-            new_updates_list.append(updates[idx])
-    else:
-        if abs(updates[idx].time - updates[idx+1].time) >= 300:
-            new_updates_list.append(updates[idx])
+#     # the last step
+#     if idx == len(updates)-1:
+#         if abs(updates[idx].time - updates[idx-1].time) >= 300:
+#             new_updates_list.append(updates[idx])
+#     else:
+#         if abs(updates[idx].time - updates[idx+1].time) >= 300:
+#             new_updates_list.append(updates[idx])
 
-updates = new_updates_list
+# updates = new_updates_list
 
 # duplicate setting commands
 
@@ -233,7 +251,6 @@ def get_time(t):
 
 print("Exporting planner script")
 hkc_start_time = 0
-hkc_period = 180
 with open(file_name, "w") as file:
 
     t = t_start
@@ -243,87 +260,19 @@ with open(file_name, "w") as file:
     # parameter setting during the orbit
     for idx,update in enumerate(updates):
 
-        t = update.time
+        if isinstance(update, ExposureUpdate):
 
-        if abs(t - prev_update_time) < 300:
-            print("Close points detected!!! {} {}".format(prev_update_time, t))
+          t = update.time
+          
+          if update.action:
+              file.write(get_time(t)+" exposure {}\r\n".format(update.exposure))
+          else:
+              file.write(get_time(t)+" exposure {}\r\n".format(update.exposure))
 
-        if update.action:
-            file.write(get_time(t-90)+"exposure {}\r\n".format(update.exposure))
-            file.write(get_time(t)+"exposure {}\r\n".format(update.exposure))
-        else:
-            file.write(get_time(t-90)+"exposure {}\r\n".format(update.exposure))
-            file.write(get_time(t)+"exposure {}\r\n".format(update.exposure))
+        if isinstance(update, MeasureUpdate):
+              file.write(get_time(t)+" measure\r\n")
 
         prev_update_time = t
-
-# simulate the orbit
-class ImageAction:
-
-    def __init__(self, time, exposure, mode, pixels, latitude, longitude):
-
-        self.time = time
-        self.exposure = exposure
-        self.mode = mode
-        self.pixels = pixels
-        self.latitude = latitude
-        self.longitude = longitude
-
-image_actions = []
-
-print("Prediction image actions")
-state = True
-i = hkc_start_time
-update_idx = 0
-exposure_time = 1
-mode = 1
-while i <= t_end:
-
-    if update_idx < len(updates) and updates[update_idx].time < i:
-        exposure_time = updates[update_idx].exposure
-        mode = updates[update_idx].action
-        update_idx = update_idx + 1
-
-    latitude, longitude, tle_date = getLatLong(int(i))
-
-    pxl_count = doses_rbf_lin[int(math.floor(mesh_size*((longitude+180)/360))), int(math.floor(mesh_size*((latitude+90)/180)))]
-
-    if pxl_count < 0:
-        pxl_count = 0
-
-    image_actions.append(ImageAction(i, exposure_time, mode, pxl_count * (float(exposure_time) / 1000.0), latitude, longitude))
-
-    i = i + hkc_period
-
-print("Calculating statistics")
-total_chunks = 0
-total_memory = 0
-total_pixel_count = 0
-
-for idx,image in enumerate(image_actions):
-
-    total_pixel_count += image.pixels
-    total_chunks += (1+(int(round((image.pixels)/20.0))))
-
-total_memory = (total_chunks*64)/1024.0
-
-print("total_pixel_count: {}".format(total_pixel_count))
-print("total_chunks: {}".format(total_chunks))
-print("total_memory: {} kB".format(total_memory))
-
-file_name = directory+"/{}_hybrid.meta.txt".format(from_time).replace(' ', '_').replace(':', '_')
-with open(file_name, "w") as file:
-
-    file.write("Planned within times:\r\n")
-    file.write("  from: "+from_time+"\r\n")
-    file.write("  to: "+to_time+"\r\n")
-    file.write("Number of images: {}\r\n".format(len(image_actions)))
-    file.write("Estimated number of chunks: {}\r\n".format(int(total_chunks)))
-    file.write("Estimated memory consumption: {} kB\r\n".format(total_memory))
-    file.write("Based on data range: {}\r\n".format(from_to))
-    file.write("Long exposure time: {} s\r\n".format(max_exposure))
-    file.write("Short exposure time: {} s\r\n".format(min_exposure))
-    file.write("HKC period: {} s\r\n".format(hkc_period))
 
 print("Plotting")
 def plot_everything(*args):
@@ -348,37 +297,40 @@ def plot_everything(*args):
         color = 'grey'
         m.scatter(x, y, 1, marker='o', color=color, zorder=5)
 
-    # mark the measurements
-    for idx,image in enumerate(image_actions):
-        x, y = m(image.longitude, image.latitude)
-        if image.exposure < 10:
-            color = 'red'
-        else:
-            color = 'blue'
-        m.scatter(x, y, 40, marker='x', color=color, zorder=5)
-
     # marks the transitions
     for idx,update in enumerate(updates):
-        x, y = m(update.longitude, update.latitude)
-        if update.exposure < 10:
-            color = 'red'
-        else:
-            color = 'blue'
-        m.scatter(x, y, 100, marker='o', color=color, zorder=5)
+
+        if isinstance(update, ExposureUpdate):
+
+            x, y = m(update.longitude, update.latitude)
+            if update.exposure < 10:
+                color = 'red'
+            else:
+                color = 'blue'
+            m.scatter(x, y, 100, marker='o', color=color, zorder=5)
+
+        if isinstance(update, MeasureUpdate):
+
+            x, y = m(update.longitude, update.latitude)
+            if update.exposure:
+                color = 'red'
+            else:
+                color = 'blue'
+            m.scatter(x, y, 100, marker='o', color=color, zorder=5)
 
     # mark the start
-    x, y = m(image_actions[0].longitude, image_actions[0].latitude)
-    m.scatter(x, y, 100, marker='o', color='green', zorder=5)
+    # x, y = m(image_actions[0].longitude, image_actions[0].latitude)
+    # m.scatter(x, y, 100, marker='o', color='green', zorder=5)
 
     # mark the end
-    x, y = m(image_actions[-1].longitude, image_actions[-1].latitude)
-    m.scatter(x, y, 100, marker='o', color='black', zorder=5)
+    # x, y = m(image_actions[-1].longitude, image_actions[-1].latitude)
+    # m.scatter(x, y, 100, marker='o', color='black', zorder=5)
 
-    plt.title('Hybrid scanning, starting on {}'.format(from_time))
+    plt.title('VZLUSAT2 scanning, starting on {}'.format(from_time))
 
     plt.subplots_adjust(left=0.025, bottom=0.05, right=0.975, top=0.95, wspace=0.1, hspace=0.1)
 
-    plt.savefig(directory+"/{}_hybrid.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=120, bbox_inches='tight')
+    plt.savefig(directory+"/{}.png".format(from_time).replace(' ', '_').replace(':', '_'), dpi=120, bbox_inches='tight')
 
     # #} end of globe south
 

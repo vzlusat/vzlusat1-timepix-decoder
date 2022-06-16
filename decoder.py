@@ -1,4 +1,4 @@
-#!./python_env/bin/python3
+#!/usr/bin/python
 
 # #{ def installAndImport(package):
 def installAndImport(package):
@@ -19,12 +19,7 @@ installAndImport('Pmw')
 
 matplotlib.use('TkAgg')
 
-try:
-    from matplotlib.backends.backend_tkagg import (NavigationToolbar2TkAgg, FigureCanvasTkAgg)
-except ImportError:
-    from matplotlib.backends.backend_tkagg import NavigationToolbar2Tk as NavigationToolbar2TkAgg
-    from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg as FigureCanvasTkAgg
-
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 import matplotlib.patches as patches # for plotting rectangles in the custom histogram
 from matplotlib.figure import Figure
 
@@ -44,8 +39,7 @@ settings.initSettings()
 
 # for plotting the globe
 if settings.use_globus:
-    import cartopy.crs as ccrs
-    import cartopy.feature as cfeature
+  from mpl_toolkits.basemap import Basemap
 
 if settings.calculate_tle:
   installAndImport('ephem')
@@ -737,9 +731,9 @@ frame_main.pack(side=Tk.TOP, fill=Tk.BOTH, expand=1)
 
 # create the figure
 if not settings.gpd_enabled:
-    my_figure = Figure(facecolor='#d9d9d9', figsize=(8.2, 6.8), dpi=90)
+    my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=90)
 else:
-    my_figure = Figure(facecolor='#d9d9d9', figsize=(8.2, 6.8), dpi=120)
+    my_figure = Figure(facecolor='none', figsize=(8.2, 6.8), dpi=120)
 my_figure.clf()
 
 statusLine.init(root, customfont)
@@ -853,13 +847,23 @@ figure_canvas.draw()
 figure_canvas.get_tk_widget().pack(side=Tk.TOP)
 figure_canvas._tkcanvas.pack(side=Tk.TOP)
 
+# globus = Basemap(projection='ortho', lat_0=60.0, lon_0=30.0, resolution='l')
+# map.drawcoastlines(linewidth=0.25)
+# map.drawcountries(linewidth=0.25)
+# map.fillcontinents(color='coral',lake_color='aqua')
+# # draw the edge of the map projection region (the projection limb)
+# map.drawmapboundary(fill_color='aqua')
+# # draw lat/lon grid lines every 30 degrees.
+# map.drawmeridians(numpy.arange(0,360,30))
+# map.drawparallels(numpy.arange(-90,90,30))
+
 if settings.use_globus:
 
   globus_label_var = Tk.StringVar()
   globus_label = Tk.Label(frame_mid_bottom, anchor=Tk.S, justify=Tk.CENTER,  textvariable=globus_label_var, font=customfont)
   globus_label.pack(side=Tk.BOTTOM)
 
-  my_figure2 = Figure(facecolor='#d9d9d9', figsize=(2.0, 2.0), dpi=90)
+  my_figure2 = Figure(facecolor='none', figsize=(2.0, 2.0), dpi=90)
 
   # create the canvas for the globus
   globus_canvas = FigureCanvasTkAgg(my_figure2, master=frame_mid_bottom)
@@ -868,7 +872,7 @@ if settings.use_globus:
 
 def clearMap():
     my_figure2.clf()
-    subplot2 = my_figure2.add_subplot(111, facecolor='#d9d9d9')
+    subplot2 = my_figure2.add_subplot(111)
     subplot2.axes.get_xaxis().set_visible(False)
     subplot2.axes.get_yaxis().set_visible(False)
     subplot2.patch.set_visible(False)
@@ -879,32 +883,28 @@ def clearMap():
 def redrawMap(lat, lon, timestamp):
 
     my_figure2.clf()
-    subplot2 = my_figure2.add_subplot(1, 1, 1, projection=ccrs.Orthographic(lat, lon), facecolor='#d9d9d9')
+    subplot2 = my_figure2.add_subplot(111)
 
-    subplot2.set_global()
+    globus = Basemap(
+        projection='ortho',
+        lat_0=lat,
+        lon_0=lon,
+        ax=subplot2
+    )
 
-    # x, y = globus(lon, lat)
-    subplot2.scatter(lat, lon, 80, marker='o', color='k', zorder=10)
+    x, y = globus(lon, lat)
+    globus.scatter(x, y, 80, marker='o', color='k', zorder=10)
 
-    land = cfeature.NaturalEarthFeature('physical', 'land', '50m',
-                                        edgecolor='face',
-                                        facecolor='coral')
-
-    subplot2.add_feature(land)
-    subplot2.add_feature(cfeature.OCEAN)
-    subplot2.add_feature(cfeature.COASTLINE)
-    # subplot2.add_feature(ocean)
-
-    # # draw coastlines, country boundaries, fill continents.
-    # globus.drawcoastlines(linewidth=0.25)
-    # globus.drawcountries(linewidth=0.25)
-    # globus.fillcontinents(color='coral', lake_color='aqua')
-    # # draw the edge of the globus projection region (the projection limb)
-    # globus.drawmapboundary(fill_color='aqua')
-    # # draw lat/lon grid lines every 30 degrees.
-    # globus.drawmeridians(numpy.arange(0,360,30))
-    # globus.drawparallels(numpy.arange(-90,90,30))
-    # globus.nightshade(timestamp)
+    # draw coastlines, country boundaries, fill continents.
+    globus.drawcoastlines(linewidth=0.25)
+    globus.drawcountries(linewidth=0.25)
+    globus.fillcontinents(color='coral', lake_color='aqua')
+    # draw the edge of the globus projection region (the projection limb)
+    globus.drawmapboundary(fill_color='aqua')
+    # draw lat/lon grid lines every 30 degrees.
+    globus.drawmeridians(numpy.arange(0,360,30))
+    globus.drawparallels(numpy.arange(-90,90,30))
+    globus.nightshade(timestamp)
 
     globus_canvas.draw()
 
@@ -1075,10 +1075,13 @@ def loadNewImages():
     else:
         file_name = tkinter.filedialog.askopenfilename(initialdir = "./orbital_data/")
 
+    print("file_name: {}".format(file_name))
+
     if file_name == "":
         return
 
     if not parseInputFile(file_name, root):
+        print("could not parse the input file")
         return
     else:
         print("Successfully parsed the file \"{}\"".format(file_name))

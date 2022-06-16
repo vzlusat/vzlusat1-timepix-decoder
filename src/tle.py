@@ -2,14 +2,15 @@ import datetime
 import numpy
 import ephem
 
-tle_time = []
-tle1 = []
-tle2 = []
+def parseTLE(file_name = "tle.txt"):
 
-def parseTLE():
+    tle_time = []
+    tle1 = []
+    tle2 = []
 
     try:
-        infile = open("tle.txt", "r")
+        print("opening tle file: {}".format(file_name))
+        infile = open(file_name, "r")
     except:
         return 0
 
@@ -35,13 +36,15 @@ def parseTLE():
         if i == 3:
             i = 0
 
-def findClosestTLE(value):
+    return tle1, tle2, tle_time
+
+def findClosestTLE(value, tle1, tle2, tle_time):
 
     return min(range(len(tle_time)), key=lambda i: numpy.abs(tle_time[i]-value))
 
-def getLatLong(timestamp):
+def getLatLong(timestamp, tle1, tle2, tle_time):
 
-    closest_tle_idx = findClosestTLE(timestamp)
+    closest_tle_idx = findClosestTLE(timestamp, tle1, tle2, tle_time)
 
     # put the closest tle to the toolboc
     tle = ephem.readtle("0 VZLUSAT", tle1[closest_tle_idx], tle2[closest_tle_idx])
