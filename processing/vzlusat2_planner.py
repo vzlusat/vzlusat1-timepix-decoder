@@ -13,8 +13,8 @@ from include.baseMethods import *
 tle11, tle12, tle_time1 = initializeTLE("tle.txt")
 tle21, tle22, tle_time2 = initializeTLE("tle2.txt")
 
-from_time = "16.06.2022 20:00:00"
-to_time = "18.06.2022 20:00:00"
+from_time = "19.06.2022 20:00:00"
+to_time = "20.06.2022 06:00:00"
 
 hkc_buffer_time = 300
 
@@ -203,16 +203,20 @@ while i <= t_end:
     # we_are_in = in_pole(latitude) or in_anomaly(latitude, longitude) # position-based
     we_are_in = pxl_count > 1 # data-based
 
+    changed_exposure = False
+
     if we_are_in:
         if (state == False):
             state = True
             updates.append(ExposureUpdate(i, state, latitude, longitude, int(round(min_exposure*1000.0))))
+            changed_exposure = True
     else:
         if (state == True) and not in_pole(latitude):
             state = False
             updates.append(ExposureUpdate(i, state, latitude, longitude, int(round(max_exposure*1000.0))))
+            changed_exposure = True
 
-    if i > last_image_time + measurement_period:
+    if i > last_image_time + measurement_period and not changed_exposure:
 
         last_image_time = i
 
@@ -270,7 +274,10 @@ with open(file_name, "w") as file:
               file.write(get_time(t)+" exposure {}\r\n".format(update.exposure))
 
         if isinstance(update, MeasureUpdate):
-              file.write(get_time(t)+" measure\r\n")
+
+          t = update.time
+
+          file.write(get_time(t)+" measure\r\n")
 
         prev_update_time = t
 
