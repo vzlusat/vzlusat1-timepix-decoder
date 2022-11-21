@@ -56,6 +56,9 @@ from src.exportMethods import exportCsv
 from src.exportMethods import exportImageForPixet
 from src.exportMethods import exportInfoFileLine
 from src.baseMethods import getPngFileName
+from src.tle import *
+
+tle1, tle2, tle_time = parseTLE("tle.txt")
 
 # imports that depend on the python version
 if sys.version_info[0] < 3:
@@ -272,7 +275,7 @@ def showHouseKeeping(housekeeping):
 
     if settings.use_globus:
       if show_globus_var.get():
-          latitude, longitude, tle_date = getLatLong(housekeeping.time)
+          latitude, longitude, tle_date = getLatLong(housekeeping.time, tle1, tle2, tle_time)
           globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
 
           redrawMap(latitude, longitude, human_readable_time)
@@ -409,7 +412,7 @@ def showImage(image, manual):
 
         if settings.use_globus:
           if show_globus_var.get():
-              latitude, longitude, tle_date = getLatLong(image.time)
+              latitude, longitude, tle_date = getLatLong(image.time, tle1, tle2, tle_time)
               globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
 
               redrawMap(latitude, longitude, human_readable_time)
@@ -1258,7 +1261,7 @@ def exportRawForPublic():
             if isinstance(image, Image):
 
                 # atempt to reconstruct the TLE
-                latitude, longitude, tle_date = getLatLong(image.time)
+                latitude, longitude, tle_date = getLatLong(image.time, tle1, tle2, tle_time)
 
                 if image.type == 1 and image.got_data and image.got_metadata and not comments.isNolearn(image.id) and not image.filtering:
 
