@@ -553,21 +553,52 @@ It might be neccessary to re-run the program multiple times, before it correctly
     * Exposure 10 s, Fullres
   * Failed dosimetry
     * Image range: 46939 to 46941
-    * Unix time range: 
-    * Human readible time range: 
+    * Unix time range:
+    * Human readible time range:
   * Fullres dosimetry 16, 4 ms short, 2 s long
     * Image range: 46944 to 47926
-    * Unix time range: 
-    * Human readible time range: 
+    * Unix time range:
+    * Human readible time range:
   * DONNO FAILED
     * Image range: 47927 to 47928
-    * Unix time range: 
-    * Human readible time range: 
+    * Unix time range:
+    * Human readible time range:
   * Fullres dosimetry 17, 4 ms short, 2 s long
     * Image range: 47929 to 48659
-    * Unix time range: 
-    * Human readible time range: 
+    * Unix time range:
+    * Human readible time range:
   * Fullres dosimetry 18, 4 ms short, 2 s long
     * Image range: 48660 to 49417
-    * Unix time range: 
-    * Human readible time range: 
+    * Unix time range:
+    * Human readible time range:
+  * XRB co-measurement 32
+    * Image range: 49418 to 49491
+    * Unix time range:
+    * Human readible time range:
+    * Exposure 10 s, Fullres
+  * Fullres dosimetry 19, 4 ms short, 2 s long
+    * Image range: 49492 to 50208
+    * Unix time range:
+    * Human readible time range:
+  * XRB co-measurement 33
+    * Image range: 50210 to 50254
+    * Unix time range:
+    * Human readible time range:
+    * Exposure 10 s, Fullres
+  * Fullres dosimetry 20, 4 ms short, 2 s long
+    * Image range: 50255 to 51347
+    * Unix time range:
+    * Human readible time range:
+  * XRB co-measurement 34
+    * Image range: 51348 to 51392
+    * Unix time range:
+    * Human readible time range:
+    * Exposure 10 s, Fullres
+  * Fullres dosimetry 21, 4 ms short, 2 s long
+    * Image range: 51393 to 51783
+    * Unix time range:
+    * Human readible time range:
+  * Fullres dosimetry 22, 4 ms short, 2 s long
+    * Image range: 51785 to 51939
+    * Unix time range:
+    * Human readible time range:
