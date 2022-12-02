@@ -1155,11 +1155,11 @@ def exportCsvData():
 
         if file_name[-5] == 'h':
             housekeeping = loadHouseKeeping(file_name)
-            exportCsv(housekeeping)
+            exportCsv(housekeeping, tle1, tle2, tle_time)
             statusLine.set("Exporting HK")
         else:
             image = loadImage(file_name)
-            exportCsv(image)
+            exportCsv(image, tle1, tle2, tle_time)
             statusLine.set("Exporting image {}".format(image.id))
 
     statusLine.set("Images exported")
