@@ -539,66 +539,62 @@ It might be neccessary to re-run the program multiple times, before it correctly
     * Human readible time range: 2020-09-26 09:10:33 to 2020-09-27 09:08:14
   * XRB co-measurement 30
     * Image range: 46194 to 46245
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1604609062 to 1605641080
+    * Human readible time range: 2020-11-05 20:44:22 to 2020-11-17 19:24:40
     * Exposure 10 s, Fullres
   * Fullres dosimetry 15, 4 ms short, 2 s long
     * Image range: 46246 to 46659
-    * Unix time range: 1605867621 to 1605994082
-    * Human readible time range: 2020-11-20 10:20:21 to 2020-11-21 21:28:02
+    * Unix time range: 1605867081 to 1605994082
+    * Human readible time range: 2020-11-20 10:11:21 to 2020-11-21 21:28:02
   * XRB co-measurement 31
     * Image range: 46660 to 46938
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1608373966 to 1616782820
+    * Human readible time range: 2020-12-19 10:32:46 to 2021-03-26 18:20:20
     * Exposure 10 s, Fullres
   * Failed dosimetry
     * Image range: 46939 to 46941
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1619424649 to 1619425008
+    * Human readible time range: 2021-04-26 08:10:49 to 2021-04-26 08:16:48
   * Fullres dosimetry 16, 4 ms short, 2 s long
-    * Image range: 46944 to 47926
-    * Unix time range:
-    * Human readible time range:
-  * DONNO FAILED
-    * Image range: 47927 to 47928
-    * Unix time range:
-    * Human readible time range:
+    * Image range: 46942 to 47926
+    * Unix time range: 1620075845 to 1620290714
+    * Human readible time range: 2021-05-03 21:04:05 to 2021-05-06 08:45:14
   * Fullres dosimetry 17, 4 ms short, 2 s long
     * Image range: 47929 to 48659
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1620892040 to 1621103163
+    * Human readible time range: 2021-05-13 07:47:20 to 2021-05-15 18:26:03
   * Fullres dosimetry 18, 4 ms short, 2 s long
     * Image range: 48660 to 49417
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1622145681 to 1622316888
+    * Human readible time range: 2021-05-27 20:01:21 to 2021-05-29 19:34:48
   * XRB co-measurement 32
     * Image range: 49418 to 49491
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1626946392 to 1633084639
+    * Human readible time range: 2021-07-22 09:33:12 to 2021-10-01 10:37:19
     * Exposure 10 s, Fullres
   * Fullres dosimetry 19, 4 ms short, 2 s long
     * Image range: 49492 to 50208
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1634032977 to 1634203569
+    * Human readible time range: 2021-10-12 10:02:57 to 2021-10-14 09:26:09
   * XRB co-measurement 33
     * Image range: 50210 to 50254
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1635104426 to 1635444508
+    * Human readible time range: 2021-10-24 19:40:26 to 2021-10-28 18:08:28
     * Exposure 10 s, Fullres
   * Fullres dosimetry 20, 4 ms short, 2 s long
     * Image range: 50255 to 51347
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1635588743 to 1635845562
+    * Human readible time range: 2021-10-30 10:12:23 to 2021-11-02 09:32:42
   * XRB co-measurement 34
     * Image range: 51348 to 51392
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1639773207 to 1640249670
+    * Human readible time range: 2021-12-17 20:33:27 to 2021-12-23 08:54:30
     * Exposure 10 s, Fullres
   * Fullres dosimetry 21, 4 ms short, 2 s long
     * Image range: 51393 to 51783
-    * Unix time range:
-    * Human readible time range:
+    * Unix time range: 1667496839 to 1667591390
+    * Human readible time range: 2022-11-03 17:33:59 to 2022-11-04 19:49:50
   * Fullres dosimetry 22, 4 ms short, 2 s long
-    * Image range: 51785 to 51939
-    * Unix time range:
-    * Human readible time range:
+    * Image range: 51785 to 52939
+    * Unix time range: 1667929937 to 1668282838
+    * Human readible time range: 2022-11-08 17:52:17 to 2022-11-12 19:53:58
