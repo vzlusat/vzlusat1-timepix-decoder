@@ -7,7 +7,7 @@ import matplotlib.ticker as ticker # for colorbar
 
 from include.baseMethods import *
 
-from_to = numpy.array([[1, 40000]])
+from_to = numpy.array([[1, 53000]])
 
 outliers=[]
 
