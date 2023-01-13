@@ -12,8 +12,8 @@ from include.baseMethods import *
 
 tle1, tle2, tle_time = initializeTLE("tle.txt")
 
-from_time = "22.01.2023 09:00:00"
-to_time = "23.01.2023 08:00:00"
+from_time = "21.01.2023 09:00:00"
+to_time = "22.01.2023 08:00:00"
 
 hkc_buffer_time = 300
 
