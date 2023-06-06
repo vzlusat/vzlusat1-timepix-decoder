@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python2
 
 import os
 import matplotlib.pyplot as plt
@@ -12,7 +12,7 @@ from include.baseMethods import *
 tle1, tle2, tle_time = initializeTLE("tle2.txt")
 
 def utc2epoch(timestamp):
-    epoch = time.mktime((datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S.%f")).timetuple()) + 3600*4
+    epoch = time.mktime((datetime.datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S.%f")).timetuple()) + 3600*2
     return epoch
 
 pcolor_min = 0
@@ -32,17 +32,24 @@ doses = []
 
 # parse the file
 
-with open('vzlusat2/june22a-exp1.txt') as csvfile:
+with open('vzlusat2/2023w17_10ms.txt') as csvfile:
 
     reader = csv.reader(csvfile, delimiter=',', quotechar='|')
 
     next(reader)
 
     for row in reader:
-        time_stamps.append(row[1])
-        exposures.append(float(row[2]))
-        # doses.append(float(row[13]))
-        doses.append(float(row[9]))
+
+        time_stamp = row[1]
+        exposure   = float(row[2])
+        data       = float(row[13]) # pocet pixlu
+
+        if exposure <= 0:
+            continue 
+
+        time_stamps.append(time_stamp)
+        exposures.append(exposure)
+        doses.append(data)
 
 doses = np.array(doses)
 exposures = np.array(exposures)
@@ -100,7 +107,7 @@ doses_rbf_log = rbf_log(x_meshgrid, y_meshgrid)
 
 def plot_everything(*args):
 
-    plt.figure(1)
+    plt.figure(2)
 
     #{ Figure 1
 

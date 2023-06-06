@@ -12,8 +12,8 @@ from include.baseMethods import *
 
 tle1, tle2, tle_time = initializeTLE("tle.txt")
 
-from_time = "13.05.2023 10:00:00"
-to_time = "14.05.2023 10:00:00"
+from_time = "08.06.2023 10:00:00"
+to_time = "09.06.2023 09:30:00"
 
 hkc_buffer_time = 300
 
@@ -37,9 +37,10 @@ from_to = numpy.array([
 # [44648, 45813], # 13th full res
 # [45826, 46193], # 14th full res
 # [46246, 46659], # 15th full res
-[51393, 51783], # 21th full res
-[51785, 52939], # 22th full res
-[52940, 54189], # 23th full res
+# [51393, 51783], # 21th full res
+# [51785, 52939], # 22th full res
+# [52940, 54189], # 23th full res
+[56303, 57763],
 ])
 
 outliers=[]

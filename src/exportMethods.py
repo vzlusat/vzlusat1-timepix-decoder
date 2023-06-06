@@ -413,7 +413,8 @@ def exportRaw(image, tle1, tle2, tle_time, image_iter=[]):
     if isinstance(image_iter, int):
         image_id = image_iter
     else:
-        return
+        print("nepes")
+        pass
 
     filename=getExportPixetName(image_id, image.type)
 
