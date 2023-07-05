@@ -604,5 +604,11 @@ It might be neccessary to re-run the program multiple times, before it correctly
     * Human readible time range: 2023-01-16 09:04:03 to 2023-01-20 07:40:18
   * Fullres dosimetry 24, 4 ms short, 2 s long
     * Image range: 54191 to 55845
-    * Unix time range: 
-    * Human readible time range: 
+    * Unix time range: 1681992079 to 1682682648
+    * Human readible time range: 2023-04-20 12:01:19 to 2023-04-28 11:50:48
+  * Fullres dosimetry 25, 4 ms short, 2 s long
+    * Image range: 56303 to 57763
+    * Unix time range: 1683748205 to 1684144057
+    * Human readible time range: 2023-05-10 19:50:05 to 2023-05-15 09:47:37
+
+53447

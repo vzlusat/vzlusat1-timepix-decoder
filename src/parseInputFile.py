@@ -139,6 +139,10 @@ def parseInputFile(file_path, root):
                     print("[{}_{}]: Metadata time ({}) inconsistent with OBC time stamp ({}), using OBC time instead.".format(temp_image.id, temp_image.type, temp_image.time, last_time))
                     temp_image.time = last_time
 
+                if (temp_image.got_metadata == 0 and last_time > 0):
+                    print("[{}_{}]: Metadata time missing using OBC time instead.".format(temp_image.id, temp_image.type))
+                    temp_image.time = last_time
+
                 # if the time stamp suggests that the OBC was confused about the time, print a message
                 if last_time < 946684800 and temp_image.time < 946684800:
                     print("[{}_{}]: \033[93mMetadata time ({}) and OBC time stamp ({}) make no sense!\033[0m".format(temp_image.id, temp_image.type, temp_image.time, last_time))

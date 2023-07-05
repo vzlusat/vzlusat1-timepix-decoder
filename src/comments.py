@@ -217,6 +217,17 @@ def hasExposure(idx):
     else:
         return False
 
+def missingMetadata(idx):
+
+    global comments
+
+    comment = getComment(idx)
+
+    if comment.find("#nometadata") > -1:
+        return True
+    else:
+        return False
+
 def getExposure(idx):
 
     global comments

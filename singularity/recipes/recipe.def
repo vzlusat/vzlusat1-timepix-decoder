@@ -1,0 +1,40 @@
+Bootstrap: docker-daemon
+From: ubuntu:18.04
+
+%post
+    apt-get -y update
+
+    # fix prompts during installation
+    echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+    apt-get install -y -q
+    DEBIAN_FRONTEND=noninteractive apt-get -y install keyboard-configuration
+
+    MRS_LOCATION=/opt/mrs
+
+    # link configuration file for the MRS env
+    ln -s $MRS_LOCATION/host/99-mrs_env.sh /.singularity.d/env/99-mrs_env.sh
+
+    apt-get -y install vim ranger git zsh sudo
+    apt-get -y install python-matplotlib python-pmw python-pip python-mpltoolkits.basemap python-scipy python-ephem
+
+    mkdir -p /opt/klaxalk/
+    cd /opt/klaxalk/
+    git clone https://github.com/klaxalk/linux-setup --depth 1
+    cd linux-setup
+    ./install.sh --unattended --docker
+
+    pip install matplotlib ephem scipy pwm
+
+%environment
+    export LC_ALL=C
+
+%runscript
+  CMD="${@}"
+
+  if [ -z "${CMD}" ]; then
+    /bin/bash --login
+  else
+    /bin/bash --login -c "${CMD}"
+  fi
+
+  exit 0
