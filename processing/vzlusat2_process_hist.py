@@ -18,7 +18,7 @@ def utc2epoch(timestamp):
 pcolor_min = 0
 pcolor_max = 4
 
-small_plot = 0
+small_plot = 1
 
 date_range = ''
 x_units = '[-]'
