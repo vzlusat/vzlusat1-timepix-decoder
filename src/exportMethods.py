@@ -14,6 +14,8 @@ from src.HouseKeeping import *
 import src.comments as comments
 import platform
 
+# #{ exportHouseKeeping()
+
 def exportHouseKeeping(data, tle1, tle2, tle_time):
 
     hk_array = [None] * 16;
@@ -46,8 +48,12 @@ def exportHouseKeeping(data, tle1, tle2, tle_time):
         hk_file.write("Resolution: {}, {}\r\n".format(256, 256))
 
         if settings.calculate_tle:
-            latitude, longitude, tle_date = getLatLong(data.time, tle1, tle2, tle_time)
-            hk_file.write("lat, long, tle_time: {}, {}, {}\n\r".format(latitude, longitude, tle_date))
+            latitude, longitude, altitude, tle_date = getLatLonAlt(data.time, tle1, tle2, tle_time)
+            hk_file.write("latitude [deg], longitude [deg], altitude (WGS84) [km], tle_time: {}, {}, {}\n\r".format(latitude, longitude, altitude, tle_date))
+
+# #} end of exportHouseKeeping()
+
+# #{ exportDescriptionFile()
 
 def exportDescriptionFile(image, image_iter, tle1, tle2, tle_time):
 
@@ -147,10 +153,10 @@ I07-W0167\r\n")
 
         if settings.calculate_tle == 1:
             try:
-                latitude, longitude, tle_date = getLatLong(image.time, tle1, tle2, tle_time)
-                dsc_file.write("\"Navigation\" (\"Latitude, Longitute in deg\"):\r\n\
-double[2]\r\n\
-{} {}\r\n".format(latitude, longitude))
+                latitude, longitude, altitude, tle_date = getLatLonAlt(image.time, tle1, tle2, tle_time)
+                dsc_file.write("\"Navigation\" (\"Latitude [deg], Longitute [deg], Altitude (WGS84) [km]\"):\r\n\
+double[3]\r\n\
+{} {} {}\r\n".format(latitude, longitude, altitude))
             except:
                 pass
 
@@ -235,18 +241,22 @@ def exportInfoFileLine(image, first, tle1, tle2, tle_time):
         line+="{}, ".format(anomaly)
 
     if first:
-        line+="latitude [deg], longitude [deg], "
+        line+="latitude [deg], longitude [deg], altitude (WGS84) [km]"
     else:
         if settings.calculate_tle == 1:
             try:
-                latitude, longitude, tle_date = getLatLong(image.time, tle1, tle2, tle_time)
-                line+="{}, {} ".format(latitude, longitude)
+                latitude, longitude, altitude, tle_date = getLatLonAlt(image.time, tle1, tle2, tle_time)
+                line+="{}, {}, {}".format(latitude, longitude, altitude)
             except:
                 line+="NaN, NaN "
         else:
             line+="NaN, NaN "
 
     return line
+
+# #} end of exportDescriptionFile()
+
+# #{ exportMetadata()
 
 def exportMetadata(image, tle1, tle2, tle_time, image_iter=[]):
 
@@ -347,12 +357,16 @@ def exportMetadata(image, tle1, tle2, tle_time, image_iter=[]):
         metadata_file.write("Human readable time: {}\r\n".format(datetime.datetime.utcfromtimestamp(image.time)))
 
         if settings.calculate_tle:
-            latitude, longitude, tle_date = getLatLong(image.time, tle1, tle2, tle_time)
-            metadata_file.write("lat, long, tle_time: {}, {}, {}\r\n".format(latitude, longitude, tle_date))
+            latitude, longitude, altitude, tle_date = getLatLonAlt(image.time, tle1, tle2, tle_time)
+            metadata_file.write("latitude, longitude, altitude, tle_time: {}, {}, {}\r\n".format(latitude, longitude, altitude, tle_date))
 
         if image.type == 32:
             metadata_file.write("Histogram bins [bin1_min, bin1_max=bin2_min, ..., bin16_max], the last bin contains also all higher energies.\r\n")
             metadata_file.write("[2.98, 4.22, 6.43, 10.38, 16.63, 24.70, 33.78, 43.36, 53.22, 63.23, 73.34, 83.51, 93.72, 103.96, 114.23, 124.52, 134.81]\r\n")
+
+# #} end of exportMetadata()
+
+# #{ exportBinning()
 
 def exportBinning(image, tle1, tle2, tle_time, image_iter=[]):
 
@@ -376,6 +390,10 @@ def exportBinning(image, tle1, tle2, tle_time, image_iter=[]):
             for i in range(0, size):
                 writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[i, :]])
 
+# #} end of exportBinning()
+
+# #{ exportSums()
+
 def exportSums(image, tle1, tle2, tle_time, image_iter=[]):
 
     if isinstance(image_iter, int):
@@ -391,6 +409,10 @@ def exportSums(image, tle1, tle2, tle_time, image_iter=[]):
             writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[0, :]])
             writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[1, :]])
 
+# #} end of exportSums()
+
+# #{ exportHistogram()
+
 def exportHistogram(image, tle1, tle2, tle_time, image_iter=[]):
 
     if isinstance(image_iter, int):
@@ -405,6 +427,10 @@ def exportHistogram(image, tle1, tle2, tle_time, image_iter=[]):
 
             writer.writerow(['{0:d}'.format(math.trunc(x)) for x in image.data[0, :]])
 
+# #} end of exportHistogram()
+
+# #{ exportRaw()
+
 def exportRaw(image, tle1, tle2, tle_time, image_iter=[]):
 
     image_id = image.id
@@ -413,7 +439,6 @@ def exportRaw(image, tle1, tle2, tle_time, image_iter=[]):
     if isinstance(image_iter, int):
         image_id = image_iter
     else:
-        print("nepes")
         pass
 
     filename=getExportPixetName(image_id, image.type)
@@ -428,8 +453,19 @@ def exportRaw(image, tle1, tle2, tle_time, image_iter=[]):
             else:
                 float_delim = '.'
 
-            for i in range(0, 256):
-                writer.writerow(["{:.2f}".format(x).replace('.', float_delim) for x in image.data[i, :]])
+            if image.original_pixels == 0:
+
+                empty_image = numpy.zeros((256, 256))
+
+                for i in range(0, 256):
+                    writer.writerow(["{:.2f}".format(x).replace('.', float_delim) for x in empty_image[i, :]])
+            else:
+              for i in range(0, 256):
+                  writer.writerow(["{:.2f}".format(x).replace('.', float_delim) for x in image.data[i, :]])
+
+# #} end of exportRaw()
+
+# #{ exportImage()
 
 def exportImage(image, tle1, tle2, tle_time):
 
@@ -451,6 +487,10 @@ def exportImage(image, tle1, tle2, tle_time):
 
     exportMetadata(image, tle1, tle2, tle_time)
 
+# #} end of exportImage()
+
+# #{ exportCsv()
+
 def exportCsv(data, tle1, tle2, tle_time):
 
     if isinstance(data, HouseKeeping):
@@ -460,6 +500,10 @@ def exportCsv(data, tle1, tle2, tle_time):
     elif isinstance(data, Image):
 
         exportImage(data, tle1, tle2, tle_time)
+
+# #} end of exportImage()
+
+# #{ exportImageForPixet()
 
 def exportImageForPixet(data, tle1, tle2, tle_time, image_iter):
 
@@ -481,5 +525,7 @@ def exportImageForPixet(data, tle1, tle2, tle_time, image_iter):
 
             exportHistogram(data, tle1, tle2, tle_time, image_iter)
 
-        exportDescriptionFile(data, tle1, tle2, tle_time, image_iter)
+        exportDescriptionFile(data, image_iter, tle1, tle2, tle_time)
         exportMetadata(data, tle1, tle2, tle_time, image_iter)
+
+# #} end of exportImageForPixet()

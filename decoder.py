@@ -276,8 +276,8 @@ def showHouseKeeping(housekeeping):
 
     if settings.use_globus:
       if show_globus_var.get():
-          latitude, longitude, tle_date = getLatLong(housekeeping.time, tle1, tle2, tle_time)
-          globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
+          latitude, longitude, altitude, tle_date = getLatLonAlt(housekeeping.time, tle1, tle2, tle_time)
+          globus_label_var.set("{}, {}, {}\nTLE: {}".format(latitude, longitude, altitude, tle_date))
 
           redrawMap(latitude, longitude, human_readable_time)
       else:
@@ -413,8 +413,8 @@ def showImage(image, manual):
 
         if settings.use_globus:
           if show_globus_var.get():
-              latitude, longitude, tle_date = getLatLong(image.time, tle1, tle2, tle_time)
-              globus_label_var.set("{}, {}\nTLE: {}".format(latitude, longitude, tle_date))
+              latitude, longitude, altitude, tle_date = getLatLonAlt(image.time, tle1, tle2, tle_time)
+              globus_label_var.set("{}, {}, {}\nTLE: {}".format(latitude, longitude, altitude, tle_date))
 
               redrawMap(latitude, longitude, human_readable_time)
           else:
@@ -1184,7 +1184,7 @@ def exportRawFullresData():
 
                 if image.type == 1 and image.got_data and image.got_metadata:
 
-                    exportImageForPixet(image, image_iter)
+                    exportImageForPixet(image, tle1, tle2, tle_time, image_iter)
 
                     if image_iter == 1:
                         first = True
@@ -1192,10 +1192,10 @@ def exportRawFullresData():
                         first = False
 
                     if first:
-                        info_line = exportInfoFileLine(image, first)
+                        info_line = exportInfoFileLine(image, first, tle1, tle2, tle_time)
                         info_file.write("# ordinar image ID, original image ID, {}\r\n".format(info_line))
 
-                    info_line = exportInfoFileLine(image, False)
+                    info_line = exportInfoFileLine(image, False, tle1, tle2, tle_time)
                     info_file.write("{}, {}, {}\r\n".format(image_iter, image.id, info_line))
 
                     image_iter += 1
@@ -1225,7 +1225,7 @@ def exportRawNonfullresData():
                         image_iter += 1
                         prev_id = image.id
 
-                    exportImageForPixet(image, image_iter)
+                    exportImageForPixet(image, tle1, tle2, tle_time, image_iter)
 
                     if image_iter == 1:
                         first = True
@@ -1233,10 +1233,10 @@ def exportRawNonfullresData():
                         first = False
 
                     if first:
-                        info_line = exportInfoFileLine(image, first)
+                        info_line = exportInfoFileLine(image, first, tle1, tle2, tle_time)
                         info_file.write("# ordinar image ID, original image ID, {}\r\n".format(info_line))
 
-                    info_line = exportInfoFileLine(image, False)
+                    info_line = exportInfoFileLine(image, False, tle1, tle2, tle_time)
                     info_file.write("{}, {}, {}\r\n".format(image_iter, image.id, info_line))
 
                     statusLine.set("Exporting image {}".format(image.id))
@@ -1262,7 +1262,7 @@ def exportRawForPublic():
             if isinstance(image, Image):
 
                 # atempt to reconstruct the TLE
-                latitude, longitude, tle_date = getLatLong(image.time, tle1, tle2, tle_time)
+                latitude, longitude, altitude, tle_date = getLatLonAlt(image.time, tle1, tle2, tle_time)
 
                 if image.type == 1 and image.got_data and image.got_metadata and not comments.isNolearn(image.id) and not image.filtering:
 
@@ -1272,7 +1272,7 @@ def exportRawForPublic():
                             image_iter += 1
                             prev_id = image.id
 
-                        exportImageForPixet(image, image_iter)
+                        exportImageForPixet(image, tle1, tle2, tle_time, image_iter)
 
                         if image_iter == 1:
                             first = True
@@ -1280,10 +1280,10 @@ def exportRawForPublic():
                             first = False
 
                         if first:
-                            info_line = exportInfoFileLine(image, first)
+                            info_line = exportInfoFileLine(image, first, tle1, tle2, tle_time)
                             info_file.write("# ordinar image ID, original image ID, {}\r\n".format(info_line))
 
-                        info_line = exportInfoFileLine(image, False)
+                        info_line = exportInfoFileLine(image, False, tle1, tle2, tle_time)
                         info_file.write("{}, {}, {}\r\n".format(image_iter, image.id, info_line))
 
                         statusLine.set("Exporting image {}".format(image.id))
@@ -1326,6 +1326,9 @@ button = Tk.Button(master=frame_left, text='Quit', command=close_window, font=cu
 button.pack(side=Tk.BOTTOM)
 # #}
 
+reload_button = Tk.Button(master=frame_left, text='Reload', command=reloadList, font=customfont)
+reload_button.pack(side=Tk.BOTTOM)
+
 # #{ CHECKBOX for autogenerate_png_view
 
 def autogenerateCheckboxCallback():
@@ -1362,49 +1365,49 @@ if settings.use_globus:
 just_metadata = Tk.Checkbutton(master=frame_left, text="Show just metadata (m)", variable=dont_redraw_var, command=reloadCurrentImage, font=customfont)
 just_metadata.pack(side=Tk.BOTTOM)
 
-just_fullres = Tk.Checkbutton(master=frame_left, text="Show just fullres (1)", variable=just_fullres_var, command=reloadList, font=customfont)
+just_fullres = Tk.Checkbutton(master=frame_left, text="Show just fullres (1)", variable=just_fullres_var,  font=customfont)
 just_fullres.pack(side=Tk.BOTTOM)
 
-first_image_type = Tk.Checkbutton(master=frame_left, text="Show first image type (i)", variable=first_image_type_var, command=reloadList, font=customfont)
+first_image_type = Tk.Checkbutton(master=frame_left, text="Show first image type (i)", variable=first_image_type_var,  font=customfont)
 first_image_type.pack(side=Tk.BOTTOM)
 
 # temp_baloon = Pmw.Balloon(master=root);
 # temp_baloon.bind(just_fullres, "hotkey: 1")
 
-# show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, command=reloadList, font=customfont)
+# show_hidden = Tk.Checkbutton(master=frame_left, text="show hidden images", variable=show_hidden_var, font=customfont)
 # show_hidden.pack(side=Tk.BOTTOM)
 
-show_adrenalin = Tk.Checkbutton(master=frame_left, text="show only adrenalin (a)", variable=show_adrenalin_var, command=reloadList, font=customfont)
+show_adrenalin = Tk.Checkbutton(master=frame_left, text="show only adrenalin (a)", variable=show_adrenalin_var, font=customfont)
 show_adrenalin.pack(side=Tk.BOTTOM)
 
-show_xrb = Tk.Checkbutton(master=frame_left, text="show only XRB (x)", variable=show_xrb_var, command=reloadList, font=customfont)
+show_xrb = Tk.Checkbutton(master=frame_left, text="show only XRB (x)", variable=show_xrb_var, font=customfont)
 show_xrb.pack(side=Tk.BOTTOM)
 
-show_fullresdos = Tk.Checkbutton(master=frame_left, text="show only FullRes dosimetry", variable=show_fullresdos_var, command=reloadList, font=customfont)
+show_fullresdos = Tk.Checkbutton(master=frame_left, text="show only FullRes dosimetry", variable=show_fullresdos_var, font=customfont)
 show_fullresdos.pack(side=Tk.BOTTOM)
 
-show_saa_belts = Tk.Checkbutton(master=frame_left, text="show only SAA and belt scanning", variable=show_saa_belts_var, command=reloadList, font=customfont)
+show_saa_belts = Tk.Checkbutton(master=frame_left, text="show only SAA and belt scanning", variable=show_saa_belts_var, font=customfont)
 show_saa_belts.pack(side=Tk.BOTTOM)
 
-show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite (f)", variable=show_favorite_var, command=reloadList, font=customfont)
+show_favorite_only = Tk.Checkbutton(master=frame_left, text="show only favorite (f)", variable=show_favorite_var, font=customfont)
 show_favorite_only.pack(side=Tk.BOTTOM)
 
-show_nolearn_only = Tk.Checkbutton(master=frame_left, text="show only nolearn (N)", variable=show_nolearn_var, command=reloadList, font=customfont)
+show_nolearn_only = Tk.Checkbutton(master=frame_left, text="show only nolearn (N)", variable=show_nolearn_var, font=customfont)
 show_nolearn_only.pack(side=Tk.BOTTOM)
 
-hide_nolearn = Tk.Checkbutton(master=frame_left, text="hide nolearn (n)", variable=hide_nolearn_var, command=reloadList, font=customfont)
+hide_nolearn = Tk.Checkbutton(master=frame_left, text="hide nolearn (n)", variable=hide_nolearn_var, font=customfont)
 hide_nolearn.pack(side=Tk.BOTTOM)
 
-show_only_without_data = Tk.Checkbutton(master=frame_left, text="show only without data (W)", variable=show_only_without_data_var, command=reloadList, font=customfont)
+show_only_without_data = Tk.Checkbutton(master=frame_left, text="show only without data (W)", variable=show_only_without_data_var, font=customfont)
 show_only_without_data.pack(side=Tk.BOTTOM)
 
-hide_without_data = Tk.Checkbutton(master=frame_left, text="hide images without data (w)", variable=hide_without_data_var, command=reloadList, font=customfont)
+hide_without_data = Tk.Checkbutton(master=frame_left, text="hide images without data (w)", variable=hide_without_data_var, font=customfont)
 hide_without_data.pack(side=Tk.BOTTOM)
 
-hide_without_metadata = Tk.Checkbutton(master=frame_left, text="show only images without metadata (M)", variable=hide_with_metadata_var, command=reloadList, font=customfont)
+hide_without_metadata = Tk.Checkbutton(master=frame_left, text="show only images without metadata (M)", variable=hide_with_metadata_var, font=customfont)
 hide_without_metadata.pack(side=Tk.BOTTOM)
 
-hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping (h)", variable=hide_housekeeping_var, command=reloadList, font=customfont)
+hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping (h)", variable=hide_housekeeping_var, font=customfont)
 hide_housekeeping.pack(side=Tk.BOTTOM)
 
 frame_from_to = Tk.Frame(frame_left);

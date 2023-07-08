@@ -42,7 +42,7 @@ def findClosestTLE(value, tle1, tle2, tle_time):
 
     return min(range(len(tle_time)), key=lambda i: numpy.abs(tle_time[i]-value))
 
-def getLatLong(timestamp, tle1, tle2, tle_time):
+def getLatLonAlt(timestamp, tle1, tle2, tle_time):
 
     closest_tle_idx = findClosestTLE(timestamp, tle1, tle2, tle_time)
 
@@ -59,5 +59,6 @@ def getLatLong(timestamp, tle1, tle2, tle_time):
     # calculate latitude and longitude in degrees
     lon = float(repr(tle.sublong))*(180/3.141592654)
     lat = float(repr(tle.sublat))*(180/3.141592654)
+    alt = float(repr(tle.elevation))/1000.0
 
-    return lat, lon, datetime.datetime.utcfromtimestamp(tle_time[closest_tle_idx])
+    return lat, lon, alt, datetime.datetime.utcfromtimestamp(tle_time[closest_tle_idx])

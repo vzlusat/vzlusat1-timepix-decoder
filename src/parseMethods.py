@@ -109,6 +109,10 @@ def parseMetadata(bin_data, image_dict):
     # check whether the time use usable for TLE extraction
     # check if the time is close to the chunk time recorded by OBC
 
+    if (image.original_pixels == 0) or (image.filtering == 1 and image.original_pixels == 0):
+        print("no data ok image_id: {}".format(image_id))
+        image.got_data = 1
+
     image.got_metadata = 1
 
     return image
