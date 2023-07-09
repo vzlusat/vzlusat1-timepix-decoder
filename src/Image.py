@@ -53,7 +53,7 @@ class Image:
                      "Measurement mode:",
                      "Threshold:",
                      "Bias:",
-                     "Exposure:",
+                     "Acquisition time:",
                      "Filtering:",
                      "Pixel count (Original):",
                      "Pixel count (Filtered):",

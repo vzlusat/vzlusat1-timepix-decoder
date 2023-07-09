@@ -1334,17 +1334,7 @@ reload_button.pack(side=Tk.BOTTOM)
 def autogenerateCheckboxCallback():
     reloadList(int(listbox.curselection()[0]))
 
-# spawn button for exporting csv
-export_csv_button = Tk.Button(master=frame_list, text='Export CSV', command=exportCsvData, font=customfont)
-export_csv_button.pack(side=Tk.BOTTOM)
-
-export_raw_button = Tk.Button(master=frame_list, text='Export RAW fullres', command=exportRawFullresData, font=customfont)
-export_raw_button.pack(side=Tk.BOTTOM)
-
-export_raw_button = Tk.Button(master=frame_list, text='Export RAW other', command=exportRawNonfullresData, font=customfont)
-export_raw_button.pack(side=Tk.BOTTOM)
-
-export_public_button = Tk.Button(master=frame_list, text='Export data for public use', command=exportRawForPublic, font=customfont)
+export_public_button = Tk.Button(master=frame_list, text='Export', command=exportRawForPublic, font=customfont)
 export_public_button.pack(side=Tk.BOTTOM)
 
 autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing (e)", variable=autogenerate_png_view, command=autogenerateCheckboxCallback, font=customfont)

@@ -49,7 +49,7 @@ def exportHouseKeeping(data, tle1, tle2, tle_time):
 
         if settings.calculate_tle:
             latitude, longitude, altitude, tle_date = getLatLonAlt(data.time, tle1, tle2, tle_time)
-            hk_file.write("latitude [deg], longitude [deg], altitude (WGS84) [km], tle_time: {}, {}, {}\n\r".format(latitude, longitude, altitude, tle_date))
+            hk_file.write("latitude [deg], longitude [deg], altitude (WGS84) [km]: {}, {}, {}\n\r".format(latitude, longitude, altitude, tle_date))
 
 # #} end of exportHouseKeeping()
 
@@ -180,14 +180,14 @@ def exportInfoFileLine(image, first, tle1, tle2, tle_time):
         exposure = 60 + image.exposure%60000
 
     if first:
-        line+="exposure [s], "
+        line+="acquisition time [s], "
     else:
         line+="{}, ".format(exposure)
 
-    if first:
-        line+="dacs, "
-    else:
-        line+="[1 100 255 127 127 0 {} 7 130 128 80 85 128 128], ".format(image.threshold)
+    # if first:
+    #     line+="dacs, "
+    # else:
+    #     line+="[1 100 255 127 127 0 {} 7 130 128 80 85 128 128], ".format(image.threshold)
 
     # bias
     if first:
@@ -195,50 +195,61 @@ def exportInfoFileLine(image, first, tle1, tle2, tle_time):
     else:
         line+="70.0, "
 
-    # detector type
-    if first:
-        line+="detector type, "
-    else:
-        line+="TPX, "
+    # # detector type
+    # if first:
+    #     line+="detector type, "
+    # else:
+    #     line+="TPX, "
 
     # time
     if first:
-        line+="UTC time, "
+        line+="UTC time [s], "
     else:
         line+="{}, ".format(image.time)
 
     # human readible time
     time_hr=datetime.datetime.utcfromtimestamp(image.time)
     if first:
-        line+="human readable time, "
+        line+="human-readable time, "
     else:
         line+="{}, ".format(time_hr)
 
-    # chip-board id
-    if first:
-        line+="chip-board id, "
-    else:
-        line+="I07-W0167, "
+    # # chip-board id
+    # if first:
+    #     line+="chip-board id, "
+    # else:
+    #     line+="I07-W0167, "
 
-    # adrenalin
-    if first:
-        line+="adrenalin mode, "
-    else:
-        if comments.isAdrenalin(image.id):
-            adrenalin=1
-        else:
-            adrenalin=0
-        line+="{}, ".format(adrenalin)
+    # # adrenalin
+    # if first:
+    #     line+="adrenalin mode, "
+    # else:
+    #     if comments.isAdrenalin(image.id):
+    #         adrenalin=1
+    #     else:
+    #         adrenalin=0
+    #     line+="{}, ".format(adrenalin)
 
-    # anomaly
+    # # anomaly
+    # if first:
+    #     line+="anomaly mode, "
+    # else:
+    #     if comments.isAnomaly(image.id):
+    #         anomaly=1
+    #     else:
+    #         anomaly=0
+    #     line+="{}, ".format(anomaly)
+
+    # nonzero pixels
     if first:
-        line+="anomaly mode, "
+        line+="no. of nonzero pixels, "
     else:
-        if comments.isAnomaly(image.id):
-            anomaly=1
-        else:
-            anomaly=0
-        line+="{}, ".format(anomaly)
+        line+="{}, ".format(image.original_pixels)
+
+    if first:
+        line+="heatsink temperature [deg C]"
+    else:
+        line+="{}, ".format(image.temperature)
 
     if first:
         line+="latitude [deg], longitude [deg], altitude (WGS84) [km]"
