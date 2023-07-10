@@ -369,7 +369,7 @@ def exportMetadata(image, tle1, tle2, tle_time, image_iter=[]):
 
         if settings.calculate_tle:
             latitude, longitude, altitude, tle_date = getLatLonAlt(image.time, tle1, tle2, tle_time)
-            metadata_file.write("latitude, longitude, altitude, tle_time: {}, {}, {}\r\n".format(latitude, longitude, altitude, tle_date))
+            metadata_file.write("latitude, longitude, altitude, tle_time: {}, {}, {}, {}\r\n".format(latitude, longitude, altitude, tle_date))
 
         if image.type == 32:
             metadata_file.write("Histogram bins [bin1_min, bin1_max=bin2_min, ..., bin16_max], the last bin contains also all higher energies.\r\n")

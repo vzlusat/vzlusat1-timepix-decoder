@@ -173,7 +173,7 @@ def loadFiles():
                     pass
 
                 # pass = hide
-                if (hide_with_metadata_var.get() and (image.got_metadata) or (comments.missingMetadata(image.id))):
+                if (hide_with_metadata_var.get() and (not image.got_metadata) or (comments.missingMetadata(image.id))):
                     pass
                 elif (hide_without_data_var.get() and (not image.got_data)):
                     pass
@@ -1248,7 +1248,7 @@ def exportRawNonfullresData():
 # #{ exportRawForPublic() callback
 def exportRawForPublic():
 
-    statusLine.set("Exporting raw images for public")
+    statusLine.set("Exporting images")
 
     image_iter = 0
     prev_id = 0
@@ -1266,7 +1266,7 @@ def exportRawForPublic():
 
                 if image.type == 1 and image.got_data and image.got_metadata and not comments.isNolearn(image.id) and not image.filtering:
 
-                    if latitude != 0 and longitude != 0:
+                    if latitude != 0 and longitude != 0 and altitude != 0:
 
                         if image.id != prev_id:
                             image_iter += 1
@@ -1292,7 +1292,8 @@ def exportRawForPublic():
 
                         print("skipping image {}, tle could not be reconstructed", image.id)
 
-        statusLine.set("Images exported")
+        statusLine.set("Exported {} images".format(image_iter))
+        print("Exported {} images".format(image_iter))
 
 # #}
 
@@ -1326,18 +1327,12 @@ button = Tk.Button(master=frame_left, text='Quit', command=close_window, font=cu
 button.pack(side=Tk.BOTTOM)
 # #}
 
-reload_button = Tk.Button(master=frame_left, text='Reload', command=reloadList, font=customfont)
-reload_button.pack(side=Tk.BOTTOM)
-
 # #{ CHECKBOX for autogenerate_png_view
-
-def autogenerateCheckboxCallback():
-    reloadList(int(listbox.curselection()[0]))
 
 export_public_button = Tk.Button(master=frame_list, text='Export', command=exportRawForPublic, font=customfont)
 export_public_button.pack(side=Tk.BOTTOM)
 
-autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing (e)", variable=autogenerate_png_view, command=autogenerateCheckboxCallback, font=customfont)
+autogenerate_checkbox = Tk.Checkbutton(master=frame_list, text="export pngs while viewing (e)", variable=autogenerate_png_view, font=customfont)
 autogenerate_checkbox.pack(side=Tk.BOTTOM)
 
 balloon = Pmw.Balloon(master=root);
@@ -1394,7 +1389,7 @@ show_only_without_data.pack(side=Tk.BOTTOM)
 hide_without_data = Tk.Checkbutton(master=frame_left, text="hide images without data (w)", variable=hide_without_data_var, font=customfont)
 hide_without_data.pack(side=Tk.BOTTOM)
 
-hide_without_metadata = Tk.Checkbutton(master=frame_left, text="show only images without metadata (M)", variable=hide_with_metadata_var, font=customfont)
+hide_without_metadata = Tk.Checkbutton(master=frame_left, text="hide without metadata (M)", variable=hide_with_metadata_var, font=customfont)
 hide_without_metadata.pack(side=Tk.BOTTOM)
 
 hide_housekeeping = Tk.Checkbutton(master=frame_left, text="hide housekeeping (h)", variable=hide_housekeeping_var, font=customfont)
